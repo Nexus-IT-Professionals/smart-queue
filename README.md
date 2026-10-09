@@ -162,13 +162,13 @@ The UI takes visual inspiration from this [Pinterest dashboard reference](https:
 
 ## Capacity and statistics
 
-Open **Provider → Capacity & statistics** for a deterministic current-month demo with roughly **90% occupancy**, a synchronized Day/Week/Month calendar, resource filters, KPI cards and clickable occupancy trends. Default capacity is **20 seats per resource per operating day**, Monday–Friday, 8 AM–6 PM, with 30-minute visits.
+Open **Provider → Capacity** for a deterministic current-month demo with roughly **90% occupancy**, a synchronized Day/Week/Month calendar, resource filters, KPI cards and clickable occupancy trends. Default capacity is **20 seats per resource per operating day**, Monday–Friday, 8 AM–6 PM, with 30-minute visits.
 
 Select a visit and confirm cancellation, booking, completion, rescheduling or a priority-ranked waiting-list assignment. Counts update immediately. Expand **Capacity configuration & regenerate** to change weekdays, hours, duration, daily cap or resources; confirmation resets that month's synthetic bookings. Previous generated months are retained as comparison snapshots for this browser session.
 
 Capacity excludes closed days; rates divide aggregate counts, not daily percentages. Completed visits consume capacity. Release fill rate measures eligible cancellations filled from the waiting list. Zero denominators show 0%; unloaded months are explicitly marked. See [calculation definitions, boundaries and a short rehearsal](docs/CAPACITY_STATISTICS.md).
 
-The fixed October **Guided cancellation demo** remains separately available, with its existing patient acceptance flow. Monthly staff assignments use a separate synthetic dataset and share priority configuration and the root in-memory state; they do not send offers to that fixed Patient inbox. Reload/reset clears edits. No real appointments or backend resources are exposed.
+The fixed October **guided cancellation demo** on the Overview remains separately available, with its existing patient acceptance flow. Monthly staff assignments use a separate synthetic dataset and share priority configuration and the root in-memory state; they do not send offers to that fixed Patient inbox. Reload/reset clears edits. No real appointments or backend resources are exposed.
 
 ## Validation status
 

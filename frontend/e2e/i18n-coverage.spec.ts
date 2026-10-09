@@ -116,6 +116,8 @@ async function walkEveryState(page: Page, language: Language) {
   ).toBeVisible();
   await check("empty search filter");
   await click("Reset filters and demo date");
+  // The Overview is always the demo day; other dates live on the Schedule.
+  await nav("Schedule");
   await page.getByLabel(L("Schedule date"), { exact: true }).fill("2026-10-09");
   await expect(
     page.getByRole("heading", {

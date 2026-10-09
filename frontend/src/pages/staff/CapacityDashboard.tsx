@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import type { DemoAction, DemoState } from "../../demo/data";
+import {
+  demoIdentities,
+  type DemoAction,
+  type DemoState,
+} from "../../demo/data";
 import {
   capacityCandidates,
   currentMonth,
@@ -11,6 +15,7 @@ import {
 } from "../../demo/capacity";
 import {
   calendarDays,
+  endTime,
   shiftDate,
   shiftMonth,
   sortPatients,
@@ -27,6 +32,11 @@ export default function CapacityDashboard({
 }) {
   const { t, dateText, timeText } = useLanguage();
   const state = demo.capacity;
+  // Resource 1 is the demo provider; extra generated resources are numbered.
+  const resourceName = (id: string) =>
+    id === "RESOURCE-1"
+      ? demoIdentities.staff.name
+      : `${t("Provider")} ${id.replace("RESOURCE-", "")}`;
   const [date, setDate] = useState(`${state.month}-01`);
   const [period, setPeriod] = useState<Period>("month");
   const [resource, setResource] = useState("all");
@@ -86,6 +96,15 @@ export default function CapacityDashboard({
       b.occupied / b.capacity - a.occupied / a.capacity ||
       a.date.localeCompare(b.date),
   );
+  const leastBusy = [...ranked].sort(
+    (a, b) =>
+      a.occupied / a.capacity - b.occupied / b.capacity ||
+      a.date.localeCompare(b.date),
+  )[0];
+  const evenOccupancy =
+    ranked.length > 0 &&
+    ranked[0].occupied / ranked[0].capacity ===
+      leastBusy.occupied / leastBusy.capacity;
   const metrics: [string, number | string][] = [
     ["Total capacity", stats.capacity],
     ["Occupied seats", stats.occupied],
@@ -115,11 +134,7 @@ export default function CapacityDashboard({
     >
       <div className="panel capacity-header">
         <div className="calendar-toolbar">
-          <div>
-            <p className="eyebrow">{t("Demo/POC Mode")}</p>
-            <h2>{t("Capacity & statistics")}</h2>
-            <p>{t("Synthetic monthly operations · session only")}</p>
-          </div>
+          <p>{t("Synthetic monthly operations · session only")}</p>
           <fieldset
             className="calendar-switch"
             aria-label={t("Statistics period")}
@@ -186,17 +201,19 @@ export default function CapacityDashboard({
                 (_, i) => i + 1,
               ).map((id) => (
                 <option key={id} value={`RESOURCE-${id}`}>
-                  {t("Resource")} {id}
+                  {resourceName(`RESOURCE-${id}`)}
                 </option>
               ))}
             </select>
           </label>
         </div>
         <p>
-          {t("Generated month")}: {state.month} · {t("Operating hours")}:{" "}
-          {timeText(inputTime(state.config.start))}–
-          {timeText(inputTime(state.config.end))} · {state.config.duration}{" "}
-          {t("minutes")} · {state.config.seats} {t("seats per resource")}
+          {dateText(`${state.month}-01`, { month: "long", year: "numeric" })}{" "}
+          · {t("Operating hours")}:{" "}
+          {timeText(endTime("12:00 AM", state.config.start))}–
+          {timeText(endTime("12:00 AM", state.config.end))} ·{" "}
+          {state.config.duration} {t("minutes")} · {state.config.seats}{" "}
+          {t("seats per provider each day")}
         </p>
         {stats.partial && (
           <p className="section-notice">
@@ -206,6 +223,17 @@ export default function CapacityDashboard({
           </p>
         )}
       </div>
+      <section className="panel capacity-lead">
+        <span>{t("Cancelled slots refilled from the waitlist")}</span>
+        <strong className="metric-value">
+          {stats.filled} {t("of")} {stats.eligibleReleases}
+        </strong>
+        <p>
+          {t(
+            "Each refill is a waiting patient seen sooner. Pick a day, cancel a visit and confirm a waitlist assignment to add one.",
+          )}
+        </p>
+      </section>
       <div className="capacity-kpis">
         {metrics.map(([label, value]) => (
           <section className="metric-card" key={label}>
@@ -365,15 +393,9 @@ export default function CapacityDashboard({
           </div>
           {ranked.length > 0 && (
             <p>
-              {t("Busiest day")}: {dateText(ranked[0].date)} ·{" "}
-              {t("Least busy day")}:{" "}
-              {dateText(
-                [...ranked].sort(
-                  (a, b) =>
-                    a.occupied / a.capacity - b.occupied / b.capacity ||
-                    a.date.localeCompare(b.date),
-                )[0].date,
-              )}
+              {evenOccupancy
+                ? t("Every operating day in this period has the same occupancy.")
+                : `${t("Busiest day")}: ${dateText(ranked[0].date)} · ${t("Least busy day")}: ${dateText(leastBusy.date)}`}
             </p>
           )}
         </section>
@@ -409,7 +431,7 @@ export default function CapacityDashboard({
               }}
             >
               <strong>
-                {timeText(s.time)} · {s.provider}
+                {timeText(s.time)} · {resourceName(s.provider)}
               </strong>
               <span>{t(s.name)}</span>
               <span>{t(s.status)}</span>
@@ -426,7 +448,7 @@ export default function CapacityDashboard({
           <div className="capacity-actions">
             <h3>
               {t("Selected appointment")}: {dateText(slot.date)} ·{" "}
-              {timeText(slot.time)} · {slot.provider}
+              {timeText(slot.time)} · {resourceName(slot.provider)}
             </h3>
             <label className="check-label">
               <input
@@ -543,7 +565,7 @@ export default function CapacityDashboard({
         {sortPatients(state.waiting, demo.config).map((p) => (
           <div className="capacity-waiting" key={p.id}>
             <strong>
-              {p.name} · {p.provider}
+              {p.name} · {resourceName(p.provider)}
             </strong>
             <PriorityBadge demo={demo} priority={p.priority} />
             <PriorityEditor

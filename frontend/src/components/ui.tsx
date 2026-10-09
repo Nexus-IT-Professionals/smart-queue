@@ -12,7 +12,8 @@ export type IconName =
   | "heart"
   | "shield"
   | "reset"
-  | "presentation";
+  | "presentation"
+  | "chart";
 const paths: Record<IconName, ReactNode> = {
   grid: (
     <>
@@ -64,6 +65,7 @@ const paths: Record<IconName, ReactNode> = {
       <path d="M12 16v4M8 21l4-1 4 1M10 8l4 2-4 2Z" />
     </>
   ),
+  chart: <path d="M4 20V10m6 10V4m6 16v-7m4 7H2" />,
   reset: (
     <>
       <path d="M3 10a9 9 0 1 1 2 8M3 4v6h6" />

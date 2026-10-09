@@ -1,4 +1,34 @@
 export const spanish: Record<string, string> = {
+  "Capacity":
+    "Capacidad",
+  "Occupancy, cancellations and waitlist refills for a synthetic month.":
+    "Ocupación, cancelaciones y espacios cubiertos desde la lista de espera en un mes ficticio.",
+  "Slot released":
+    "Espacio liberado",
+  "Offer accepted":
+    "Oferta aceptada",
+  "Offer declined":
+    "Oferta rechazada",
+  "Help requested":
+    "Ayuda solicitada",
+  "Priority updated":
+    "Prioridad actualizada",
+  "Priority settings updated":
+    "Configuración de prioridades actualizada",
+  "Capacity updated":
+    "Capacidad actualizada",
+  "Provider":
+    "Proveedor",
+  "Cancelled slots refilled from the waitlist":
+    "Espacios cancelados cubiertos desde la lista de espera",
+  "Each refill is a waiting patient seen sooner. Pick a day, cancel a visit and confirm a waitlist assignment to add one.":
+    "Cada espacio cubierto es un paciente atendido antes. Elija un día, cancele una cita y confirme una asignación de la lista de espera para sumar uno.",
+  "Every operating day in this period has the same occupancy.":
+    "Todos los días de servicio de este período tienen la misma ocupación.",
+  "Ranked first: highest scheduling priority among eligible patients.":
+    "Primero en la lista: mayor prioridad de cita entre los pacientes elegibles.",
+  "Ranked first: earliest request among patients with the same priority.":
+    "Primero en la lista: la solicitud más antigua entre pacientes con la misma prioridad.",
   "waiting since": "en espera desde el",
   "Today at Isla Care":
     "Hoy en Isla Care",
@@ -88,18 +118,15 @@ export const spanish: Record<string, string> = {
     "Cambie de rol desde el encabezado en cualquier momento. Reiniciar o recargar empieza de nuevo. Nada sale de este navegador. Las herramientas del personal están en el espacio del proveedor; no hay una vista de administración separada.",
   "Staff updated monthly demo scheduling.": "El personal actualizó la programación de la demostración mensual.",
   "Capacity & statistics": "Capacidad y estadísticas",
-  "Guided cancellation demo": "Demostración guiada de cancelación",
-  "Demo/POC Mode": "Modo demostración/POC",
   "Synthetic monthly operations · session only":
     "Operaciones mensuales ficticias · solo esta sesión",
   "Statistics period": "Período de estadísticas",
   "Provider resource": "Recurso del proveedor",
   "All resources": "Todos los recursos",
-  Resource: "Recurso",
   "Generated month": "Mes generado",
   "Operating hours": "Horario de servicio",
   minutes: "minutos",
-  "seats per resource": "cupos por recurso",
+  "seats per provider each day": "cupos por proveedor cada día",
   "Partial coverage: only the generated month contributes capacity. Generate this month to explore it.":
     "Cobertura parcial: solo el mes generado aporta capacidad. Genere este mes para explorarlo.",
   "Total capacity": "Capacidad total",

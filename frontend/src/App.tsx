@@ -23,12 +23,18 @@ import DemoAccess from "./pages/DemoAccess";
 import StaffWorkspace from "./pages/staff/StaffWorkspace";
 import PatientWorkspace from "./pages/patient/PatientWorkspace";
 
-export type StaffView = "overview" | "schedule" | "waitlist" | "activity";
+export type StaffView =
+  | "overview"
+  | "schedule"
+  | "waitlist"
+  | "activity"
+  | "capacity";
 const navigation: { id: StaffView; label: string; icon: IconName }[] = [
   { id: "overview", label: "Overview", icon: "grid" },
   { id: "schedule", label: "Schedule", icon: "calendar" },
   { id: "waitlist", label: "Waitlist", icon: "users" },
   { id: "activity", label: "Activity log", icon: "activity" },
+  { id: "capacity", label: "Capacity", icon: "chart" },
 ];
 // Relative to the app's path (the #/ route is not part of it), so it resolves
 // to <site>/presentation/index.html wherever the build is hosted.

@@ -239,6 +239,23 @@ Item IDs are grouped by theme: **G** guided story, **H** hierarchy and noise, **
 - **Evidence:** at 390×844 the slide fills about 25% of the screen height, with large empty dark areas above and below.
 - **Proposal:** in portrait, show a "Rotate your phone for the best view" hint. You could also let the slide use more height, with controls overlaid.
 
+#### Tier 2 status (2026-10-09)
+
+**Implemented:**
+- **V1:** candidate radio cards with a "why ranked first" line.
+- **V2:** provider names instead of RESOURCE-1, blue occupancy bars, chevron disclosures, readable waitlist notes.
+- **V3:** Capacity is a sidebar page.
+- **D1 (partly):** "Cancelled slots refilled: X of Y" leads the dashboard. When every day ties, the page says so instead of naming the same day as both busiest and least busy.
+- **D2:** the Overview is the demo day with counters, and the Schedule owns the calendar and date field.
+- **D3:** titled, iconed activity entries.
+- **M2:** the phone table folds the visit type under the name, with no sideways scroll.
+- **M3:** a one-row day strip and two-column cards on phones.
+
+**Not implemented, by decision:**
+- **D1, varied data and a non-zero starting fill rate:** this conflicts with `docs/CAPACITY_STATISTICS.md` and task CAP-1. The month is specified as `round(0.9 × seats)` per day, with a baseline fill rate that is "honestly 0%". The spec owner should decide whether to change it.
+- **D1, counting the guided refill in Capacity:** the spec keeps the guided scenario out of the monthly statistics.
+- **P1 and P2 (slides):** deferred at the user's request. Julio's cast alignment already resolved the names in P1.
+
 ### Tier 3: after the hackathon
 
 | ID | Enhancement | Why it matters |

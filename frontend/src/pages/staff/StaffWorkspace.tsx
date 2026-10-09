@@ -40,7 +40,26 @@ const titles: Record<StaffView, [string, string]> = {
     "Patients who asked for an earlier appointment, in priority order.",
   ],
   activity: ["Activity log", "Every step of the demo, in order."],
+  capacity: [
+    "Capacity & statistics",
+    "Occupancy, cancellations and waitlist refills for a synthetic month.",
+  ],
 };
+// Activity entries are stored as sentences; each gets a short title and icon.
+const eventKinds: [string, string, IconName][] = [
+  ["confirmed the sample cancellation", "Slot released", "calendar"],
+  ["sent a simulated in-app offer", "Offer sent", "arrow"],
+  ["Patient accepted", "Offer accepted", "check"],
+  ["Patient declined", "Offer declined", "reset"],
+  ["requested help", "Help requested", "heart"],
+  ["scheduling priority:", "Priority updated", "users"],
+  ["priority configuration", "Priority settings updated", "grid"],
+  ["monthly demo scheduling", "Capacity updated", "chart"],
+];
+function eventKind(event: string): [string, IconName] {
+  const kind = eventKinds.find(([text]) => event.includes(text));
+  return kind ? [kind[1], kind[2]] : ["Demo event", "check"];
+}
 function WaitlistPanel({
   full = false,
   onNavigate,
@@ -140,11 +159,13 @@ export default function StaffWorkspace({
     if (previousPhase.current !== demo.phase) scenarioStatus.current?.focus();
     previousPhase.current = demo.phase;
   }, [demo.phase]);
-  const [utilization, setUtilization] = useState(false);
   const [date, setDate] = useState(DEMO_DATE);
+  // The Overview is always the demo day; the Schedule navigates other dates.
+  const shownDate = view === "overview" ? DEMO_DATE : date;
+  const dayView = view === "overview" || view === "schedule";
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All statuses");
-  const day = calendarAppointments(demo).filter((a) => a.date === date);
+  const day = calendarAppointments(demo).filter((a) => a.date === shownDate);
   const candidates = eligibleCandidates(demo);
   const [chosenId, setChosenId] = useState("");
   const candidateId = candidates.some((p) => p.id === chosenId)
@@ -205,7 +226,7 @@ export default function StaffWorkspace({
           <h1>{t(titles[view][0])}</h1>
           <p>{t(titles[view][1])}</p>
         </div>
-        {!utilization && (view === "overview" || view === "schedule") && (
+        {view === "schedule" && (
           <label className="date-control">
             <Icon name="calendar" />
             <span className="sr-only">{t("Schedule date")}</span>
@@ -220,26 +241,10 @@ export default function StaffWorkspace({
           </label>
         )}
       </div>
-      {(view === "overview" || view === "schedule") && (
-        <div className="capacity-entry">
-          <button
-            type="button"
-            className="secondary-button"
-            aria-pressed={utilization}
-            onClick={() => setUtilization(!utilization)}
-          >
-            {t(
-              utilization
-                ? "Guided cancellation demo"
-                : "Capacity & statistics",
-            )}
-          </button>
-        </div>
-      )}
-      {utilization && (view === "overview" || view === "schedule") && (
+      {view === "capacity" && (
         <CapacityDashboard demo={demo} onAction={onAction} />
       )}
-      {!(utilization && (view === "overview" || view === "schedule")) && (
+      {(dayView || view === "waitlist") && (
         <DemoGuide
           phase={demo.phase}
           statusRef={scenarioStatus}
@@ -319,40 +324,44 @@ export default function StaffWorkspace({
           )}
         </DemoGuide>
       )}
-      <p className="priority-disclaimer">{t(priorityDisclaimer)}</p>
-      {demo.phase === "open" && (
+      {view !== "activity" && (
+        <p className="priority-disclaimer">{t(priorityDisclaimer)}</p>
+      )}
+      {demo.phase === "open" && (dayView || view === "waitlist") && (
         <CandidateReview
           demo={demo}
           candidateId={candidateId}
           onSelect={setChosenId}
         />
       )}
-      {!utilization && (view === "overview" || view === "schedule") && (
+      {dayView && (
         <>
-          <ProviderCalendar demo={demo} date={date} onDate={setDate} />
-          <div className="metrics-grid">
-            {metrics.map((metric) => (
-              <section className="metric-card" key={t(metric.label)}>
-                <div className="metric-top">
-                  <span>{t(metric.label)}</span>
-                  <span className={`metric-icon ${metric.tone}`}>
-                    <Icon name={metric.icon} />
-                  </span>
-                </div>
-                <strong className="metric-value">
-                  {metric.value}
-                </strong>
-                <p>{t(metric.detail)}</p>
-              </section>
-            ))}
-          </div>
+          {view === "schedule" && (
+            <ProviderCalendar demo={demo} date={date} onDate={setDate} />
+          )}
+          {view === "overview" && (
+            <div className="metrics-grid">
+              {metrics.map((metric) => (
+                <section className="metric-card" key={t(metric.label)}>
+                  <div className="metric-top">
+                    <span>{t(metric.label)}</span>
+                    <span className={`metric-icon ${metric.tone}`}>
+                      <Icon name={metric.icon} />
+                    </span>
+                  </div>
+                  <strong className="metric-value">{metric.value}</strong>
+                  <p>{t(metric.detail)}</p>
+                </section>
+              ))}
+            </div>
+          )}
           <div className={view === "overview" ? "schedule-grid" : ""}>
             <section className="panel schedule-panel">
               <div className="panel-heading">
                 <div>
                   <h2>{t("Daily schedule")}</h2>
                   <p>
-                    {dateText(date)} {t("· Atlantic Standard Time")}{" "}
+                    {dateText(shownDate)} {t("· Atlantic Standard Time")}{" "}
                   </p>
                 </div>
                 <Badge>
@@ -460,6 +469,9 @@ export default function StaffWorkspace({
                                       : appointment.status === "Open slot"
                                         ? t("Staff-confirmed sample cancellation")
                                         : appointment.id}
+                                  </span>
+                                  <span className="table-visit">
+                                    {t(appointment.type)}
                                   </span>
                                 </div>
                               </div>
@@ -570,11 +582,11 @@ export default function StaffWorkspace({
                 // biome-ignore lint/suspicious/noArrayIndexKey: Session activity is append-only; positions never reorder.
                 <li key={`${index}-${event}`}>
                   <span className="timeline-icon">
-                    <Icon name="check" />
+                    <Icon name={eventKind(event)[1]} />
                   </span>
                   <div>
                     <strong>
-                      {t("Demo event")} {index + 1}
+                      {index + 1} · {t(eventKind(event)[0])}
                     </strong>
                     <p>{t(event)}</p>
                   </div>

@@ -3,7 +3,8 @@ import AxeBuilder from "@axe-core/playwright";
 async function open(page: import("@playwright/test").Page) {
   await page.goto("/#/provider");
   await page
-    .getByRole("button", { name: "Capacity & statistics", exact: true })
+    .getByRole("navigation", { name: "Main navigation" })
+    .getByRole("button", { name: "Capacity", exact: true })
     .click();
   const dashboard = page.getByRole("region", {
     name: "Capacity & statistics",

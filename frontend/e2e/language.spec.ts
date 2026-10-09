@@ -93,6 +93,8 @@ test("Spanish empty states and decline preserve the original appointment", async
   await page
     .getByRole("button", { name: "Restablecer filtros y fecha demo" })
     .click();
+  // Other dates are chosen on the Schedule (Agenda); the Overview is the demo day.
+  await page.getByRole("button", { name: "Agenda", exact: true }).click();
   await page
     .getByLabel("Fecha de la agenda", { exact: true })
     .fill("2026-10-09");

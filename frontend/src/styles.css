@@ -1644,8 +1644,6 @@ dd {
 .priority-settings form > label { max-width: 320px; margin-bottom: 18px; }
 .candidate-review { padding: 22px; background: #f1f6fc; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 22px; }
 .candidate-review p { margin: 12px 0; font-size: var(--text-sm); }
-.candidate-review li { margin: 12px 0; font-size: var(--text-base); }
-.candidate-review select { max-width: 480px; }
 .provider-calendar { padding: 20px; margin-bottom: 22px; min-width: 0; }
 .calendar-toolbar, .calendar-navigation { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .calendar-switch { display: flex; border: 0; padding: 0; gap: 4px; margin: 0; }
@@ -1680,7 +1678,11 @@ dd {
 .capacity-dashboard input[type=checkbox] { width: 18px; height: 18px; flex-shrink: 0; }
 .capacity-kpis { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }
 .capacity-kpis .metric-value { display: block; font-size: var(--text-2xl); }
-.capacity-dashboard meter { display: block; width: 100%; height: 18px; accent-color: #218269; }
+.capacity-dashboard meter { display: block; width: 100%; height: 18px; accent-color: var(--blue); }
+/* Chrome and Safari ignore accent-color on <meter>; style the bar directly. */
+.capacity-dashboard meter::-webkit-meter-bar { background: #e8edf5; border: 0; border-radius: 4px; }
+.capacity-dashboard meter::-webkit-meter-optimum-value { background: var(--blue); border-radius: 4px; }
+.capacity-dashboard meter::-moz-meter-bar { background: var(--blue); }
 .capacity-calendar { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 7px; }
 .capacity-calendar button, .capacity-slots button { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px solid #b9c7d9; border-radius: 9px; background: white; color: #344965; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
 .capacity-calendar button[aria-pressed=true], .capacity-slots button[aria-pressed=true] { background: #eff4ff; outline: 2px solid #365db5; outline-offset: -2px; }
@@ -1761,6 +1763,209 @@ dd {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .patient-nav {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Candidate review: one card per eligible patient; the radio is the choice. */
+.candidate-list {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 14px 0;
+  padding: 0;
+  border: 0;
+}
+.candidate-list legend {
+  margin-bottom: 8px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--navy);
+}
+.candidate-review .candidate-card {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.candidate-review .candidate-card.selected {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 1px var(--blue);
+}
+.candidate-card input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--blue);
+}
+.candidate-rank {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #edf2fc;
+  color: var(--blue);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.candidate-details {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.candidate-details strong {
+  font-size: var(--text-base);
+  color: var(--navy);
+}
+.candidate-details span {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.candidate-details .candidate-reason {
+  font-weight: 500;
+  color: #286e5e;
+}
+
+/* Capacity: the refill count leads, because refills are the point of the queue. */
+.capacity-lead {
+  display: grid;
+  gap: 4px;
+  padding: 20px 24px;
+  border-color: #9fd0b8;
+  background: #f4fbf7;
+}
+.capacity-lead > span {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: #286e5e;
+}
+.capacity-lead p {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* Expandable sections read as cards with a chevron, not browser triangles. */
+.priority-settings summary,
+.capacity-dashboard summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  list-style: none;
+}
+.priority-settings summary::-webkit-details-marker,
+.capacity-dashboard summary::-webkit-details-marker {
+  display: none;
+}
+.priority-settings summary::after,
+.capacity-dashboard summary::after {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 9px;
+  margin-right: 4px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg);
+}
+details[open] > summary::after {
+  transform: rotate(-135deg);
+}
+.waitlist-editor p {
+  margin-bottom: 10px;
+  font-size: var(--text-sm);
+  color: var(--navy);
+}
+
+/* Schedule table: the visit type folds under the name on phones. */
+.table-person .table-visit {
+  display: none;
+}
+@media (max-width: 600px) {
+  .schedule-panel th:nth-child(3),
+  .schedule-panel td:nth-child(3),
+  .schedule-panel .table-person .avatar {
+    display: none;
+  }
+  .table-person div > .table-visit {
+    display: block;
+  }
+  .schedule-panel table {
+    min-width: 0;
+  }
+  .schedule-panel td {
+    white-space: normal;
+  }
+  .schedule-panel td,
+  .schedule-panel th {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  .schedule-panel td:first-child,
+  .schedule-panel th:first-child {
+    padding-left: 16px;
+  }
+  .schedule-panel td:last-child,
+  .schedule-panel th:last-child {
+    padding-right: 16px;
+  }
+  .candidate-review .candidate-card {
+    grid-template-columns: auto auto minmax(0, 1fr);
+  }
+  .candidate-card .priority-badge {
+    grid-column: 3;
+  }
+  /* One scrollable row of days instead of a six-row month grid. */
+  .capacity-calendar {
+    min-width: 0;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 112px;
+  }
+  .capacity-slots,
+  .capacity-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .schedule-panel .time-cell {
+    white-space: nowrap;
+  }
+}
+@media (max-width: 650px) {
+  /* Five sections: three per row keeps navigation to two rows. */
+  .sidebar nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 375px) {
+  /* The narrowest phones need tighter cells to keep three columns in view. */
+  .schedule-panel td,
+  .schedule-panel th {
+    padding-right: 6px;
+    padding-left: 6px;
+  }
+  .schedule-panel td:first-child,
+  .schedule-panel th:first-child {
+    padding-left: 12px;
+  }
+  .schedule-panel td:last-child,
+  .schedule-panel th:last-child {
+    padding-right: 12px;
+  }
+  .schedule-panel .time-cell {
+    font-size: var(--text-sm);
+  }
+  /* Too narrow for three labels; the odd fifth item takes the full row. */
+  .sidebar nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sidebar nav .nav-item:last-child:nth-child(odd) {
     grid-column: 1 / -1;
   }
 }

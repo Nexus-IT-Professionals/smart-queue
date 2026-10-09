@@ -29,7 +29,7 @@ test("urgent eligible patient is reviewed, explicitly accepts, and updates all c
   await page
     .getByRole("button", { name: "Confirm demo cancellation", exact: true })
     .click();
-  await expect(page.getByLabel("Offer recipient")).toHaveValue("WL-003");
+  await expect(page.getByRole("radio", { name: /Camila Soto/ })).toBeChecked();
   await expect(page.locator(".candidate-review")).not.toContainText(
     "Nicolás Díaz",
   );

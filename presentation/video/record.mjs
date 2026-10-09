@@ -141,7 +141,11 @@ await scene(7, async () => {
 });
 let dashboard;
 await scene(8, async () => {
-  await click(button("Capacity & statistics"));
+  await click(
+    page
+      .getByRole("navigation")
+      .getByRole("button", { name: "Capacity", exact: true }),
+  );
   dashboard = page.locator(".capacity-dashboard");
   await focus(dashboard);
   await expect(

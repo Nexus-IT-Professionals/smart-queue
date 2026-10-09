@@ -127,14 +127,14 @@ for (const { name, width, height, scale } of cases) {
           await checkpoint();
         }
         if (width <= 375) {
+          // Phones fold the visit type under the name, so the table fits
+          // without sideways scrolling.
           const table = page.getByRole("region", {
             name: t("Daily appointments"),
           });
-          await table.focus();
-          await page.keyboard.press("ArrowRight");
-          await expect
-            .poll(() => table.evaluate((el) => el.scrollLeft))
-            .toBeGreaterThan(0);
+          expect(
+            await table.evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+          ).toBe(true);
           await fits(page);
         }
         await page.evaluate(() => window.scrollTo(0, 0));
