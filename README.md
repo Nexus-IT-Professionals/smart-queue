@@ -74,10 +74,9 @@ AI reply interpretation, expiry, automatic next-candidate offers, persistence, a
 
 ## Next steps
 
-1. Choose and publish to a public static hosting destination; verify access in a signed-out browser.
-2. Validate mobile layouts, keyboard navigation, and screen-reader behavior.
-3. Rehearse the synthetic workflow and prepare the judge video and feature-status list.
-4. If needed for the POC, add simulated expiry/next-candidate handling and optional bounded AI assistance.
+1. Complete the manual screen-reader review (VoiceOver, NVDA) and test on real touch devices.
+2. Rehearse the synthetic workflow and prepare the judge video and feature-status list.
+3. If needed for the POC, add simulated expiry/next-candidate handling and optional bounded AI assistance.
 
 Production accounts and protected live APIs are deliberately deferred. Priorities and acceptance criteria are in [PENDING_TASKS.md](PENDING_TASKS.md).
 
@@ -146,16 +145,17 @@ The UI takes visual inspiration from this [Pinterest dashboard reference](https:
 
 ## Validation status
 
-- Production build: strict TypeScript and Vite passed.
-- Backend tests: **1 passed**; an upstream Starlette/HTTPX deprecation warning remains.
-- FastAPI served the production HTML, JavaScript, CSS, and health endpoint successfully.
-- Demo tests: `cd frontend && npm test` — **29 passed** covering public navigation resolution, workflow transitions, the credential-free health request, and public artifact rejection cases.
-- QA-2: `npm run lint` — zero warnings; `npm run test:e2e` — **19 Chromium tests passed**.
-- Desktop Firefox: checked credential-free entry, Provider cancellation/offer, Patient acceptance, appointment update, and return to the entry page without losing access.
-- Static-only Firefox: direct Patient access works with the health API unavailable.
-- Mobile/tablet, full accessibility, Docker, and automated Firefox/WebKit tests remain unverified. Biome lint and desktop Chromium browser tests are now configured.
+Every push to `main` runs lint, unit tests and Chromium browser tests before anything is published (see [How the demo is hosted](#how-the-demo-is-hosted)). The browser tests cover the full demo workflow, direct links to each view, English and Spanish, screen widths from phone to desktop (320 to 1440px), keyboard-only use, and automated accessibility scans (axe, WCAG A/AA). To run them from `frontend/`:
 
-These checks validate the synthetic browser workflow and health endpoint, not persistent production booking. Detailed results and limitations are in [PENDING_TASKS.md](PENDING_TASKS.md).
+```bash
+npm ci
+npx playwright install chromium
+npm run lint
+npm test
+npm run test:e2e
+```
+
+Not yet verified: screen-reader speech (VoiceOver, NVDA), real touch devices, automated Firefox and WebKit runs, and the Docker setup. These checks cover the synthetic browser workflow, not persistent production booking. Detailed results are in [PENDING_TASKS.md](PENDING_TASKS.md).
 
 ## Planning documents
 
@@ -170,62 +170,4 @@ This README was adapted from the team's pre-event planning documents (research a
 
 Run `cd frontend && npm run build:demo` and publish only `frontend/dist/` at the host's site root. This release makes no API requests, displays “Standalone demo · No API connection,” and includes a restrictive browser connection policy. The build verifies the output contains only expected UI assets; it rejects unexpected files, symlinks, source maps, API paths, and selected secret signatures. This guard does not replace review of synthetic data or detect every possible secret.
 
-`npm test` runs 29 tests; `npm run verify:demo` rechecks the artifact. Standard `npm run build` retains the development health check and overwrites the output, so use `build:demo` for publication. See [manual release acceptance](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1). Vercel with GitHub Actions is selected; configuration is prepared; activation and public deployment remain pending.
-
-### Deployment readiness — October 9, 2026
-
-The next P0 is public static hosting (DEP-POC-1). All 26 unit/artifact tests, 9 Chromium browser tests, lint, and the public-demo build/artifact check passed locally. Vercel with GitHub Actions is selected; no public deployment URL has been verified. Deployment configuration is prepared, with publishing disabled until explicitly enabled. A host serving under a subdirectory also requires adapting and testing the current root-relative asset checks.
-
-
-The [DEP-POC-1 implementation task](PENDING_TASKS.md#dep-poc-1--configure-github-actions-deployment-to-vercel) covers the workflow, test/build gates, static-only publishing, and manual acceptance. Store `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` in GitHub deployment-environment secrets; never commit their values or expose them through frontend variables, logs, or artifacts. Secret scanning, ignore rules, and credential rotation are part of the planned acceptance criteria. The workflow is now implemented; no secrets or Vercel deployment have been created.
-
-
-#### Prepared workflow (deployment paused)
-
-`.github/workflows/deploy-vercel.yml` validates PRs and `main`: tests, public build, redacted Gitleaks history/package scans, and verified static packaging. Actions are pinned by commit, Gitleaks by version/checksum, and Node/Vercel CLI by version. Only a trusted `main` run can deploy; PR validation receives no deployment secrets.
-
-To activate later, create a dedicated Vercel static demo project and the GitHub environment `vercel-production`, restrict it to `main`, and populate its three secrets listed above. Configure required reviewers where available. Keep the Vercel project rooted at the repository root and disable duplicate Git auto-deployments (`vercel.json` contains `git.deploymentEnabled: false`). Then set repository Actions variable `VERCEL_DEPLOY_ENABLED=true` and run the workflow on `main`. Until then the deploy job is skipped. Never put tokens in frontend variables or tracked files.
-
-For local packaging: `cd frontend && npm test && npm run build:demo && npm run package:vercel`. The package is ignored at `frontend/.vercel-stage`; packaging intentionally refuses an existing destination. For a repeat run use a fresh destination: `npm run package:vercel -- /tmp/queue-review-UNIQUE`. Verify with `node scripts/package-vercel.mjs --verify /tmp/queue-review-UNIQUE`. Preview `frontend/dist/` using the existing local static server, then follow the [manual checklist](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1).
-
-Local validation: 26 tests passed, public build/package verified, actionlint passed (shellcheck unavailable), and Gitleaks found no leaks in the 10 existing commits or static package. These checks do not prove every possible secret is absent. Hosted Actions, CLI deployment, environment protections, signed-out HTTPS access, and rollback remain unverified. For failures, keep publishing disabled and fix the failing check; after a live deployment exists, use Vercel's rollback to the last verified release and rehearse the workflow. Rotate a compromised token immediately and replace the environment secret; removing it from Git alone is insufficient.
-
-
-### QA-2: repeatable lint and browser checks
-
-From `frontend/`, run:
-
-```bash
-npm ci
-npx playwright install chromium
-npm run lint
-npm test
-npm run test:e2e
-```
-
-Validated locally: lint passes with zero warnings, 26 unit/artifact tests pass, and 9 Chromium tests pass. The browser suite rebuilds the public demo and starts an isolated loopback server at port 4175 without a backend. It covers direct public routes, role/entry navigation, back/forward, provider sections and filters, acceptance confirmation/focus, help/decline, and reset/reload; API/external requests and uncaught browser errors fail tests. CI runs these checks before packaging; publishing remains gated off. Browser traces/screenshots on failure are ignored by Git.
-
-Biome uses recommended rules with documented exceptions for intentional navigation/focus and the existing CSS cascade. TypeScript compilation remains a separate check. Desktop Chromium coverage does not replace mobile, screen-reader, or cross-browser review. See [QA-2 results and manual steps](PENDING_TASKS.md#qa-2--lint-and-automated-browser-regression-tests).
-
-
-### UX-1: responsive layout checks
-
-Fixed horizontal Provider page overflow at 320px: the mobile shell can shrink and navigation uses two columns at ≤375px. The schedule table retains its own keyboard-scrollable region. Five new tests exercise all Provider sections and the appointment workflow at 320/375/768/1024/1440px without page overflow. The full suite now passes **14 Chromium tests**, plus **26 unit/artifact tests** and lint. Public-demo build verification passes. A native Firefox **200% zoom** walkthrough also passed through acceptance and reset; real-device/touch and full accessibility testing remain pending.
-
-For manual review, refresh http://127.0.0.1:8001/#/demo, try 320px/375px widths and 200% browser zoom, and complete cancellation → offer → acceptance → reset. See [UX-1 validation](PENDING_TASKS.md#ux-1--responsive-layout-and-zoom-validation). Changes await manual review before commit/push.
-
-
-### UX-2: English / Español
-
-Use the header language buttons on any demo page. Navigation, instructions, status/empty states, filters, confirmations, and activity history switch languages without resetting the appointment scenario or selected filter. Dates and times use Puerto Rico locale formatting; native date-picker controls follow browser/OS settings. Document language/title update with the selection.
-
-English is the default. Only the language preference is saved locally; blocked browser storage still allows switching. Reset preserves the language, while reload resets the synthetic scenario and restores the saved language. No account, patient data storage, or new runtime dependency is involved.
-
-Validation: **29 unit/artifact tests, 19 browser tests, lint, and both builds passed**. Spanish workflow tests cover 320/768/1440px, active-filter/confirmation switching, persistence, empty/decline/help states, and storage failure. For manual review, refresh http://127.0.0.1:8001/#/demo, choose Español, and switch languages midway through an offer before confirming. See [UX-2 results](PENDING_TASKS.md#ux-2--english-spanish-ui-and-date-formatting). The owner authorized committing and pushing UX-2; human language/accessibility review remains pending.
-
-
-### UX-3: accessibility checks
-
-Fixed low-contrast intermediate colors when changing role/language selection by removing those color transitions. Added six accessibility browser tests: bilingual keyboard-only flow, focus after state changes, skip navigation, semantic/live-region checks, and focus-ring contrast. Axe scans 14 demo states per language with WCAG 2/2.1 A/AA rules; no detected violations remain in those scans.
-
-Latest local results: **29 unit/artifact tests, 25 browser tests, lint, and both builds passed**. This is not a claim of full WCAG compliance. Actual VoiceOver/NVDA speech, pronunciation, and announcement quality remain manual acceptance steps. Use the [UX-3 checklist](PENDING_TASKS.md#ux-3--accessibility-review-and-regression-coverage) on the local demo in English and Spanish. The owner authorized commit/push; manual screen-reader acceptance remains pending.
+`npm run verify:demo` rechecks the artifact. Standard `npm run build` retains the development health check and overwrites the output, so use `build:demo` for publication. See [manual release acceptance](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1).
