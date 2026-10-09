@@ -60,3 +60,7 @@ The presentation loads five local WebP images totaling approximately **291 KB**.
 `tests/capture.mjs` encodes fresh screenshots directly to WebP using the existing Playwright Chromium installation; intermediate PNG buffers remain in memory. Keep an external original when editing the character illustration to avoid recompressing the delivery image. HTML dimensions and responsive CSS preserve aspect ratios.
 
 After refreshing screenshots, run `node presentation/tests/validate.mjs` and review text readability on the presentation device.
+
+## Two-minute application video
+
+For a screen-focused walkthrough of the current app, open [the offline video player](video/index.html) or [the MP4](video/smart-queue-demo-2min.mp4). Includes real UI interactions, English synthetic narration, on-screen captions, and the current María → Ana → José → Dr. Rivera scenario. [Video notes and reproduction](video/README.md). This is a separate two-minute recording; the slide presentation remains available unchanged.

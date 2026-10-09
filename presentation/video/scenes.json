@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Smart Queue · Two-minute demo",
+    "duration": 7,
+    "text": "Smart Queue turns a canceled appointment into an earlier visit. Here is the two-minute demo."
+  },
+  {
+    "title": "01 · María needs to cancel",
+    "duration": 10,
+    "text": "María Rodríguez needs to cancel her two o'clock visit. Ana, the office assistant, confirms the cancellation in the provider workspace."
+  },
+  {
+    "title": "02 · An opening becomes an opportunity",
+    "duration": 11,
+    "text": "The appointment is now available. Smart Queue checks the waiting list for compatible patients, using provider, visit type, and availability."
+  },
+  {
+    "title": "03 · Staff confirms priority",
+    "duration": 12,
+    "text": "Ana can confirm a scheduling priority for José. Urgent priority helps organize the queue, but this is not automated medical triage. Compatibility still comes first."
+  },
+  {
+    "title": "04 · Ana offers the opening to José",
+    "duration": 10,
+    "text": "José is eligible for the afternoon opening. Ana reviews the candidate and sends the simulated offer. His original appointment stays in place until he accepts."
+  },
+  {
+    "title": "05 · The patient stays in control",
+    "duration": 10,
+    "text": "In the patient view, José sees the earlier appointment. He can accept, decline, or request help. No account or password is needed for this demo."
+  },
+  {
+    "title": "06 · Explicit acceptance moves the appointment",
+    "duration": 12,
+    "text": "José previews the change from October twenty-second to October eighth, then confirms. That is fourteen days earlier. The schedule and waiting list update together."
+  },
+  {
+    "title": "07 · Dr. Rivera sees the updated schedule",
+    "duration": 9,
+    "text": "Back in the provider schedule, José now occupies the released slot. Staff and Dr. Rivera see the same updated appointment."
+  },
+  {
+    "title": "08 · Separate monthly demo: capacity and statistics",
+    "duration": 13,
+    "text": "A separate monthly scenario shows utilization. Day, week, and month views calculate totals from synthetic appointments. Staff can configure hours, visit duration, and capacity."
+  },
+  {
+    "title": "09 · Cancellation updates availability",
+    "duration": 12,
+    "text": "Select a day and cancel a scheduled visit with staff confirmation. Occupied seats decrease, availability increases, and the cancellation count updates immediately."
+  },
+  {
+    "title": "10 · Refill the slot; measure the result",
+    "duration": 8,
+    "text": "Ana confirms the waiting-list assignment. Occupancy recovers, and the fill rate updates."
+  },
+  {
+    "title": "Smart Queue — Less Waiting. Better Care.",
+    "duration": 6,
+    "text": "Fictional patients. Browser-only simulation. Smart Queue. Less waiting. Better care."
+  }
+]
