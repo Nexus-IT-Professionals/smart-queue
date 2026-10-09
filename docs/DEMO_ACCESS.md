@@ -8,7 +8,7 @@ This document supersedes the account/session requirements in the original techni
 |---|---|---|
 | `#/demo` or `#/login` | Always-accessible demo entry; no form or verification | None required |
 | `#/provider` (`#/staff` alias) | Existing staff schedule, waitlist, and activity tools | Dr. Alex Rivera |
-| `#/patient` | Sample appointment and simulated offer inbox | Elena Morales |
+| `#/patient` | Sample appointment and simulated offer inbox | Selected synthetic offer recipient; Elena Morales before an offer |
 
 Root and unknown fragments display the entry page. The header exposes Demo access, Provider view, and Patient view at all times. Browser back/forward switches workspaces. No separate Admin page exists; staff scheduling tools are in Provider view. There is no authenticated state, role token, login cookie, registration, or password field. Selecting a role is navigation only.
 
@@ -20,7 +20,7 @@ Root and unknown fragments display the entry page. The header exposes Demo acces
 4. Return to Provider. The 2:00 PM slot now shows Elena; the waitlist drops from three entries to two; Activity log lists cancellation, offer, and acceptance.
 5. Reset demo scenario to replay. Alternatively decline to preserve the October 22 appointment, or request help and then accept/decline.
 
-All steps operate in **one browser tab**. Entry-page visits and role switches retain the scenario. Reload/reset clears it; different tabs and judges have independent state. This is a fixed single-offer simulation, not automatic waitlist progression, expiry, a persistent audit log, or multi-user scheduling.
+All steps operate in **one browser tab**. Entry-page visits and role switches retain the scenario. Reload/reset clears it; different tabs and judges have independent state. This is a single-slot offer simulation with staff-reviewed priority candidates, not automatic waitlist progression, expiry, a persistent audit log, or multi-user scheduling.
 
 ## Data boundary
 
@@ -90,3 +90,7 @@ The full suite now passes 25 Chromium tests and 29 unit/artifact tests. Six brow
 For manual acceptance, use keyboard-only navigation and VoiceOver/NVDA in both languages. Verify the skip link, headings/landmarks, button states and field labels; listen to cancellation/offer/help/decline/acceptance/reset announcements; check that confirmation instructions are read and focus remains reachable after back/forward or reset. Automated tests do not verify actual speech or establish complete accessibility compliance. See the detailed UX-3 checklist in `PENDING_TASKS.md`.
 
 Step-by-step Windows Narrator/NVDA script (pending human acceptance): [SCREEN_READER_CHECK.md](SCREEN_READER_CHECK.md).
+
+## Calendar and priorities
+
+Day/Week/Month views and staff-confirmed configurable priorities now share the existing in-memory session. The offered patient may be Elena or Camila; the Patient workspace follows the selected recipient. See [PRIORITY_CALENDAR.md](PRIORITY_CALENDAR.md) for eligibility rules, non-triage boundaries, disabled-level migration and manual scenarios. Reload/reset clears these settings alongside the scenario.

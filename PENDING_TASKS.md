@@ -7,7 +7,7 @@ Updated October 9, 2026. The current decision is a **public, credential-free hac
 - No login page, auth library, redirect, middleware guard, or implemented authentication endpoint existed. The auth router was a stub; database user/session tables are unused by this POC.
 - Patient and Staff were the existing interfaces. Staff is now labeled **Provider** and retains schedule, waitlist, and activity navigation. There is no separate Admin interface.
 - `#/demo` and `#/login` always show the public entry page. `#/provider` (`#/staff` alias) and `#/patient` are directly accessible. Root/unknown fragments show the entry page; no credentials or personal input are requested.
-- Fixed fictional identities are Dr. Alex Rivera and Elena Morales. Role selection is navigation, not a token or backend permission.
+- Fictional provider is Dr. Alex Rivera; Patient view follows the staff-selected synthetic offer recipient (Elena before an offer). Role selection is navigation, not a token or backend permission.
 - The complete **synthetic single-offer scenario** runs in browser memory: provider cancellation → offer → explicit patient acceptance → changed appointment, waitlist, schedule, and activity. Decline/help/reset are supported. Invalid/repeated actions are ignored.
 - Role changes and entry-page visits preserve state; reload/reset clears it. Separate judges/tabs do not share state. No live booking, message, real patient data, or database mutation is involved.
 - `/api/health` remains the only implemented API. The standard build queries it without cookies; the public-demo build makes no API request. Neither gates navigation. No production security check was disabled or universal-login endpoint added.
@@ -42,6 +42,20 @@ Original UI inspiration: the [Pinterest dashboard](https://ru.pinterest.com/pin/
 | Anonymous serving | FastAPI TestClient served HTML/assets/health without login, redirects, or a session cookie; no universal login endpoint exists. |
 | Static-only browser | Direct `#/patient` rendered without a backend, with Health API unavailable and the correct no-offer state. Full static-host rehearsal remains recommended. |
 | Outstanding validation | Mobile/tablet, full screen-reader/contrast audit, cross-browser coverage beyond Chromium, Docker, and public signed-out access. |
+
+## Calendar and priority feature update — October 9, 2026
+
+**Implemented; manual acceptance pending.** Added Day/Week/Month navigation, day selection, status/availability counts, historical cancellation display, eligible P1/P2 counts, configurable P1–P4 scheduling priorities, and staff-reviewed compatible candidate selection. Acceptance moves the selected patient's booking and releases the old slot atomically in the existing in-memory reducer. EN/ES controls, priority badges and no-triage disclosures are included. No backend, real authorization or persistent storage was added. See [rules and manual scenarios](docs/PRIORITY_CALENDAR.md).
+
+| ID | Priority | Status / basis | Task and acceptance criteria |
+|---|---|---|---|
+| CAL-1 | P1 | Implemented · local verification | Day/Week/Month show the same selected-day appointments; month/year navigation and leap dates are correct. Empty dates have no inferred capacity; canceled history does not double-count open slots. |
+| PRI-1 | P1 | Implemented · local verification | Staff-confirmed P1 changes candidate order after compatibility filtering; ties use request date/ID. Invalid config is rejected; disabled levels migrate to enabled default. Staff offer and patient acceptance are separate, with overlap and duplicate guards. |
+| CAL-QA | P1 | Pending · manual acceptance | Rehearse urgent Camila versus normal Elena, incompatible Nicolás, configuration migration, all calendar modes, and reload/reset on the demo device using the linked checklist. |
+| CAL-NEXT | P2 | Deferred · verified scope limit | Generalize cancellation/offer handling to arbitrary slots only if needed; keep one active offer per slot and preserve patient consent. Current scenario remains SQ-006. |
+
+Validation: **63 frontend unit/artifact tests, 86 Chromium browser tests, and 1 backend smoke test passed**. Lint, standard build, public-demo build/CSP packaging and diff whitespace checks passed. Fixed a badge contrast regression and preserved patient start/end times while generalizing the recipient. Existing Starlette/HTTPX deprecation warning remains. No added dependencies. Priority/configuration state survives view/role changes but intentionally resets on reload, following the current POC storage approach.
+
 
 ## Remaining POC tasks
 

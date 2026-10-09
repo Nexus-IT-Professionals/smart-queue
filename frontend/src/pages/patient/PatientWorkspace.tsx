@@ -1,8 +1,11 @@
+import { endTime, priorityDisclaimer } from "../../demo/scheduling";
+import { PriorityBadge } from "../staff/SchedulingTools";
 import { useLanguage } from "../../i18n/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Badge, Icon } from "../../components/ui";
 import {
   responseMessages,
+  selectedPatient,
   type DemoState,
   type DemoAction,
 } from "../../demo/data";
@@ -17,6 +20,9 @@ export default function PatientWorkspace({
   onProvider: () => void;
 }) {
   const { t, dateText, timeText } = useLanguage();
+  const patient = selectedPatient(demo);
+  const currentTime =
+    demo.phase === "accepted" ? "2:00 PM" : patient.bookingTime;
   const response = ["accepted", "declined", "help"].includes(demo.phase)
     ? (demo.phase as "accepted" | "declined" | "help")
     : null;
@@ -46,11 +52,14 @@ export default function PatientWorkspace({
           <p className="eyebrow">{t("ISLA CARE / PATIENT WORKSPACE")}</p>
           <h1>{t("Your care, a little closer.")}</h1>
           <p>
-            {t("Welcome, Elena. An earlier appointment could fit your day.")}
+            {patient.id === "WL-001"
+              ? t("Welcome, Elena. An earlier appointment could fit your day.")
+              : `${t("Selected patient")}: ${patient.name}`}
           </p>
         </div>
         <Badge tone="blue">{t("Fictional patient")}</Badge>
       </div>
+      <p className="priority-disclaimer">{t(priorityDisclaimer)}</p>
       <div className="patient-grid">
         <div>
           <section className="panel patient-appointment">
@@ -79,7 +88,8 @@ export default function PatientWorkspace({
                   )}
                 </h3>
                 <p>
-                  {timeText("2:00 PM")}–{timeText("2:30 PM")} ·{" "}
+                  {timeText(currentTime)}–
+                  {timeText(endTime(currentTime, patient.duration))} ·{" "}
                   {t("Atlantic Standard Time")}
                 </p>
                 <p>{t("Isla Care · San Juan · Consultation")}</p>
@@ -249,20 +259,23 @@ export default function PatientWorkspace({
         <div className="right-column">
           <section className="panel profile-panel">
             <div className="profile-heading">
-              <Avatar name="Elena Morales" />
+              <Avatar name={patient.name} />
               <div>
-                <h2>Elena Morales</h2>
-                <p>{t("Synthetic patient · SQ-P01")}</p>
+                <h2>{patient.name}</h2>
+                <PriorityBadge demo={demo} priority={patient.priority} />
+                <p>
+                  {t("Synthetic patient")} · {patient.id}
+                </p>
               </div>
             </div>
             <dl className="profile-list">
               <div>
                 <dt>{t("Preferred language")}</dt>
-                <dd>{t("Spanish")}</dd>
+                <dd>{t(patient.language)}</dd>
               </div>
               <div>
                 <dt>{t("Availability")}</dt>
-                <dd>{t("Afternoons · 1–4 PM")}</dd>
+                <dd>{t(patient.availability)}</dd>
               </div>
               <div>
                 <dt>{t("Contact preference")}</dt>

@@ -102,7 +102,9 @@ test("Spanish empty states and decline preserve the original appointment", async
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("viernes, 9 de octubre", { exact: false }),
+    page
+      .locator(".schedule-panel")
+      .getByText("viernes, 9 de octubre", { exact: false }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Restablecer filtros y fecha demo" })

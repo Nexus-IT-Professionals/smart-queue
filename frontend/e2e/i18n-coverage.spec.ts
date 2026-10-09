@@ -47,7 +47,9 @@ async function visibleTexts(page: Page) {
       NodeFilter.SHOW_TEXT,
     );
     for (let node = walker.nextNode(); node; node = walker.nextNode())
-      texts.push(node.textContent ?? "");
+      // Editable configuration values, like input values, remain staff-authored.
+      if (!node.parentElement?.closest("textarea"))
+        texts.push(node.textContent ?? "");
     const attributes = ["aria-label", "title", "placeholder", "alt"];
     for (const element of document.querySelectorAll(
       attributes.map((name) => `[${name}]`).join(","),

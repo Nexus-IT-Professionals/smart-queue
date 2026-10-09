@@ -72,6 +72,14 @@ Booking rules control availability, offer expiry, and duplicate acceptance. Pati
 
 AI reply interpretation, expiry, automatic next-candidate offers, persistence, and simultaneous users remain future work.
 
+## Provider calendar and scheduling priorities
+
+Provider → **Schedule** now supports **Day, Week and Month**, period navigation, day selection, slot/status counts, cancellation history and eligible P1/P2 indicators. October 8 and October 22 contain synthetic appointments; empty dates do not imply availability.
+
+Provider → **Waitlist** lets demo staff confirm P1–P4 scheduling priorities. **Priority configuration** controls labels, descriptions, indicators, ordering, enabled levels and an enabled non-urgent default. Candidates must meet office/provider, visit, duration, date/time and conflict constraints before priority ranking. Ties use request date, then record ID. Staff confirms an offer; the selected patient must still explicitly accept. The new booking and released old slot appear consistently across calendar views.
+
+Try assigning **Camila → P1**, check the qualified-staff review confirmation, save, then cancel the sample slot and review candidates. Camila ranks ahead of normal-priority Elena; morning-only Nicolás remains ineligible. No AI or condition-text analysis decides urgency. **Scheduling support is not emergency medical assessment.** Changes live in the existing shared browser memory and reset on reload; there is no backend persistence. See [rules, limits and manual scenarios](docs/PRIORITY_CALENDAR.md).
+
 ## Next steps
 
 1. Complete the manual screen-reader review (VoiceOver, NVDA) and test on real touch devices.

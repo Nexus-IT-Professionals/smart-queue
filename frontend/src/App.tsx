@@ -5,6 +5,7 @@ import { Icon, type IconName } from "./components/ui";
 import {
   OFFICE,
   demoAssistant,
+  selectedPatient,
   demoIdentities,
   demoReducer,
   demoWaitlist,
@@ -249,7 +250,8 @@ export default function App() {
             )}
           <p className="sidebar-foot">
             {" "}
-            {t("Made in and for Puerto Rico with love!")} <span aria-hidden="true">↗</span>
+            {t("Made in and for Puerto Rico with love!")}{" "}
+            <span aria-hidden="true">↗</span>
           </p>
         </div>
       </aside>
@@ -270,8 +272,12 @@ export default function App() {
           <div className="demo-identity">
             <span className="demo-identity-people">
               <span>
-                <strong>{demoIdentities[workspace].name}</strong> ·{" "}
-                {t(demoIdentities[workspace].label)}
+                <strong>
+                  {workspace === "patient"
+                    ? selectedPatient(demo).name
+                    : demoIdentities[workspace].name}
+                </strong>{" "}
+                · {t(demoIdentities[workspace].label)}
               </span>
               {workspace === "staff" && (
                 <span className="demo-identity-assistant">

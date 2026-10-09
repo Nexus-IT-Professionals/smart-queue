@@ -1,3 +1,11 @@
+import {
+  PriorityBadge,
+  PriorityEditor,
+  PriorityConfiguration,
+  CandidateReview,
+  ProviderCalendar,
+} from "./SchedulingTools";
+import { priorityDisclaimer } from "../../demo/scheduling";
 import { useLanguage } from "../../i18n/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import type { StaffView } from "../../App";
@@ -9,7 +17,9 @@ import {
   type IconName,
 } from "../../components/ui";
 import {
-  demoAppointments,
+  calendarAppointments,
+  eligibleCandidates,
+  selectedPatient,
   demoWaitlist,
   DEMO_DATE,
   type DemoState,
@@ -38,8 +48,10 @@ function WaitlistPanel({
   full = false,
   onNavigate,
   demo,
+  onAction,
 }: {
   full?: boolean;
+  onAction: (action: DemoAction) => void;
   demo: DemoState;
   onNavigate: (view: StaffView) => void;
 }) {
@@ -50,7 +62,7 @@ function WaitlistPanel({
       <div className="panel-heading">
         <div>
           <h2>{t("Ready for an earlier visit")}</h2>
-          <p>{t("Sample waitlist · order is illustrative")}</p>
+          <p>{t("Priority order · oldest request first within a level")}</p>
         </div>
         <Badge tone="blue">
           {waitlist.length} {t("patients")}
@@ -71,6 +83,18 @@ function WaitlistPanel({
                 </span>
               )}
             </div>
+            <PriorityBadge demo={demo} priority={person.priority} />
+            {full && (
+              <div className="waitlist-editor">
+                <p>{t(person.condition)}</p>
+                <PriorityEditor
+                  key={`${person.id}-${person.priority}`}
+                  person={person}
+                  demo={demo}
+                  onAction={onAction}
+                />
+              </div>
+            )}
             <Badge>{person.language === "Spanish" ? "ES" : "EN"}</Badge>
           </div>
         ))}
@@ -88,12 +112,7 @@ function WaitlistPanel({
       {full && (
         <div className="panel-note">
           <Icon name="shield" />
-          <p>
-            {" "}
-            {t(
-              "Availability helps staff review a match. Insurance labels and AI do not decide who receives care. Patient registration and matching are not connected yet.",
-            )}{" "}
-          </p>
+          <p> {t(priorityDisclaimer)} </p>
         </div>
       )}
     </section>
@@ -122,7 +141,13 @@ export default function StaffWorkspace({
   const [date, setDate] = useState(DEMO_DATE);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All statuses");
-  const day = date === DEMO_DATE ? demoAppointments(demo) : [];
+  const day = calendarAppointments(demo).filter((a) => a.date === date);
+  const candidates = eligibleCandidates(demo);
+  const [chosenId, setChosenId] = useState("");
+  const candidateId = candidates.some((p) => p.id === chosenId)
+    ? chosenId
+    : (candidates[0]?.id ?? "");
+  const patient = selectedPatient(demo);
   const waitlist = demoWaitlist(demo);
   const filtered = day.filter(
     (a) =>
@@ -186,7 +211,9 @@ export default function StaffWorkspace({
               type="date"
               aria-label={t("Schedule date")}
               value={date}
-              onChange={(event) => setDate(event.target.value)}
+              onChange={(event) => {
+                if (event.target.value) setDate(event.target.value);
+              }}
             />
           </label>
         )}
@@ -204,7 +231,7 @@ export default function StaffWorkspace({
                 )
               : demo.phase === "open"
                 ? t(
-                    "Step 2: The slot is open. Offer it to Elena Morales, who is available in the afternoon.",
+                    "Review eligible candidates below, then confirm the selected demo offer.",
                   )
                 : demo.phase === "offered"
                   ? t(
@@ -212,14 +239,14 @@ export default function StaffWorkspace({
                     )
                   : demo.phase === "accepted"
                     ? t(
-                        "Complete: Elena now has the October 8 demo appointment. The schedule, waitlist, and activity are updated.",
+                        "Complete: the selected patient now has the October 8 appointment. Schedule, waitlist and activity are updated.",
                       )
                     : demo.phase === "declined"
                       ? t(
                           "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay.",
                         )
                       : t(
-                          "Elena requested help. Return to Patient to accept or decline; no message leaves this browser.",
+                          "The selected patient requested help. Return to Patient; no message leaves this browser.",
                         )}
           </p>
         </div>
@@ -238,10 +265,13 @@ export default function StaffWorkspace({
             <button
               type="button"
               className="primary-button"
-              onClick={() => onAction({ type: "offer" })}
+              disabled={!candidateId}
+              onClick={() => onAction({ type: "offer", candidateId })}
             >
               {" "}
-              {t("Send demo offer to Elena")}{" "}
+              {candidateId === "WL-001"
+                ? t("Send demo offer to Elena")
+                : t("Confirm offer to selected patient")}{" "}
             </button>
           )}
           {(demo.phase === "offered" || demo.phase === "help") && (
@@ -266,8 +296,25 @@ export default function StaffWorkspace({
           )}
         </div>
       </section>
+      <p className="priority-disclaimer">{t(priorityDisclaimer)}</p>
+      {demo.phase === "open" && (
+        <CandidateReview
+          demo={demo}
+          candidateId={candidateId}
+          onSelect={setChosenId}
+        />
+      )}
+      {(demo.phase === "offered" ||
+        demo.phase === "help" ||
+        demo.phase === "accepted") && (
+        <p className="section-notice">
+          {t("Selected patient")}: {patient.name}{" "}
+          <PriorityBadge demo={demo} priority={patient.priority} />
+        </p>
+      )}
       {(view === "overview" || view === "schedule") && (
         <>
+          <ProviderCalendar demo={demo} date={date} onDate={setDate} />
           <div className="metrics-grid">
             {metrics.map((metric) => (
               <section className="metric-card" key={t(metric.label)}>
@@ -457,6 +504,12 @@ export default function StaffWorkspace({
                               )}
                               <div>
                                 <strong>{t(appointment.name)}</strong>
+                                {appointment.status !== "Open slot" && (
+                                  <PriorityBadge
+                                    demo={demo}
+                                    priority={appointment.priority}
+                                  />
+                                )}
                                 <span>
                                   {appointment.status === "Open slot"
                                     ? t("Staff-confirmed sample cancellation")
@@ -524,7 +577,11 @@ export default function StaffWorkspace({
             </section>
             {view === "overview" && (
               <div className="right-column">
-                <WaitlistPanel onNavigate={onNavigate} demo={demo} />
+                <WaitlistPanel
+                  onNavigate={onNavigate}
+                  demo={demo}
+                  onAction={onAction}
+                />
                 <section className="care-note">
                   <span className="metric-icon green">
                     <Icon name="shield" />
@@ -549,11 +606,17 @@ export default function StaffWorkspace({
             <p>
               <strong>{t("A smaller wait starts with a good match.")}</strong>{" "}
               {t(
-                "This demo uses fictional availability. Use the scenario controls above to offer the opening to Elena; live matching remains unimplemented.",
+                "Synthetic scheduling only. Assign staff-confirmed priorities, then review eligible candidates after cancellation.",
               )}{" "}
             </p>
           </div>
-          <WaitlistPanel full onNavigate={onNavigate} demo={demo} />
+          <WaitlistPanel
+            full
+            onNavigate={onNavigate}
+            demo={demo}
+            onAction={onAction}
+          />
+          <PriorityConfiguration demo={demo} onAction={onAction} />
         </>
       )}
       {view === "activity" && (
@@ -568,7 +631,8 @@ export default function StaffWorkspace({
           {demo.events.length ? (
             <ol className="timeline">
               {demo.events.map((event, index) => (
-                <li key={t(event)}>
+                // biome-ignore lint/suspicious/noArrayIndexKey: Session activity is append-only; positions never reorder.
+                <li key={`${index}-${event}`}>
                   <span className="timeline-icon">
                     <Icon name="check" />
                   </span>

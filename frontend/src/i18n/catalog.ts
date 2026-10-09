@@ -1,4 +1,127 @@
 export const spanish: Record<string, string> = {
+  "Synthetic routine follow-up; morning visit requested":
+    "Seguimiento de rutina ficticio; solicita visita por la mañana",
+  "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Camila Soto.":
+    "Ana Martínez, asistente de oficina médica, envió una oferta simulada a Camila Soto.",
+  "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Nicolás Díaz.":
+    "Ana Martínez, asistente de oficina médica, envió una oferta simulada a Nicolás Díaz.",
+  "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to José Pérez.":
+    "Ana Martínez, asistente de oficina médica, envió una oferta simulada a José Pérez.",
+  "Staff confirmed scheduling priority: WL-004 → P1.":
+    "El personal confirmó la prioridad de la cita: WL-004 → P1.",
+  "Staff confirmed scheduling priority: WL-004 → P2.":
+    "El personal confirmó la prioridad de la cita: WL-004 → P2.",
+  "Staff confirmed scheduling priority: WL-004 → P3.":
+    "El personal confirmó la prioridad de la cita: WL-004 → P3.",
+  "Staff confirmed scheduling priority: WL-004 → P4.":
+    "El personal confirmó la prioridad de la cita: WL-004 → P4.",
+  "Synthetic patient": "Paciente ficticio",
+  "Scheduling support only, not emergency medical assessment. Urgency must be entered or confirmed by qualified staff. No AI triage.":
+    "Solo apoyo para coordinar citas, no evaluación médica de emergencias. El personal cualificado debe ingresar o confirmar la urgencia. Sin triaje por IA.",
+  Urgent: "Urgente",
+  High: "Alta",
+  Normal: "Estándar",
+  Low: "Baja",
+  "Patient requires prompt attention": "El paciente requiere atención pronta",
+  "Patient needs an earlier appointment":
+    "El paciente necesita una cita más temprana",
+  "Standard waiting-list request": "Solicitud estándar en lista de espera",
+  "Flexible scheduling request": "Solicitud con horario flexible",
+  "Scheduling priority": "Prioridad de la cita",
+  "Qualified staff review confirmed (demo)":
+    "Revisión del personal cualificado confirmada (demo)",
+  "Save priority": "Guardar prioridad",
+  "Eligible candidates · staff review":
+    "Candidatos elegibles · revisión del personal",
+  "Ranked by configured priority, then oldest request. Confirm an offer; the patient must accept before the schedule changes.":
+    "Ordenados por prioridad configurada y luego por antigüedad. Confirme una oferta; el paciente debe aceptar antes de cambiar la agenda.",
+  "Offer recipient": "Destinatario de la oferta",
+  "No eligible candidates. No appointment will be reassigned.":
+    "No hay candidatos elegibles. No se reasignará ninguna cita.",
+  "Only matching office, provider, visit type, duration, date and full time window qualify. Existing patient or provider conflicts exclude a candidate.":
+    "Deben coincidir consultorio, proveedor, tipo de visita, duración, fecha y horario completo. Los conflictos de citas del paciente o proveedor excluyen al candidato.",
+  "Priority configuration": "Configuración de prioridades",
+  "Lower order numbers rank first. Request date breaks ties; record ID breaks exact ties. Disabled levels move existing records to the enabled default. P1 cannot be the default.":
+    "Los números menores van primero. La fecha de solicitud desempata; luego el ID del registro. Los niveles desactivados se trasladan al nivel predeterminado habilitado. P1 no puede ser el predeterminado.",
+  "Use unique order values 1–4 and an enabled non-urgent default. Labels and descriptions are required.":
+    "Use órdenes únicos 1–4 y un nivel predeterminado habilitado no urgente. Se requieren etiquetas y descripciones.",
+  "Priority configuration saved for this demo session.":
+    "Configuración de prioridades guardada para esta sesión demo.",
+  Enabled: "Habilitado",
+  Label: "Etiqueta",
+  Description: "Descripción",
+  Indicator: "Indicador",
+  Order: "Orden",
+  Red: "Rojo",
+  Orange: "Naranja",
+  Blue: "Azul",
+  Gray: "Gris",
+  "Default priority": "Prioridad predeterminada",
+  "Save configuration": "Guardar configuración",
+  "Provider calendar": "Calendario del proveedor",
+  "Calendar view": "Vista del calendario",
+  Day: "Día",
+  Week: "Semana",
+  Month: "Mes",
+  "Previous period": "Período anterior",
+  "Next period": "Período siguiente",
+  "Calendar days": "Días del calendario",
+  "Select a day to review appointments below. Blank days have no demo capacity; no availability is inferred.":
+    "Seleccione un día para ver sus citas abajo. Los días vacíos no tienen capacidad demo; no se infiere disponibilidad.",
+  "high-priority eligible": "elegibles de alta prioridad",
+  Canceled: "Cancelada",
+  "October 8 · 2:00 PM": "8 de octubre · 2:00 p. m.",
+  "Historical cancellation; the released slot is counted separately.":
+    "Cancelación histórica; el espacio liberado se cuenta por separado.",
+  "Priority order · oldest request first within a level":
+    "Orden de prioridad · solicitudes más antiguas primero en cada nivel",
+  "Review eligible candidates below, then confirm the selected demo offer.":
+    "Revise los candidatos elegibles abajo y confirme la oferta demo seleccionada.",
+  "Complete: the selected patient now has the October 8 appointment. Schedule, waitlist and activity are updated.":
+    "Completado: el paciente seleccionado tiene la cita del 8 de octubre. Agenda, lista de espera y actividad actualizadas.",
+  "The selected patient requested help. Return to Patient; no message leaves this browser.":
+    "El paciente seleccionado solicitó ayuda. Regrese a Paciente; ningún mensaje sale del navegador.",
+  "Confirm offer to selected patient":
+    "Confirmar oferta al paciente seleccionado",
+  "Selected patient": "Paciente seleccionado",
+  "Synthetic scheduling only. Assign staff-confirmed priorities, then review eligible candidates after cancellation.":
+    "Solo citas ficticias. Asigne prioridades confirmadas por el personal y revise los candidatos elegibles después de cancelar.",
+  "Synthetic knee discomfort; earlier routine visit requested":
+    "Molestia ficticia de rodilla; solicita visita de rutina más temprana",
+  "Synthetic back discomfort; morning visit requested":
+    "Molestia ficticia de espalda; solicita visita por la mañana",
+  "Synthetic follow-up request; flexible afternoon":
+    "Solicitud ficticia de seguimiento; tarde flexible",
+  "Staff updated scheduling priority configuration.":
+    "El personal actualizó la configuración de prioridades de citas.",
+  "Provider sent a simulated in-app offer to Camila Soto.":
+    "El proveedor envió una oferta simulada en la aplicación a Camila Soto.",
+  "Provider sent a simulated in-app offer to Nicolás Díaz.":
+    "El proveedor envió una oferta simulada en la aplicación a Nicolás Díaz.",
+  "Staff confirmed scheduling priority: WL-001 → P1.":
+    "El personal confirmó la prioridad de la cita: WL-001 → P1.",
+  "Staff confirmed scheduling priority: WL-001 → P2.":
+    "El personal confirmó la prioridad de la cita: WL-001 → P2.",
+  "Staff confirmed scheduling priority: WL-001 → P3.":
+    "El personal confirmó la prioridad de la cita: WL-001 → P3.",
+  "Staff confirmed scheduling priority: WL-001 → P4.":
+    "El personal confirmó la prioridad de la cita: WL-001 → P4.",
+  "Staff confirmed scheduling priority: WL-002 → P1.":
+    "El personal confirmó la prioridad de la cita: WL-002 → P1.",
+  "Staff confirmed scheduling priority: WL-002 → P2.":
+    "El personal confirmó la prioridad de la cita: WL-002 → P2.",
+  "Staff confirmed scheduling priority: WL-002 → P3.":
+    "El personal confirmó la prioridad de la cita: WL-002 → P3.",
+  "Staff confirmed scheduling priority: WL-002 → P4.":
+    "El personal confirmó la prioridad de la cita: WL-002 → P4.",
+  "Staff confirmed scheduling priority: WL-003 → P1.":
+    "El personal confirmó la prioridad de la cita: WL-003 → P1.",
+  "Staff confirmed scheduling priority: WL-003 → P2.":
+    "El personal confirmó la prioridad de la cita: WL-003 → P2.",
+  "Staff confirmed scheduling priority: WL-003 → P3.":
+    "El personal confirmó la prioridad de la cita: WL-003 → P3.",
+  "Staff confirmed scheduling priority: WL-003 → P4.":
+    "El personal confirmó la prioridad de la cita: WL-003 → P4.",
   Overview: "Resumen",
   Schedule: "Agenda",
   Waitlist: "Lista de espera",

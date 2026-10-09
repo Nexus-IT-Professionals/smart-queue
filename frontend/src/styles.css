@@ -1734,3 +1734,49 @@ dd {
     display: none;
   }
 }
+
+/* Synthetic scheduling tools: labels accompany every color indicator. */
+.priority-badge { display: inline-block; width: fit-content; border-radius: 6px; padding: 4px 8px; font-size: 12px; font-weight: 700; line-height: 1.4; white-space: normal; }
+.priority-badge.priority-danger { color: #8f2027; background: #ffebed; }
+.priority-badge.priority-warning { color: #87400c; background: #fff0d9; }
+.priority-badge.priority-info { color: #244fa2; background: #eaf0ff; }
+.priority-badge.priority-secondary { color: #485263; background: #edf0f3; }
+.waitlist-person { flex-wrap: wrap; }
+.waitlist-editor { flex-basis: 100%; padding-top: 12px; }
+.priority-editor { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-top: 10px; }
+.priority-editor label, .priority-settings label, .candidate-review label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.priority-editor .check-label, .priority-settings .check-label { flex-direction: row; align-items: center; }
+.priority-editor input[type=checkbox], .priority-settings input[type=checkbox] { width: 18px; height: 18px; flex-shrink: 0; }
+.priority-editor select, .priority-settings input, .priority-settings textarea, .priority-settings select, .candidate-review select { width: 100%; max-width: 100%; min-width: 0; padding: 9px; border: 1px solid #a6b2c6; border-radius: 6px; background: white; color: var(--navy); }
+.priority-settings { padding: 22px; margin-top: 22px; }
+.priority-settings summary { cursor: pointer; font-size: 18px; font-weight: 700; }
+.priority-settings p { margin: 16px 0; }
+.priority-settings-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin: 18px 0; }
+.priority-settings fieldset { min-width: 0; border: 1px solid var(--border); border-radius: 10px; padding: 14px; display: grid; gap: 12px; }
+.priority-settings form > label { max-width: 320px; margin-bottom: 18px; }
+.candidate-review { padding: 22px; background: #f1f6fc; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 22px; }
+.candidate-review p { margin: 12px 0; }
+.candidate-review li { margin: 12px 0; }
+.candidate-review select { max-width: 480px; }
+.provider-calendar { padding: 20px; margin-bottom: 22px; min-width: 0; }
+.calendar-toolbar, .calendar-navigation { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.calendar-switch { display: flex; border: 0; padding: 0; gap: 4px; margin: 0; }
+.calendar-switch button { padding: 10px 14px; border: 1px solid #a6b2c6; background: white; color: #244467; border-radius: 6px; cursor: pointer; }
+.calendar-switch button[aria-pressed=true] { color: white; background: #294e9b; }
+.calendar-navigation h2 { font-size: 18px; }
+.calendar-scroll { overflow-x: auto; margin-top: 16px; }
+.calendar-days { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); min-width: 680px; gap: 6px; }
+.calendar-days button { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; min-height: 95px; padding: 10px; background: white; border: 1px solid #b9c7d9; border-radius: 8px; text-align: left; color: #344965; cursor: pointer; font-size: 12px; }
+.calendar-days button[aria-pressed=true] { border: 2px solid #365db5; background: #eff4ff; }
+.calendar-days .outside-month { background: #f3f5f8; }
+.calendar-scheduled { color: #244fa2; }
+.calendar-completed { color: #236852; }
+.calendar-open { color: #87400c; }
+.calendar-canceled { color: #8f2027; text-decoration: line-through; }
+.cancellation-history { margin-top: 16px; line-height: 1.7; }
+@media(max-width: 600px) { .priority-settings-grid { grid-template-columns: minmax(0,1fr); } .calendar-navigation { width: 100%; } .calendar-navigation h2 { font-size: 14px; } .priority-editor { align-items: stretch; flex-direction: column; } }
+.priority-disclaimer { padding: 12px 16px; margin: 0 0 18px; background: #fff5e7; color: #704410; border-radius: 8px; font-size: 13px; line-height: 1.6; }
+
+.table-person .priority-badge { font-size: 12px; margin: 5px 0; }
+
+.priority-settings textarea { resize: vertical; font: inherit; }

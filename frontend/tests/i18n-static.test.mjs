@@ -29,7 +29,6 @@ const allowed = new Set([
   "App.tsx: queue", // Brand wordmark "smartqueue".
   "App.tsx: SQ", // aria-hidden brand avatar initials.
   "App.tsx: Smart Queue · Caribbean AI 2026 Hackathon", // Product + event names.
-  "pages/patient/PatientWorkspace.tsx: Elena Morales", // Fictional person name.
 ]);
 const used = new Set();
 function findings(pattern) {

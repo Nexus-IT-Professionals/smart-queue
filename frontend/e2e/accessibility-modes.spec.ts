@@ -79,9 +79,7 @@ test.describe("forced colors (Windows High Contrast)", () => {
       expect(
         await signature(off, countWeight),
         `${label}: selected looks unselected`,
-      ).not.toBe(
-        on,
-      );
+      ).not.toBe(on);
   }
   async function bordered(button: Locator, label: string) {
     const border = await button.evaluate((el) => {
@@ -109,13 +107,19 @@ test.describe("forced colors (Windows High Contrast)", () => {
     }, testInfo) => {
       await open(page, language);
       expect(
-        await page.evaluate(() => matchMedia("(forced-colors: active)").matches),
+        await page.evaluate(
+          () => matchMedia("(forced-colors: active)").matches,
+        ),
       ).toBe(true);
       await distinguishable(page.locator(".workspace-switch"), "role switch");
       await distinguishable(page.locator(".language-switch"), "language");
       await roleButton(page, 1).click();
       await distinguishable(page.locator(".workspace-switch"), "role switch");
-      await distinguishable(page.getByRole("navigation"), "provider nav", false);
+      await distinguishable(
+        page.getByRole("navigation"),
+        "provider nav",
+        false,
+      );
       await bordered(scenarioButton(page), "primary button");
       await focusRing(page, roleButton(page, 1), "selected role");
       await focusRing(page, roleButton(page, 2), "unselected role");
@@ -168,7 +172,7 @@ async function notClipped(page: Page, state: string) {
     // allowed to bleed out by design.
     const clipped = [...document.querySelectorAll<HTMLElement>("body *")]
       .filter((el) => {
-        if (el.closest(".sr-only, .table-scroll") || !el.offsetParent)
+        if (el.closest(".sr-only, .table-scroll") || !el.checkVisibility())
           return false;
         if (
           el.matches("button, h1, h2, h3, a, label, input") &&
@@ -179,7 +183,10 @@ async function notClipped(page: Page, state: string) {
         if (!/hidden|clip/.test(`${s.overflowX} ${s.overflowY}`)) return false;
         const box = el.getBoundingClientRect();
         return [...el.querySelectorAll("*")].some((child) => {
-          if (child.closest('[aria-hidden="true"], .sr-only, .table-scroll *'))
+          if (
+            !child.checkVisibility() ||
+            child.closest('[aria-hidden="true"], .sr-only, .table-scroll *')
+          )
             return false;
           const r = child.getBoundingClientRect();
           return (
@@ -219,8 +226,16 @@ for (const width of [320, 1280]) {
         await notClipped(page, "entry");
         await roleButton(page, 1).click();
         for (const index of [1, 2, 3, 0]) {
-          await page.getByRole("navigation").getByRole("button").nth(index).click();
+          await page
+            .getByRole("navigation")
+            .getByRole("button")
+            .nth(index)
+            .click();
           await notClipped(page, `provider section ${index}`);
+          if (index === 2) {
+            await page.locator(".priority-settings summary").click();
+            await notClipped(page, "expanded priority configuration");
+          }
         }
         await scenarioButton(page).click();
         await scenarioButton(page).click();

@@ -87,6 +87,10 @@ test("María Rodríguez is the new first 8:30 AM slot; the day has 9 slots", () 
   assert.equal(day.length, 9);
   assert.deepEqual(day[0], {
     id: "SQ-009",
+    date: "2026-10-08",
+    office: "ISLA",
+    provider: "DR-01",
+    duration: 30,
     name: "María Rodríguez",
     time: "8:30 AM",
     type: "Follow-up",
@@ -141,8 +145,14 @@ test("Ana Martínez is the fictional assistant and the actor on cancellation and
     offered,
     "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Elena Morales.",
   );
-  assert.match(spanish[cancelled], /^Ana Martínez, asistente de oficina médica, confirmó/);
-  assert.match(spanish[offered], /^Ana Martínez, asistente de oficina médica, envió .* a Elena Morales.$/);
+  assert.match(
+    spanish[cancelled],
+    /^Ana Martínez, asistente de oficina médica, confirmó/,
+  );
+  assert.match(
+    spanish[offered],
+    /^Ana Martínez, asistente de oficina médica, envió .* a Elena Morales.$/,
+  );
 });
 
 test("demo health request omits credentials and preserves abort signal", async () => {
