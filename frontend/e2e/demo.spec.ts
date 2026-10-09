@@ -42,9 +42,9 @@ async function offer(page: Page) {
 for (const [path, title] of [
   ["/", "Explore care without the wait."],
   ["/#/login", "Explore care without the wait."],
-  ["/#/provider", "A clearer day. Better access."],
-  ["/#/staff", "A clearer day. Better access."],
-  ["/#/patient", "Your care, a little closer."],
+  ["/#/provider", "Today at Isla Care"],
+  ["/#/staff", "Today at Isla Care"],
+  ["/#/patient", "My appointment"],
   ["/#/nope", "Explore care without the wait."],
   ["/#/../patient", "Explore care without the wait."],
 ]) {
@@ -70,7 +70,7 @@ test("entry from either role and browser back/forward remain public", async ({
   await page.goBack();
   await expect(page).toHaveURL(/#\/provider$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "A clearer day. Better access.",
+    "Today at Isla Care",
   );
   await page.goForward();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -123,7 +123,7 @@ test("all provider sections, search, empty state and filters", async ({
   ).toBeVisible();
   await nav.getByRole("button", { name: "Overview", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "A snapshot of your day" }),
+    page.getByRole("heading", { level: 1, name: "Today at Isla Care" }),
   ).toBeVisible();
 });
 test("explicit confirmation updates booking, waitlist and activity; reset restores state", async ({
@@ -131,21 +131,21 @@ test("explicit confirmation updates booking, waitlist and activity; reset restor
 }) => {
   await offer(page);
   await page
-    .getByRole("button", { name: "Preview acceptance", exact: true })
+    .getByRole("button", { name: "Accept earlier visit", exact: true })
     .click();
   await expect(
-    page.getByRole("group", { name: "Confirm preview acceptance" }),
+    page.getByRole("group", { name: "Confirm earlier visit" }),
   ).toBeFocused();
   await expect(
     page.getByRole("heading", { name: "Thursday, October 22", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Go back", exact: true }).click();
   await expect(
-    page.getByRole("button", { name: "Preview acceptance", exact: true }),
+    page.getByRole("button", { name: "Accept earlier visit", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await page
-    .getByRole("button", { name: "Confirm preview", exact: true })
+    .getByRole("button", { name: "Yes, move my appointment", exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: "Thursday, October 8", exact: true }),
@@ -177,7 +177,7 @@ test("help permits a later response; decline preserves appointment; reload clear
     ),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Preview acceptance", exact: true }),
+    page.getByRole("button", { name: "Accept earlier visit", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Keep my current visit", exact: true })
@@ -186,7 +186,7 @@ test("help permits a later response; decline preserves appointment; reload clear
     page.getByRole("heading", { name: "Thursday, October 22", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Preview acceptance", exact: true }),
+    page.getByRole("button", { name: "Accept earlier visit", exact: true }),
   ).not.toBeVisible();
   await page.reload();
   await expect(
@@ -198,11 +198,11 @@ test("double activation of confirm applies the acceptance only once", async ({
 }) => {
   await offer(page);
   await page
-    .getByRole("button", { name: "Preview acceptance", exact: true })
+    .getByRole("button", { name: "Accept earlier visit", exact: true })
     .click();
   // Two clicks in one task, before React re-renders: the worst-case double-click.
   await page
-    .getByRole("button", { name: "Confirm preview", exact: true })
+    .getByRole("button", { name: "Yes, move my appointment", exact: true })
     .evaluate((button: HTMLElement) => {
       button.click();
       button.click();
@@ -220,7 +220,7 @@ test("reload while an offer is pending returns to the initial scenario", async (
 }) => {
   await offer(page);
   await expect(
-    page.getByRole("button", { name: "Preview acceptance", exact: true }),
+    page.getByRole("button", { name: "Accept earlier visit", exact: true }),
   ).toBeVisible();
   await page.reload();
   await expect(page).toHaveURL(/#\/patient$/);
@@ -240,10 +240,10 @@ test("back/forward after completing the scenario keeps the accepted state", asyn
 }) => {
   await offer(page);
   await page
-    .getByRole("button", { name: "Preview acceptance", exact: true })
+    .getByRole("button", { name: "Accept earlier visit", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Confirm preview", exact: true })
+    .getByRole("button", { name: "Yes, move my appointment", exact: true })
     .click();
   await page.getByRole("button", { name: "Provider view", exact: true }).click();
   await expect(page.getByRole("button", { name: "Waitlist 3" })).toBeVisible();
@@ -253,7 +253,7 @@ test("back/forward after completing the scenario keeps the accepted state", asyn
     page.getByRole("heading", { name: "Thursday, October 8", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Preview acceptance", exact: true }),
+    page.getByRole("button", { name: "Accept earlier visit", exact: true }),
   ).toHaveCount(0);
   await page.goForward();
   await expect(page).toHaveURL(/#\/provider$/);

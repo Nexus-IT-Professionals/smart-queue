@@ -1,4 +1,90 @@
 export const spanish: Record<string, string> = {
+  "Today at Isla Care":
+    "Hoy en Isla Care",
+  "Fill cancelled appointments with patients who want an earlier visit.":
+    "Cubra citas canceladas con pacientes que quieren una cita más cercana.",
+  "Appointments by day, week or month.":
+    "Citas por día, semana o mes.",
+  "Patients who asked for an earlier appointment, in priority order.":
+    "Pacientes que pidieron una cita más cercana, en orden de prioridad.",
+  "Every step of the demo, in order.":
+    "Cada paso de la demo, en orden.",
+  "On the selected date":
+    "En la fecha seleccionada",
+  "Already seen":
+    "Ya atendidas",
+  "Want an earlier visit":
+    "Quieren una cita más cercana",
+  "Adrián López cancelled his October 8, 2:00 PM visit. Confirm it to open the slot.":
+    "Adrián López canceló su cita del 8 de octubre a las 2:00 p. m. Confírmelo para liberar el espacio.",
+  "The 2:00 PM slot is open. The best match is ranked first below; send the offer.":
+    "El espacio de las 2:00 p. m. está disponible. La mejor coincidencia aparece primero abajo; envíe la oferta.",
+  "Offer sent to":
+    "Oferta enviada a",
+  "Nothing changes until the patient accepts. Open the Patient view to answer.":
+    "Nada cambia hasta que el paciente acepte. Abra la vista del paciente para responder.",
+  "Open slot filled in 3 steps.":
+    "Espacio cubierto en 3 pasos.",
+  "days sooner":
+    "días antes",
+  "Just filled":
+    "Recién cubierta",
+  "Waiting for":
+    "Esperando a",
+  "Offer sent":
+    "Oferta enviada",
+  "Resets when you reload or reset the demo":
+    "Se borra al recargar o reiniciar la demo",
+  "Demo guide":
+    "Guía de la demo",
+  "Cancel":
+    "Cancelar",
+  "Offer":
+    "Oferta",
+  "Patient accepts":
+    "El paciente acepta",
+  "Result":
+    "Resultado",
+  "My appointment":
+    "Mi cita",
+  "Waiting for the office to offer an earlier slot.":
+    "Esperando que el consultorio ofrezca una cita más cercana.",
+  "Done. The office sees the change right away.":
+    "Listo. El consultorio ve el cambio de inmediato.",
+  "You kept your current visit. Reset to replay.":
+    "Mantuvo su cita actual. Reinicie para repetir.",
+  "Your turn: review the earlier visit below and decide.":
+    "Su turno: revise la cita más cercana abajo y decida.",
+  "EARLIER VISIT CONFIRMED":
+    "CITA MÁS CERCANA CONFIRMADA",
+  "You're booked for":
+    "Su cita quedó para el",
+  "days sooner. Your October 22 visit was released for someone else.":
+    "días antes. Su cita del 22 de octubre quedó libre para otra persona.",
+  "Accept earlier visit":
+    "Aceptar cita más cercana",
+  "Confirm earlier visit":
+    "Confirmar cita más cercana",
+  "Move your appointment to October 8 at 2:00 PM?":
+    "¿Mover su cita al 8 de octubre a las 2:00 p. m.?",
+  "Yes, move my appointment":
+    "Sí, mover mi cita",
+  "See what the office sees":
+    "Ver lo que ve el consultorio",
+  "Start the guided demo":
+    "Comenzar la demo guiada",
+  "Starts as the Provider · about 2 minutes":
+    "Empieza como proveedor · unos 2 minutos",
+  "As the Provider, confirm the sample 2:00 PM cancellation.":
+    "Como proveedor, confirme la cancelación de ejemplo de las 2:00 p. m.",
+  "Send the open slot to the best-matched waiting patient.":
+    "Ofrezca el espacio al paciente en espera más adecuado.",
+  "Switch to Patient and accept the earlier visit.":
+    "Cambie a Paciente y acepte la cita más cercana.",
+  "Return to Provider to see the filled slot, waitlist and activity log.":
+    "Vuelva a Proveedor para ver el espacio cubierto, la lista de espera y el registro.",
+  "Switch roles at any time from the header. Reset or reload starts over. Nothing leaves this browser. Staff tools are in the Provider workspace; there is no separate Admin view.":
+    "Cambie de rol desde el encabezado en cualquier momento. Reiniciar o recargar empieza de nuevo. Nada sale de este navegador. Las herramientas del personal están en el espacio del proveedor; no hay una vista de administración separada.",
   "Staff updated monthly demo scheduling.": "El personal actualizó la programación de la demostración mensual.",
   "Capacity & statistics": "Capacidad y estadísticas",
   "Guided cancellation demo": "Demostración guiada de cancelación",
@@ -161,10 +247,6 @@ export const spanish: Record<string, string> = {
     "Cancelación histórica; el espacio liberado se cuenta por separado.",
   "Priority order · oldest request first within a level":
     "Orden de prioridad · solicitudes más antiguas primero en cada nivel",
-  "Review eligible candidates below, then confirm the selected demo offer.":
-    "Revise los candidatos elegibles abajo y confirme la oferta demo seleccionada.",
-  "Complete: the selected patient now has the October 8 appointment. Schedule, waitlist and activity are updated.":
-    "Completado: el paciente seleccionado tiene la cita del 8 de octubre. Agenda, lista de espera y actividad actualizadas.",
   "The selected patient requested help. Return to Patient; no message leaves this browser.":
     "El paciente seleccionado solicitó ayuda. Regrese a Paciente; ningún mensaje sale del navegador.",
   "Confirm offer to selected patient":
@@ -227,10 +309,6 @@ export const spanish: Record<string, string> = {
   "Welcome to the demo": "Bienvenido a la demo",
   "Press for presentation": "Oprima para ver la presentación",
   "Opens in a new window": "Se abre en una ventana nueva",
-  "A safe space to explore": "Un espacio seguro para explorar",
-  "Fictional people. Simulated offers. No real patient information.":
-    "Personas ficticias. Ofertas simuladas. Sin datos de pacientes reales.",
-  "DEMO / POC MODE": "MODO DEMO / POC",
   "Standalone demo · No API connection":
     "Demo independiente · Sin conexión a la API",
   "Health API connected": "API de estado conectada",
@@ -258,16 +336,7 @@ export const spanish: Record<string, string> = {
     "Continúe como Elena Morales para ver una cita de ejemplo y aceptar, rechazar o pedir ayuda con una cita más cercana.",
   "Continue as Demo Patient": "Continuar como paciente demo",
   "A complete demo in one browser": "Una demo completa en un navegador",
-  "Choose Provider and confirm the sample 2:00 PM cancellation.":
-    "Elija Proveedor y confirme la cancelación de ejemplo de las 2:00 p. m.",
-  "Send the demo offer, then switch to Patient.":
-    "Envíe la oferta de demostración y cambie a Paciente.",
-  "Accept and confirm the offer. Return to Provider to see the updated schedule, waitlist, and activity log.":
-    "Acepte y confirme la oferta. Vuelva a Proveedor para ver la agenda, la lista de espera y el registro actualizados.",
-  "Switch roles at any time using the header. Reset restarts the scenario; refreshing clears it. This is a local simulation, not a live appointment or message. The Provider workspace includes staff scheduling tools; no separate Admin interface exists.":
-    "Cambie de rol desde el encabezado en cualquier momento. Reiniciar o recargar restablece el escenario. Es una simulación local, no una cita ni un mensaje real. El espacio del proveedor incluye herramientas de agenda; no hay una interfaz de administración separada.",
   "ISLA CARE / PATIENT WORKSPACE": "ISLA CARE / ESPACIO DEL PACIENTE",
-  "Your care, a little closer.": "Su atención, un poco más cerca.",
   "Welcome, Elena. An earlier appointment could fit your day.":
     "Bienvenida, Elena. Una cita más cercana podría ajustarse a su día.",
   "Fictional patient": "Paciente ficticia",
@@ -290,17 +359,11 @@ export const spanish: Record<string, string> = {
     "Consulta de 30 minutos · Isla Care, San Juan",
   "This is a simulated offer. Confirming updates only the fictional schedule in this browser. No real appointment or message is created.":
     "Esta oferta es simulada. Confirmarla solo actualiza la agenda ficticia de este navegador. No se crea ninguna cita ni mensaje real.",
-  "Preview acceptance": "Revisar aceptación",
   "Keep my current visit": "Mantener mi cita actual",
   "I need help": "Necesito ayuda",
-  "Confirm preview acceptance": "Confirmar aceptación de prueba",
-  "Preview accepting October 8 at 2:00 PM?":
-    "¿Aceptar la cita de prueba del 8 de octubre a las 2:00 p. m.?",
   "This moves your fictional appointment to October 8 and updates the Provider view. No real appointment is reserved.":
     "Esto mueve su cita ficticia al 8 de octubre y actualiza la vista del proveedor. No se reserva ninguna cita real.",
-  "Confirm preview": "Confirmar prueba",
   "Go back": "Volver",
-  "Restart demo scenario": "Volver a iniciar la demo",
   "You’re in control. The demo changes the appointment only after your explicit confirmation.":
     "Usted decide. La demo cambia la cita solo después de su confirmación explícita.",
   "Synthetic patient · SQ-P01": "Paciente sintética · SQ-P01",
@@ -324,18 +387,6 @@ export const spanish: Record<string, string> = {
     "Rechazar una oferta de cita más cercana no significa perder su cita actual.",
   "AI reply assistance is not connected. This preview uses explicit response buttons.":
     "La asistencia de IA para respuestas no está conectada. Esta demo usa botones de respuesta explícitos.",
-  "A clearer day. Better access.": "Un día más claro. Mejor acceso.",
-  "Keep your schedule moving and bring the next appointment closer.":
-    "Mantenga su agenda en movimiento y acerque la próxima cita.",
-  "Your daily schedule": "Su agenda diaria",
-  "A little clarity for every appointment, from arrival to follow-up.":
-    "Claridad para cada cita, desde la llegada hasta el seguimiento.",
-  "The next opportunity for care": "La próxima oportunidad de atención",
-  "Availability at a glance. Help patients find an earlier appointment.":
-    "Disponibilidad de un vistazo. Ayude a encontrar una cita más cercana.",
-  "Every change, in view": "Cada cambio, a la vista",
-  "Follow the preview journey from an open slot to a patient response.":
-    "Siga la simulación desde un espacio disponible hasta la respuesta del paciente.",
   "Ready for an earlier visit": "Listos para una cita más cercana",
   "Sample waitlist · order is illustrative":
     "Lista de espera de ejemplo · orden ilustrativo",
@@ -349,23 +400,15 @@ export const spanish: Record<string, string> = {
   Scheduled: "Programada",
   "Open slot": "Espacio disponible",
   "Appointment slots": "Espacios de citas",
-  "For the selected demo date": "Para la fecha de demo seleccionada",
   "Completed visits": "Visitas completadas",
-  "Marked complete in the sample": "Marcadas como completadas en el ejemplo",
   "Open slots": "Espacios disponibles",
   "An opportunity for earlier care": "Una oportunidad de atención más cercana",
   "Patients waiting": "Pacientes en espera",
-  "Current sample waitlist": "Lista de espera de ejemplo actual",
   "ISLA CARE / PROVIDER WORKSPACE": "ISLA CARE / ESPACIO DEL PROVEEDOR",
   "Schedule date": "Fecha de la agenda",
   "Demo appointment workflow": "Flujo de citas de demostración",
-  "Try the appointment queue": "Pruebe la cola de citas",
-  "Step 1: Confirm the fictional patient's cancellation for October 8 at 2:00 PM.":
-    "Paso 1: Confirme la cancelación del paciente ficticio para el 8 de octubre a las 2:00 p. m.",
   "Step 2: The slot is open. Offer it to Elena Morales, who is available in the afternoon.":
     "Paso 2: El espacio está disponible. Ofrézcalo a Elena Morales, que tiene disponibilidad por la tarde.",
-  "Step 3: Switch to Patient to respond to the simulated offer.":
-    "Paso 3: Cambie a Paciente para responder a la oferta simulada.",
   "Complete: Elena now has the October 8 demo appointment. The schedule, waitlist, and activity are updated.":
     "Completado: Elena ahora tiene la cita de demo del 8 de octubre. La agenda, la lista de espera y la actividad están actualizadas.",
   "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay.":
@@ -376,26 +419,6 @@ export const spanish: Record<string, string> = {
   "Send demo offer to Elena": "Enviar oferta demo a Elena",
   "Open Demo Patient": "Abrir paciente demo",
   "Review activity": "Revisar actividad",
-  "A snapshot of your day": "Un vistazo a su día",
-  "Appointment status · selected demo date":
-    "Estado de las citas · fecha seleccionada",
-  "Sample data": "Datos de ejemplo",
-  "total slots": "espacios en total",
-  "Each open slot is a chance to shorten someone’s wait.":
-    "Cada espacio disponible es una oportunidad para reducir la espera.",
-  "MAKE ROOM FOR EARLIER CARE": "HAGA ESPACIO PARA ATENCIÓN MÁS CERCANA",
-  "One opening.\nA new possibility.": "Un espacio.\nUna nueva posibilidad.",
-  "A little planning.\nA better patient day.":
-    "Un poco de planificación.\nUn mejor día para el paciente.",
-  "The 2:00 PM sample slot is open. Explore the waitlist to see who is available.":
-    "El espacio de ejemplo de las 2:00 p. m. está disponible. Explore la lista de espera para ver quién puede asistir.",
-  "Choose October 8 to explore the sample schedule and waitlist.":
-    "Elija el 8 de octubre para explorar la agenda y la lista de espera de ejemplo.",
-  "An earlier visit is confirmed in the demo. Review the activity log to follow each step.":
-    "Se confirmó una cita más cercana en la demo. Revise el registro para seguir cada paso.",
-  "Use the scenario controls to open a slot and offer an earlier visit.":
-    "Use los controles para abrir un espacio y ofrecer una cita más cercana.",
-  "Explore waitlist": "Explorar lista de espera",
   "Daily schedule": "Agenda diaria",
   "Selected date": "Fecha seleccionada",
   "· Atlantic Standard Time": "· Hora estándar del Atlántico",
@@ -423,21 +446,13 @@ export const spanish: Record<string, string> = {
   "Reset filters and demo date": "Restablecer filtros y fecha demo",
   Showing: "Mostrando",
   of: "de",
-  "sample slots": "espacios de ejemplo",
   "Single office · 30-minute visits": "Un consultorio · visitas de 30 minutos",
-  "Patient choice comes first": "La decisión del paciente es primero",
-  "Earlier appointments are always an offer. An existing booking stays in place until a replacement is confirmed.":
-    "Las citas más cercanas siempre son una oferta. La cita existente se mantiene hasta confirmar su reemplazo.",
   "A smaller wait starts with a good match.":
     "Una espera más corta comienza con una buena coincidencia.",
   "This demo uses fictional availability. Use the scenario controls above to offer the opening to Elena; live matching remains unimplemented.":
     "Esta demo usa disponibilidad ficticia. Use los controles para ofrecer el espacio a Elena; la asignación real aún no está implementada.",
   "Preview activity": "Actividad de demostración",
-  "Illustrative events, not a persisted audit log":
-    "Eventos ilustrativos, no un registro de auditoría persistente",
-  "Session only": "Solo esta sesión",
   "Demo event": "Evento demo",
-  "This browser only": "Solo este navegador",
   "No demo actions yet": "Todavía no hay acciones demo",
   "Confirm the sample cancellation to start the activity log.":
     "Confirme la cancelación de ejemplo para iniciar el registro.",

@@ -46,15 +46,15 @@ for (const width of [320, 768, 1440]) {
       ),
     ).toBeVisible();
     await page
-      .getByRole("button", { name: "Revisar aceptación", exact: true })
+      .getByRole("button", { name: "Aceptar cita más cercana", exact: true })
       .click();
     await page.getByRole("button", { name: "English", exact: true }).click();
     await expect(
-      page.getByRole("button", { name: "Confirm preview", exact: true }),
+      page.getByRole("button", { name: "Yes, move my appointment", exact: true }),
     ).toBeVisible();
     await page.getByRole("button", { name: "Español", exact: true }).click();
     await page
-      .getByRole("button", { name: "Confirmar prueba", exact: true })
+      .getByRole("button", { name: "Sí, mover mi cita", exact: true })
       .click();
     await expect(
       page.getByRole("heading", { name: "jueves, 8 de octubre", exact: true }),
@@ -64,7 +64,7 @@ for (const width of [320, 768, 1440]) {
     await expect(page.locator(".timeline")).toContainText("La paciente aceptó");
     await page.getByRole("button", { name: /^Lista de espera/ }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "La próxima oportunidad de atención",
+      "Lista de espera",
     );
     await expect(page.getByText(/Desde/).first()).toContainText("oct");
     expect(
@@ -147,7 +147,7 @@ test("language switching works when browser preference storage is blocked", asyn
     .getByRole("button", { name: "Continuar como paciente demo" })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Su atención, un poco más cerca." }),
+    page.getByRole("heading", { name: "Mi cita", level: 1 }),
   ).toBeVisible();
   await page.getByRole("button", { name: "English", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");

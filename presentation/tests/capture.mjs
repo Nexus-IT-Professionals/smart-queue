@@ -41,11 +41,11 @@ await page
 	.click();
 await page.getByRole("button", { name: "Patient view", exact: true }).click();
 await page
-	.getByRole("button", { name: "Preview acceptance", exact: true })
+	.getByRole("button", { name: "Accept earlier visit", exact: true })
 	.click();
 await capture(page.locator(".offer-panel"), "patient-confirmation");
 await page
-	.getByRole("button", { name: "Confirm preview", exact: true })
+	.getByRole("button", { name: "Yes, move my appointment", exact: true })
 	.click();
 await page.getByRole("button", { name: "Provider view", exact: true }).click();
 await page

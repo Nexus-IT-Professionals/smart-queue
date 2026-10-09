@@ -48,7 +48,7 @@ Here are real application captures. Staff confirms the cancellation, then offers
 
 Ana sends the simulated offer. The patient previews the earlier appointment and explicitly confirms. Decline and help are also available. This confirmation is the key: the appointment changes only after acceptance. Everything shown runs in one browser session.
 
-*Cue: Point to Confirm preview. In the story, José makes this choice. End by 1:47.*
+*Cue: Point to Yes, move my appointment. In the story, José makes this choice. End by 1:47.*
 
 ## 9. The updated provider schedule — 17s
 

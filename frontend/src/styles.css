@@ -259,33 +259,6 @@ p {
   font-size: 10px;
   color: #54627b;
 }
-.demo-card {
-  padding: 16px;
-  background: #f6f8fc;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-.demo-card > .icon {
-  color: var(--blue);
-  margin-bottom: 12px;
-}
-.demo-card strong {
-  display: block;
-  font-size: 12px;
-  margin-bottom: 7px;
-}
-.demo-card p {
-  color: var(--muted);
-  font-size: 11px;
-}
-.demo-tag {
-  display: inline-block;
-  font-size: 8px;
-  letter-spacing: 0.9px;
-  color: #4c6286;
-  margin-top: 15px;
-  font-weight: 700;
-}
 .connection {
   display: flex;
   align-items: center;
@@ -445,12 +418,6 @@ main {
   font-size: 10px;
   color: var(--muted);
 }
-.overview-grid {
-  display: grid;
-  grid-template-columns: 1.28fr 1fr;
-  gap: 21px;
-  margin-bottom: 24px;
-}
 .panel {
   background: #fff;
   border: 1px solid var(--border);
@@ -493,147 +460,6 @@ main {
 .badge-amber {
   color: #945522;
   background: #fff2e6;
-}
-.day-chart {
-  display: flex;
-  align-items: center;
-  gap: 35px;
-  padding: 8px 28px 24px;
-}
-.donut {
-  width: 146px;
-  height: 146px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  transform: rotate(-90deg);
-}
-.donut > div {
-  width: 116px;
-  height: 116px;
-  border-radius: 50%;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  transform: rotate(90deg);
-}
-.donut strong {
-  font-size: 35px;
-  letter-spacing: -1px;
-  font-weight: 600;
-}
-.donut span {
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 4px;
-}
-.chart-legend {
-  flex: 1;
-}
-.chart-legend > div {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: #5e6b80;
-  margin-bottom: 13px;
-}
-.chart-legend strong {
-  margin-left: auto;
-  color: #263852;
-  font-size: 12px;
-}
-.legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 3px;
-}
-.legend-dot.scheduled {
-  background: var(--blue);
-}
-.legend-dot.completed {
-  background: var(--teal);
-}
-.legend-dot.open {
-  background: var(--coral);
-}
-.chart-legend p {
-  font-size: 10px;
-  color: var(--muted);
-  padding-top: 8px;
-  border-top: 1px solid var(--border);
-  max-width: 190px;
-}
-.opportunity-card {
-  position: relative;
-  overflow: hidden;
-  padding: 26px 28px;
-  background: #294a85;
-  color: white;
-  border: 1px solid #294a85;
-  border-radius: var(--radius);
-}
-.opportunity-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 8px;
-  letter-spacing: 1.25px;
-  color: #d1dff8;
-  font-weight: 600;
-}
-.opportunity-label .icon {
-  width: 15px;
-  height: 15px;
-}
-.opportunity-card h2 {
-  white-space: pre-line;
-  font-size: 25px;
-  letter-spacing: -0.65px;
-  font-weight: 550;
-  line-height: 1.2;
-  margin: 15px 0 10px;
-  position: relative;
-  z-index: 1;
-}
-.opportunity-card p {
-  font-size: 11px;
-  line-height: 1.6;
-  max-width: 280px;
-  color: #e0e8f7;
-  position: relative;
-  z-index: 1;
-}
-.light-button {
-  background: #fff;
-  color: #2d4f88;
-  display: inline-flex;
-  align-items: center;
-  gap: 19px;
-  padding: 10px 14px;
-  margin-top: 17px;
-  border-radius: 7px;
-  font-size: 11px;
-  font-weight: 650;
-  position: relative;
-  z-index: 1;
-  min-height: 40px;
-}
-.light-button:hover {
-  background: #e5edfc;
-}
-.opportunity-decoration {
-  position: absolute;
-  right: -18px;
-  bottom: -51px;
-  font-weight: 300;
-  font-size: 280px;
-  line-height: 1;
-  color: #ffffff0b;
-  pointer-events: none;
 }
 /* Staff schedule, waitlist, and activity. */
 .schedule-grid {
@@ -776,6 +602,26 @@ th:last-child {
 }
 .open-row {
   background: #fffbf5;
+}
+.pending-row {
+  background: #fff6e8;
+}
+.filled-row {
+  background: #edf8f2;
+  animation: filled-flash 1.2s ease-out;
+}
+@keyframes filled-flash {
+  from {
+    background: #c6ebd6;
+  }
+}
+.table-person div > .badge {
+  display: inline-flex;
+  width: fit-content;
+  font-size: 11px;
+}
+.table-person div > .badge-green {
+  color: #286e5e;
 }
 .table-footer {
   border-top: 1px solid var(--border);
@@ -1043,6 +889,38 @@ th:last-child {
   margin-top: 6px;
   color: #557169;
 }
+/* Accepted offer: the question is replaced by the booking it produced. */
+.success-panel {
+  border-top-color: var(--teal);
+}
+.success-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px 23px 4px;
+}
+.success-check {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+}
+.success-check .icon {
+  width: 26px;
+  height: 26px;
+}
+.success-head h2 {
+  margin: 6px 0;
+  font-size: 22px;
+}
+.success-head p:not(.eyebrow) {
+  font-size: 14px;
+  color: #286e5e;
+}
 .offer-explanation {
   margin: 0 23px;
   font-size: 12px;
@@ -1167,15 +1045,6 @@ dd {
   .metric-card {
     padding: 23px;
   }
-  .overview-grid {
-    grid-template-columns: 1.4fr 1fr;
-  }
-  .day-chart {
-    gap: 55px;
-  }
-  .day-panel .panel-heading {
-    padding-bottom: 25px;
-  }
 }
 @media (max-width: 1200px) {
   .app-shell {
@@ -1214,28 +1083,6 @@ dd {
   }
   .metric-card p {
     font-size: 9px;
-  }
-  .overview-grid {
-    grid-template-columns: 1.2fr 1fr;
-    gap: 16px;
-  }
-  .day-chart {
-    gap: 18px;
-    padding: 12px 20px 24px;
-  }
-  .donut {
-    width: 120px;
-    height: 120px;
-  }
-  .donut > div {
-    width: 94px;
-    height: 94px;
-  }
-  .opportunity-card {
-    padding: 23px;
-  }
-  .opportunity-card h2 {
-    font-size: 23px;
   }
   .patient-grid {
     grid-template-columns: 1fr;
@@ -1294,14 +1141,8 @@ dd {
   .preview-banner {
     font-size: 9px;
   }
-  .overview-grid {
-    grid-template-columns: 1.2fr 1fr;
-  }
   .page-heading {
     align-items: flex-start;
-  }
-  .day-chart {
-    gap: 25px;
   }
   .metric-value {
     font-size: 31px;
@@ -1405,27 +1246,6 @@ dd {
   .metric-card p {
     font-size: 9px;
     line-height: 1.5;
-  }
-  .overview-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-  .day-chart {
-    justify-content: center;
-    gap: 35px;
-    padding: 5px 23px 24px;
-  }
-  .chart-legend {
-    max-width: 200px;
-  }
-  .opportunity-card {
-    padding: 23px;
-  }
-  .opportunity-card h2 {
-    white-space: normal;
-    max-width: 250px;
-    font-size: 25px;
   }
   .right-column,
   .patient-grid > .right-column {
@@ -1555,6 +1375,7 @@ dd {
   *::after {
     transition: none !important;
     scroll-behavior: auto !important;
+    animation: none !important;
   }
 }
 
@@ -1599,26 +1420,106 @@ dd {
   flex-wrap: wrap;
   gap: 4px 18px;
 }
+/* Demo guide: the same four steps on every screen, one sentence, one action. */
 .demo-scenario {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px;
+  padding: 18px 22px;
   margin-bottom: 24px;
   border-color: #b7c9e6;
 }
-.demo-scenario p {
-  font-size: 12px;
+.demo-scenario-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+.demo-scenario h2 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
   color: var(--muted);
-  margin-top: 8px;
-  max-width: 620px;
+}
+.stepper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.stepper li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.stepper li + li::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  border-radius: 1px;
+  background: #c5cfdf;
+}
+.step-dot {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #c5cfdf;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 12px;
+}
+.step-dot .icon {
+  width: 14px;
+  height: 14px;
+}
+.stepper li.current {
+  color: var(--navy);
+}
+.stepper li.current .step-dot {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: #fff;
+}
+.stepper li.done {
+  color: #286e5e;
+}
+.stepper li.done .step-dot {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #fff;
+}
+.stepper li.done + li::before {
+  background: var(--teal);
+}
+.demo-scenario-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 20px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.demo-scenario-body p {
+  max-width: 680px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--navy);
 }
 .demo-scenario-actions {
   flex-shrink: 0;
 }
+.demo-result {
+  border-color: #9fd0b8;
+  background: #f4fbf7;
+}
 @media (max-width: 900px) {
-  .demo-scenario {
+  .demo-scenario-body {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -1733,7 +1634,6 @@ dd {
 @media (forced-colors: active) {
   .primary-button,
   .secondary-button,
-  .light-button,
   .workspace-switch button,
   .language-switch button {
     border: 1px solid ButtonText;
@@ -1745,10 +1645,6 @@ dd {
     forced-color-adjust: none;
     background: Highlight;
     color: HighlightText;
-  }
-  /* The faint "+" watermark would be forced to solid text color. */
-  .opportunity-decoration {
-    display: none;
   }
 }
 
@@ -1833,3 +1729,43 @@ dd {
 .capacity-grid-panel { min-width: 0; }
 .capacity-calendar-scroll { overflow-x: auto; padding: 2px; }
 .capacity-calendar { min-width: 700px; grid-template-columns: repeat(7,minmax(0,1fr)); }
+
+/* Entry: a start button under the headline, visible on the first phone screen. */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 20px;
+}
+.hero-actions span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.entry-steps strong {
+  color: var(--navy);
+}
+@media (max-width: 650px) {
+  /* Brand and language share the first row; the role switch gets its own. */
+  .topbar .workspace-switch {
+    order: 1;
+  }
+  .language-switch {
+    margin-left: auto;
+  }
+  /* Two rows of two steps; connectors would dangle where the row wraps. */
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+  }
+  .stepper li {
+    font-size: 12px;
+  }
+  .stepper li + li::before {
+    display: none;
+  }
+  .hero-actions .primary-button {
+    width: 100%;
+  }
+}

@@ -293,6 +293,12 @@ export function selectedPatient(state: DemoState) {
     state.patients[0]
   );
 }
+// Days between the patient's original booking and the offered October 8 slot.
+export function daysEarlier(patient: WaitingPatient) {
+  return Math.round(
+    (Date.parse(patient.bookingDate) - Date.parse(DEMO_DATE)) / 86_400_000,
+  );
+}
 export function eligibleCandidates(state: DemoState) {
   const bookings = calendarAppointments(state);
   const slot = bookings.find((a) => a.id === "SQ-006");

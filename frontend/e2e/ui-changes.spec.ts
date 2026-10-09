@@ -129,25 +129,15 @@ for (const language of languages) {
       await expect(metric("Appointment slots")).toHaveText("09");
       await expect(metric("Completed visits")).toHaveText("03");
       await expect(metric("Open slots")).toHaveText("00");
-      const donut = page.locator(".donut");
-      await expect(donut).toHaveAttribute(
-        "aria-label",
-        `6 ${t("Scheduled")}, 3 ${t("Completed")}, 0 ${t("Open slots")}`,
-      );
-      await expect(donut.locator("strong")).toHaveText("9");
       await expect(page.locator(".schedule-panel .panel-heading")).toContainText(
         `9 ${t("slots")}`,
       );
       await expect(page.locator(".table-footer [role=status]")).toHaveText(
-        `${t("Showing")} 9 ${t("of")} 9 ${t("sample slots")}`,
+        `${t("Showing")} 9 ${t("of")} 9 ${t("slots")}`,
       );
       await page
         .getByRole("button", { name: t("Confirm demo cancellation") })
         .click();
-      await expect(donut).toHaveAttribute(
-        "aria-label",
-        `5 ${t("Scheduled")}, 3 ${t("Completed")}, 1 ${t("Open slots")}`,
-      );
       await expect(metric("Open slots")).toHaveText("01");
     });
 
@@ -231,9 +221,9 @@ for (const language of languages) {
         .getByRole("button", { name: t("Send demo offer to Elena"), exact: true })
         .click();
       await page.getByRole("button", { name: t("Patient view") }).click();
-      await page.getByRole("button", { name: t("Preview acceptance") }).click();
+      await page.getByRole("button", { name: t("Accept earlier visit") }).click();
       await page
-        .getByRole("button", { name: t("Confirm preview"), exact: true })
+        .getByRole("button", { name: t("Yes, move my appointment"), exact: true })
         .click();
       await page.getByRole("button", { name: t("Provider view") }).click();
       await expect(
@@ -262,13 +252,13 @@ for (const language of languages) {
           route,
         ).toHaveAttribute("aria-current", "page");
         await expect(page.getByRole("heading", { level: 1 }), route).toHaveText(
-          t("A clearer day. Better access."),
+          t("Today at Isla Care"),
         );
       };
       const leaveOnActivity = async () => {
         await nav.getByRole("button", { name: t("Activity log") }).click();
         await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-          t("Every change, in view"),
+          t("Activity log"),
         );
       };
       await expectOverview("direct #/provider link");

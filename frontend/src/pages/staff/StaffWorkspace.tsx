@@ -10,6 +10,7 @@ import { priorityDisclaimer } from "../../demo/scheduling";
 import { useLanguage } from "../../i18n/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import type { StaffView } from "../../App";
+import DemoGuide from "../../components/DemoGuide";
 import {
   Avatar,
   Badge,
@@ -20,6 +21,7 @@ import {
 import {
   calendarAppointments,
   eligibleCandidates,
+  daysEarlier,
   selectedPatient,
   demoWaitlist,
   DEMO_DATE,
@@ -29,21 +31,15 @@ import {
 
 const titles: Record<StaffView, [string, string]> = {
   overview: [
-    "A clearer day. Better access.",
-    "Keep your schedule moving and bring the next appointment closer.",
+    "Today at Isla Care",
+    "Fill cancelled appointments with patients who want an earlier visit.",
   ],
-  schedule: [
-    "Your daily schedule",
-    "A little clarity for every appointment, from arrival to follow-up.",
-  ],
+  schedule: ["Schedule", "Appointments by day, week or month."],
   waitlist: [
-    "The next opportunity for care",
-    "Availability at a glance. Help patients find an earlier appointment.",
+    "Waitlist",
+    "Patients who asked for an earlier appointment, in priority order.",
   ],
-  activity: [
-    "Every change, in view",
-    "Follow the preview journey from an open slot to a patient response.",
-  ],
+  activity: ["Activity log", "Every step of the demo, in order."],
 };
 function WaitlistPanel({
   full = false,
@@ -84,7 +80,11 @@ function WaitlistPanel({
                 </span>
               )}
             </div>
-            <PriorityBadge demo={demo} priority={person.priority} />
+            <PriorityBadge
+              demo={demo}
+              priority={person.priority}
+              hideDefault={!full}
+            />
             {full && (
               <div className="waitlist-editor">
                 <p>{t(person.condition)}</p>
@@ -119,6 +119,7 @@ function WaitlistPanel({
     </section>
   );
 }
+const SHORT_DATE = { month: "short", day: "numeric" } as const;
 export default function StaffWorkspace({
   view,
   onNavigate,
@@ -159,7 +160,6 @@ export default function StaffWorkspace({
       (status === "All statuses" || a.status === status),
   );
   const completed = day.filter((a) => a.status === "Completed").length;
-  const scheduled = day.filter((a) => a.status === "Scheduled").length;
   const open = day.filter((a) => a.status === "Open slot").length;
   const metrics: {
     label: string;
@@ -171,14 +171,14 @@ export default function StaffWorkspace({
     {
       label: "Appointment slots",
       value: day.length,
-      detail: "For the selected demo date",
+      detail: "On the selected date",
       icon: "calendar",
       tone: "blue",
     },
     {
       label: "Completed visits",
       value: completed,
-      detail: "Marked complete in the sample",
+      detail: "Already seen",
       icon: "check",
       tone: "green",
     },
@@ -192,7 +192,7 @@ export default function StaffWorkspace({
     {
       label: "Patients waiting",
       value: waitlist.length,
-      detail: "Current sample waitlist",
+      detail: "Want an earlier visit",
       icon: "users",
       tone: "purple",
     },
@@ -239,40 +239,41 @@ export default function StaffWorkspace({
       {utilization && (view === "overview" || view === "schedule") && (
         <CapacityDashboard demo={demo} onAction={onAction} />
       )}
-      <section
-        hidden={utilization && (view === "overview" || view === "schedule")}
-        className="panel demo-scenario"
-        aria-label={t("Demo appointment workflow")}
-      >
-        <div>
-          <h2>{t("Try the appointment queue")}</h2>
-          <p role="status" ref={scenarioStatus} tabIndex={-1}>
-            {demo.phase === "scheduled"
-              ? t(
-                  "Step 1: Confirm the fictional patient's cancellation for October 8 at 2:00 PM.",
-                )
-              : demo.phase === "open"
-                ? t(
-                    "Review eligible candidates below, then confirm the selected demo offer.",
-                  )
-                : demo.phase === "offered"
-                  ? t(
-                      "Step 3: Switch to Patient to respond to the simulated offer.",
-                    )
-                  : demo.phase === "accepted"
-                    ? t(
-                        "Complete: the selected patient now has the October 8 appointment. Schedule, waitlist and activity are updated.",
-                      )
-                    : demo.phase === "declined"
-                      ? t(
-                          "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay.",
-                        )
-                      : t(
-                          "The selected patient requested help. Return to Patient; no message leaves this browser.",
-                        )}
-          </p>
-        </div>
-        <div className="demo-scenario-actions">
+      {!(utilization && (view === "overview" || view === "schedule")) && (
+        <DemoGuide
+          phase={demo.phase}
+          statusRef={scenarioStatus}
+          status={
+            demo.phase === "scheduled" ? (
+              t(
+                "Adrián López cancelled his October 8, 2:00 PM visit. Confirm it to open the slot.",
+              )
+            ) : demo.phase === "open" ? (
+              t(
+                "The 2:00 PM slot is open. The best match is ranked first below; send the offer.",
+              )
+            ) : demo.phase === "offered" ? (
+              `${t("Offer sent to")} ${patient.name}. ${t("Nothing changes until the patient accepts. Open the Patient view to answer.")}`
+            ) : demo.phase === "accepted" ? (
+              <>
+                <strong>{t("Open slot filled in 3 steps.")}</strong>{" "}
+                {patient.name} ·{" "}
+                {dateText(patient.bookingDate, SHORT_DATE)} →{" "}
+                {dateText(DEMO_DATE, SHORT_DATE)} · {daysEarlier(patient)}{" "}
+                {t("days sooner")} · {t("Waitlist")} {demo.patients.length} →{" "}
+                {waitlist.length}
+              </>
+            ) : demo.phase === "declined" ? (
+              t(
+                "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay.",
+              )
+            ) : (
+              t(
+                "The selected patient requested help. Return to Patient; no message leaves this browser.",
+              )
+            )
+          }
+        >
           {demo.phase === "scheduled" && (
             <button
               type="button"
@@ -316,8 +317,8 @@ export default function StaffWorkspace({
               {t("Review activity")}{" "}
             </button>
           )}
-        </div>
-      </section>
+        </DemoGuide>
+      )}
       <p className="priority-disclaimer">{t(priorityDisclaimer)}</p>
       {demo.phase === "open" && (
         <CandidateReview
@@ -325,14 +326,6 @@ export default function StaffWorkspace({
           candidateId={candidateId}
           onSelect={setChosenId}
         />
-      )}
-      {(demo.phase === "offered" ||
-        demo.phase === "help" ||
-        demo.phase === "accepted") && (
-        <p className="section-notice">
-          {t("Selected patient")}: {patient.name}{" "}
-          <PriorityBadge demo={demo} priority={patient.priority} />
-        </p>
       )}
       {!utilization && (view === "overview" || view === "schedule") && (
         <>
@@ -353,93 +346,6 @@ export default function StaffWorkspace({
               </section>
             ))}
           </div>
-          {view === "overview" && (
-            <div className="overview-grid">
-              <section className="panel day-panel">
-                <div className="panel-heading">
-                  <div>
-                    <h2>{t("A snapshot of your day")}</h2>
-                    <p>{t("Appointment status · selected demo date")}</p>
-                  </div>
-                  <Badge>{t("Sample data")}</Badge>
-                </div>
-                <div className="day-chart">
-                  <div
-                    className="donut"
-                    style={{
-                      background: day.length
-                        ? `conic-gradient(var(--blue) 0 ${(scheduled / day.length) * 100}%, var(--teal) ${(scheduled / day.length) * 100}% ${((scheduled + completed) / day.length) * 100}%, var(--coral) ${((scheduled + completed) / day.length) * 100}% 100%)`
-                        : "var(--border)",
-                    }}
-                    role="img"
-                    aria-label={`${scheduled} ${t("Scheduled")}, ${completed} ${t("Completed")}, ${open} ${t("Open slots")}`}
-                  >
-                    <div>
-                      <strong>{day.length}</strong>
-                      <span>{t("total slots")}</span>
-                    </div>
-                  </div>
-                  <div className="chart-legend">
-                    <div>
-                      <span className="legend-dot scheduled" /> {t("Scheduled")}{" "}
-                      <strong>{scheduled}</strong>
-                    </div>
-                    <div>
-                      <span className="legend-dot completed" /> {t("Completed")}{" "}
-                      <strong>{completed}</strong>
-                    </div>
-                    <div>
-                      <span className="legend-dot open" /> {t("Open slots")}{" "}
-                      <strong>{open}</strong>
-                    </div>
-                    <p>
-                      {t(
-                        "Each open slot is a chance to shorten someone’s wait.",
-                      )}
-                    </p>
-                  </div>
-                </div>
-              </section>
-              <section className="opportunity-card">
-                <div className="opportunity-label">
-                  <Icon name="heart" /> {t("MAKE ROOM FOR EARLIER CARE")}{" "}
-                </div>
-                <h2>
-                  {open
-                    ? t("One opening.\nA new possibility.")
-                    : t("A little planning.\nA better patient day.")}
-                </h2>
-                <p>
-                  {open
-                    ? t(
-                        "The 2:00 PM sample slot is open. Explore the waitlist to see who is available.",
-                      )
-                    : date !== DEMO_DATE
-                      ? t(
-                          "Choose October 8 to explore the sample schedule and waitlist.",
-                        )
-                      : demo.phase === "accepted"
-                        ? t(
-                            "An earlier visit is confirmed in the demo. Review the activity log to follow each step.",
-                          )
-                        : t(
-                            "Use the scenario controls to open a slot and offer an earlier visit.",
-                          )}
-                </p>
-                <button
-                  type="button"
-                  className="light-button"
-                  onClick={() => onNavigate("waitlist")}
-                >
-                  {" "}
-                  {t("Explore waitlist")} <Icon name="arrow" />
-                </button>
-                <span className="opportunity-decoration" aria-hidden="true">
-                  +
-                </span>
-              </section>
-            </div>
-          )}
           <div className={view === "overview" ? "schedule-grid" : ""}>
             <section className="panel schedule-panel">
               <div className="panel-heading">
@@ -504,58 +410,79 @@ export default function StaffWorkspace({
                       </tr>
                     </thead>
                     <tbody>
-                      {filtered.map((appointment) => (
-                        <tr
-                          key={appointment.id}
-                          className={
-                            appointment.status === "Open slot" ? "open-row" : ""
-                          }
-                        >
-                          <td className="time-cell">
-                            {timeText(appointment.time)}
-                            <span>{t("30 min")}</span>
-                          </td>
-                          <td>
-                            <div className="table-person">
-                              {appointment.status === "Open slot" ? (
-                                <span className="avatar open-avatar">
-                                  <Icon name="calendar" />
-                                </span>
-                              ) : (
-                                <Avatar name={t(appointment.name)} />
-                              )}
-                              <div>
-                                <strong>{t(appointment.name)}</strong>
-                                {appointment.status !== "Open slot" && (
-                                  <PriorityBadge
-                                    demo={demo}
-                                    priority={appointment.priority}
-                                  />
-                                )}
-                                <span>
-                                  {appointment.status === "Open slot"
-                                    ? t("Staff-confirmed sample cancellation")
-                                    : appointment.id}
-                                </span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>{t(appointment.type)}</td>
-                          <td>
-                            <Badge
-                              tone={
-                                appointment.status === "Completed"
-                                  ? "green"
+                      {filtered.map((appointment) => {
+                        const slot = appointment.id === "SQ-006";
+                        const pending =
+                          slot &&
+                          (demo.phase === "offered" || demo.phase === "help");
+                        const filled = slot && demo.phase === "accepted";
+                        return (
+                          <tr
+                            key={appointment.id}
+                            className={
+                              pending
+                                ? "pending-row"
+                                : filled
+                                  ? "filled-row"
                                   : appointment.status === "Open slot"
-                                    ? "amber"
-                                    : "blue"
-                              }
-                            >
-                              {t(appointment.status)}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))}
+                                    ? "open-row"
+                                    : ""
+                            }
+                          >
+                            <td className="time-cell">
+                              {timeText(appointment.time)}
+                              <span>{t("30 min")}</span>
+                            </td>
+                            <td>
+                              <div className="table-person">
+                                {appointment.status === "Open slot" ? (
+                                  <span className="avatar open-avatar">
+                                    <Icon name="calendar" />
+                                  </span>
+                                ) : (
+                                  <Avatar name={t(appointment.name)} />
+                                )}
+                                <div>
+                                  <strong>{t(appointment.name)}</strong>
+                                  {appointment.status !== "Open slot" && (
+                                    <PriorityBadge
+                                      demo={demo}
+                                      priority={appointment.priority}
+                                      hideDefault
+                                    />
+                                  )}
+                                  {filled && (
+                                    <Badge tone="green">{t("Just filled")}</Badge>
+                                  )}
+                                  <span>
+                                    {pending
+                                      ? `${t("Waiting for")} ${patient.name}`
+                                      : appointment.status === "Open slot"
+                                        ? t("Staff-confirmed sample cancellation")
+                                        : appointment.id}
+                                  </span>
+                                </div>
+                              </div>
+                            </td>
+                            <td>{t(appointment.type)}</td>
+                            <td>
+                              <Badge
+                                tone={
+                                  appointment.status === "Completed"
+                                    ? "green"
+                                    : appointment.status === "Open slot"
+                                      ? "amber"
+                                      : "blue"
+                                }
+                              >
+                                {pending
+                                  ? t("Offer sent")
+                                  : t(appointment.status)}
+                              </Badge>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </section>
@@ -592,7 +519,7 @@ export default function StaffWorkspace({
                 <span role="status">
                   {" "}
                   {t("Showing")} {filtered.length} {t("of")} {day.length}{" "}
-                  {t("sample slots")}{" "}
+                  {t("slots")}{" "}
                 </span>
                 <span>{t("Single office · 30-minute visits")}</span>
               </div>
@@ -604,18 +531,6 @@ export default function StaffWorkspace({
                   demo={demo}
                   onAction={onAction}
                 />
-                <section className="care-note">
-                  <span className="metric-icon green">
-                    <Icon name="shield" />
-                  </span>
-                  <h3>{t("Patient choice comes first")}</h3>
-                  <p>
-                    {" "}
-                    {t(
-                      "Earlier appointments are always an offer. An existing booking stays in place until a replacement is confirmed.",
-                    )}{" "}
-                  </p>
-                </section>
               </div>
             )}
           </div>
@@ -646,9 +561,8 @@ export default function StaffWorkspace({
           <div className="panel-heading">
             <div>
               <h2>{t("Preview activity")}</h2>
-              <p>{t("Illustrative events, not a persisted audit log")}</p>
+              <p>{t("Resets when you reload or reset the demo")}</p>
             </div>
-            <Badge tone="amber">{t("Session only")}</Badge>
           </div>
           {demo.events.length ? (
             <ol className="timeline">
@@ -663,7 +577,6 @@ export default function StaffWorkspace({
                       {t("Demo event")} {index + 1}
                     </strong>
                     <p>{t(event)}</p>
-                    <Badge tone="blue">{t("This browser only")}</Badge>
                   </div>
                 </li>
               ))}

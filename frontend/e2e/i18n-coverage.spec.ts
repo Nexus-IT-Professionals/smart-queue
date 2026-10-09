@@ -129,7 +129,7 @@ async function walkEveryState(page: Page, language: Language) {
   await click("Send demo offer to Elena");
   await check("offer sent");
   await click("Patient view");
-  await click("Preview acceptance");
+  await click("Accept earlier visit");
   await check("patient confirmation");
   await click("Go back");
   await check("patient offer");
@@ -147,8 +147,8 @@ async function walkEveryState(page: Page, language: Language) {
   await click("Confirm demo cancellation");
   await click("Send demo offer to Elena");
   await click("Patient view");
-  await click("Preview acceptance");
-  await click("Confirm preview");
+  await click("Accept earlier visit");
+  await click("Yes, move my appointment");
   await check("patient accepted");
   await click("Provider view");
   for (const view of ["Overview", "Schedule", "Waitlist", "Activity log"]) {

@@ -127,10 +127,10 @@ async function waitlist(page: Page, t: Translate) {
 async function accept(page: Page, t: Translate, language: Language) {
   await offer(page, t);
   await page
-    .getByRole("button", { name: t("Preview acceptance"), exact: true })
+    .getByRole("button", { name: t("Accept earlier visit"), exact: true })
     .click();
   await page
-    .getByRole("button", { name: t("Confirm preview"), exact: true })
+    .getByRole("button", { name: t("Yes, move my appointment"), exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: dates[language].earlier, exact: true }),
@@ -247,10 +247,10 @@ for (const language of ["en", "es"] as const) {
         ),
       ).toBeVisible();
       await page
-        .getByRole("button", { name: t("Preview acceptance"), exact: true })
+        .getByRole("button", { name: t("Accept earlier visit"), exact: true })
         .click();
       await page
-        .getByRole("button", { name: t("Confirm preview"), exact: true })
+        .getByRole("button", { name: t("Yes, move my appointment"), exact: true })
         .click();
       await expect(
         page.getByRole("heading", {

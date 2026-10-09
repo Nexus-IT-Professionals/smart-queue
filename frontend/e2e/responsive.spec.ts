@@ -145,10 +145,10 @@ for (const { name, width, height, scale } of cases) {
         await button("Send demo offer to Elena").click();
         await checkpoint();
         await button("Patient view").click();
-        await checkpoint("Preview acceptance");
-        await button("Preview acceptance").click();
-        await checkpoint("Confirm preview");
-        await button("Confirm preview").click();
+        await checkpoint("Accept earlier visit");
+        await button("Accept earlier visit").click();
+        await checkpoint("Yes, move my appointment");
+        await button("Yes, move my appointment").click();
         await expect(
           page.getByRole("heading", {
             name: lang === "es" ? "jueves, 8 de octubre" : "Thursday, October 8",

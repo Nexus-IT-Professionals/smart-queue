@@ -20,27 +20,46 @@ export default function DemoAccess({
               "No account, password, or personal information needed. Choose a fictional identity to begin.",
             )}{" "}
           </p>
+          <div className="hero-actions">
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => onNavigate("staff")}
+            >
+              {" "}
+              {t("Start the guided demo")} <Icon name="arrow" />
+            </button>
+            <span>{t("Starts as the Provider · about 2 minutes")}</span>
+          </div>
         </div>
       </div>
       {/* Instructions first, then the role cards (Patient left, Provider right). */}
       <section className="care-note demo-guide">
         <h2>{t("A complete demo in one browser")}</h2>
-        <ol>
+        <ol className="entry-steps">
           <li>
-            {t("Choose Provider and confirm the sample 2:00 PM cancellation.")}
+            <strong>{t("Cancel")}</strong>{" "}
+            {t("As the Provider, confirm the sample 2:00 PM cancellation.")}
           </li>
-          <li>{t("Send the demo offer, then switch to Patient.")}</li>
           <li>
-            {" "}
+            <strong>{t("Offer")}</strong>{" "}
+            {t("Send the open slot to the best-matched waiting patient.")}
+          </li>
+          <li>
+            <strong>{t("Patient accepts")}</strong>{" "}
+            {t("Switch to Patient and accept the earlier visit.")}
+          </li>
+          <li>
+            <strong>{t("Result")}</strong>{" "}
             {t(
-              "Accept and confirm the offer. Return to Provider to see the updated schedule, waitlist, and activity log.",
-            )}{" "}
+              "Return to Provider to see the filled slot, waitlist and activity log.",
+            )}
           </li>
         </ol>
         <p>
           {" "}
           {t(
-            "Switch roles at any time using the header. Reset restarts the scenario; refreshing clears it. This is a local simulation, not a live appointment or message. The Provider workspace includes staff scheduling tools; no separate Admin interface exists.",
+            "Switch roles at any time from the header. Reset or reload starts over. Nothing leaves this browser. Staff tools are in the Provider workspace; there is no separate Admin view.",
           )}{" "}
         </p>
       </section>

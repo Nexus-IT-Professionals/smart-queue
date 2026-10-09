@@ -114,9 +114,9 @@ for (const language of ["en", "es"]) {
     await expect(page.locator('[aria-live="polite"]')).toContainText(
       language === "es" ? "Cita demo adelantada" : "Demo appointment moved",
     );
-    await tabTo(page, page.locator(".offer-panel > .text-button"));
+    await tabTo(page, page.locator(".success-actions .primary-button"));
     await page.keyboard.press("Enter");
-    await expect(page.locator(".patient-grid .demo-access-card")).toBeFocused();
+    await expect(page.getByRole("main")).toBeFocused();
     await page.goBack();
     await expect(page.getByRole("main")).toBeFocused();
     await page.goForward();
@@ -148,7 +148,7 @@ test("focus is retained after help, decline and resets during confirmation", asy
   await page.getByRole("button", { name: "Send demo offer to Elena" }).click();
   await page.getByRole("button", { name: "Open Demo Patient" }).click();
   await page
-    .getByRole("button", { name: "Preview acceptance", exact: true })
+    .getByRole("button", { name: "Accept earlier visit", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Reset demo scenario", exact: true })

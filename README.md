@@ -70,7 +70,7 @@ Booking rules control availability, offer expiry, and duplicate acceptance. Pati
 
 1. Enter Provider view and confirm the sample October 8, 2:00 PM cancellation.
 2. Send the demo offer to Elena, then open Patient view.
-3. Preview acceptance and confirm. Elena's fictional appointment moves from October 22 to October 8.
+3. Choose **Accept earlier visit** and confirm. Elena's fictional appointment moves from October 22 to October 8.
 4. Return to Provider: the schedule names Elena, the waitlist has two remaining patients, and the Activity log records the steps.
 5. Reset the scenario to replay or try decline/help. No credentials are required at any step.
 

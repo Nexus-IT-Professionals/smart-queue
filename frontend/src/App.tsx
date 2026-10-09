@@ -264,17 +264,6 @@ export default function App() {
           </a>
         </div>
         <div className="sidebar-bottom">
-          <div className="demo-card">
-            <Icon name="shield" />
-            <strong>{t("A safe space to explore")}</strong>
-            <p>
-              {" "}
-              {t(
-                "Fictional people. Simulated offers. No real patient information.",
-              )}{" "}
-            </p>
-            <span className="demo-tag">{t("DEMO / POC MODE")}</span>
-          </div>
           <div className="connection" role="status">
             <span
               className={`status-dot ${import.meta.env.MODE === "public-demo" ? "ok" : apiStatus}`}

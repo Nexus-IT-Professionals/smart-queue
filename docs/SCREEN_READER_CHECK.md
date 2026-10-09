@@ -43,22 +43,23 @@ paraphrased; wording order varies by reader. Spanish text is in brackets.
 5. **Provider.** Activate "Provider view" [Vista del proveedor]. Focus moves to main.
    Sidebar "Overview" announces "current page".
 6. **Cancellation.** Activate "Confirm demo cancellation" [Confirmar cancelación demo].
-   Hear: "Step 2: The slot is open. Offer it to Elena Morales, who is available in the
-   afternoon." [Paso 2: El espacio está disponible. Ofrézcalo a Elena Morales, que tiene
-   disponibilidad por la tarde.]
+   Hear: "The 2:00 PM slot is open. The best match is ranked first below; send the
+   offer." [El espacio de las 2:00 p. m. está disponible. La mejor coincidencia aparece
+   primero abajo; envíe la oferta.]
 7. **Offer.** Activate "Send demo offer to Elena" [Enviar oferta demo a Elena]. Hear:
-   "Step 3: Switch to Patient to respond to the simulated offer." [Paso 3: Cambie a
-   Paciente para responder a la oferta simulada.]
+   "Offer sent to Elena Morales. Nothing changes until the patient accepts. Open the
+   Patient view to answer." [Oferta enviada a Elena Morales. Nada cambia hasta que el
+   paciente acepte. Abra la vista del paciente para responder.]
 8. **Patient.** Activate "Open Demo Patient" [Abrir paciente demo]. Focus moves to main.
 9. **Help.** Activate "I need help" [Necesito ayuda]. Hear: "Help request preview
    recorded. No message was sent to the office." [Solicitud de ayuda de prueba
    registrada. No se envió ningún mensaje al consultorio.]
-10. **Confirmation.** Activate "Preview acceptance" [Revisar aceptación]. Hear the group
-    name "Confirm preview acceptance" [Confirmar aceptación de prueba] and the question
-    "Preview accepting October 8 at 2:00 PM?" [¿Aceptar la cita de prueba del 8 de
-    octubre a las 2:00 p. m.?]. `Tab` reaches "Confirm preview" [Confirmar prueba] and
+10. **Confirmation.** Activate "Accept earlier visit" [Aceptar cita más cercana]. Hear
+    the group name "Confirm earlier visit" [Confirmar cita más cercana] and the question
+    "Move your appointment to October 8 at 2:00 PM?" [¿Mover su cita al 8 de octubre a
+    las 2:00 p. m.?]. `Tab` reaches "Yes, move my appointment" [Sí, mover mi cita] and
     "Go back" [Volver].
-11. **Accept.** Activate "Confirm preview". Hear: "Demo appointment moved to October 8 at
+11. **Accept.** Activate "Yes, move my appointment". Hear: "Demo appointment moved to October 8 at
     2:00 PM. Provider schedule and waitlist updated in this browser only; no real booking
     was made." [Cita demo adelantada al 8 de octubre a las 2:00 p. m. Agenda y lista de
     espera actualizadas solo en este navegador; no se hizo una reserva real.]

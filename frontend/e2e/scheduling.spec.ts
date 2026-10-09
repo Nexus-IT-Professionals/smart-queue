@@ -43,17 +43,17 @@ test("urgent eligible patient is reviewed, explicitly accepts, and updates all c
     "October 22",
   );
   await page
-    .getByRole("button", { name: "Preview acceptance", exact: true })
+    .getByRole("button", { name: "Accept earlier visit", exact: true })
     .click();
   await page.getByRole("button", { name: "Go back", exact: true }).click();
   await expect(page.locator(".patient-appointment")).toContainText(
     "October 22",
   );
   await page
-    .getByRole("button", { name: "Preview acceptance", exact: true })
+    .getByRole("button", { name: "Accept earlier visit", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Confirm preview", exact: true })
+    .getByRole("button", { name: "Yes, move my appointment", exact: true })
     .click();
   await expect(page.locator(".patient-appointment")).toContainText("October 8");
   await page
@@ -128,6 +128,8 @@ test("configuration validation, migration, custom labels/order and session reset
   await page
     .getByRole("button", { name: "Provider view", exact: true })
     .click();
+  // The Overview preview hides the default level; the Waitlist shows every badge.
+  await page.getByRole("button", { name: "Waitlist 4", exact: true }).click();
   await expect(
     page.locator(".waitlist-person").filter({ hasText: "Elena Morales" }),
   ).toContainText("P4");

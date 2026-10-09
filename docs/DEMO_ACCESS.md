@@ -16,7 +16,7 @@ Root and unknown fragments display the entry page. The header exposes Demo acces
 
 1. Continue as Demo Provider. Confirm the fictional patient's October 8, 2:00 PM cancellation.
 2. Send the demo offer to Elena Morales. Open Demo Patient.
-3. Preview acceptance and explicitly confirm. Her fictional appointment moves from October 22 to October 8.
+3. Choose **Accept earlier visit** and explicitly confirm. Her fictional appointment moves from October 22 to October 8.
 4. Return to Provider. The 2:00 PM slot now shows Elena; the waitlist drops from three entries to two; Activity log lists cancellation, offer, and acceptance.
 5. Reset demo scenario to replay. Alternatively decline to preserve the October 22 appointment, or request help and then accept/decline.
 

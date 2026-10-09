@@ -1,9 +1,10 @@
-import { endTime, priorityDisclaimer } from "../../demo/scheduling";
-import { PriorityBadge } from "../staff/SchedulingTools";
+import { endTime } from "../../demo/scheduling";
 import { useLanguage } from "../../i18n/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
+import DemoGuide from "../../components/DemoGuide";
 import { Avatar, Badge, Icon } from "../../components/ui";
 import {
+  daysEarlier,
   responseMessages,
   selectedPatient,
   type DemoState,
@@ -27,6 +28,7 @@ export default function PatientWorkspace({
     ? (demo.phase as "accepted" | "declined" | "help")
     : null;
   const hasOffer = demo.phase === "offered" || demo.phase === "help";
+  const accepted = demo.phase === "accepted";
   const [confirming, setConfirming] = useState(false);
   const acceptButton = useRef<HTMLButtonElement>(null);
   const confirmation = useRef<HTMLDivElement>(null);
@@ -50,7 +52,7 @@ export default function PatientWorkspace({
       <div className="page-heading">
         <div>
           <p className="eyebrow">{t("ISLA CARE / PATIENT WORKSPACE")}</p>
-          <h1>{t("Your care, a little closer.")}</h1>
+          <h1>{t("My appointment")}</h1>
           <p>
             {patient.id === "WL-001"
               ? t("Welcome, Elena. An earlier appointment could fit your day.")
@@ -59,7 +61,18 @@ export default function PatientWorkspace({
         </div>
         <Badge tone="blue">{t("Fictional patient")}</Badge>
       </div>
-      <p className="priority-disclaimer">{t(priorityDisclaimer)}</p>
+      <DemoGuide
+        phase={demo.phase}
+        status={t(
+          demo.phase === "scheduled" || demo.phase === "open"
+            ? "Waiting for the office to offer an earlier slot."
+            : demo.phase === "accepted"
+              ? "Done. The office sees the change right away."
+              : demo.phase === "declined"
+                ? "You kept your current visit. Reset to replay."
+                : "Your turn: review the earlier visit below and decide.",
+        )}
+      />
       <div className="patient-grid">
         <div>
           <section className="panel patient-appointment">
@@ -127,31 +140,56 @@ export default function PatientWorkspace({
               </button>
             </section>
           ) : (
-            <section className="panel offer-panel">
-              <div className="panel-heading">
-                <div>
-                  <p className="eyebrow">
-                    {t("AN OPPORTUNITY TO BE SEEN SOONER")}
+            <section
+              className={`panel offer-panel${accepted ? " success-panel" : ""}`}
+            >
+              {accepted ? (
+                <div className="success-head">
+                  <span className="success-check">
+                    <Icon name="check" />
+                  </span>
+                  <div>
+                    <p className="eyebrow">{t("EARLIER VISIT CONFIRMED")}</p>
+                    <h2>
+                      {t("You're booked for")} {dateText("2026-10-08")} ·{" "}
+                      {timeText("2:00 PM")}
+                    </h2>
+                    <p>
+                      {daysEarlier(patient)}{" "}
+                      {t(
+                        "days sooner. Your October 22 visit was released for someone else.",
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="panel-heading">
+                    <div>
+                      <p className="eyebrow">
+                        {t("AN OPPORTUNITY TO BE SEEN SOONER")}
+                      </p>
+                      <h2>{t("Does an earlier visit work for you?")}</h2>
+                    </div>
+                    <Badge tone="green">{t("14 days earlier")}</Badge>
+                  </div>
+                  <div className="offer-date">
+                    <Icon name="clock" />
+                    <div>
+                      <strong>
+                        {dateText("2026-10-08")} · {timeText("2:00 PM")}
+                      </strong>
+                      <p>{t("30-minute consultation · Isla Care, San Juan")}</p>
+                    </div>
+                  </div>
+                  <p className="offer-explanation">
+                    {" "}
+                    {t(
+                      "This is a simulated offer. Confirming updates only the fictional schedule in this browser. No real appointment or message is created.",
+                    )}{" "}
                   </p>
-                  <h2>{t("Does an earlier visit work for you?")}</h2>
-                </div>
-                <Badge tone="green">{t("14 days earlier")}</Badge>
-              </div>
-              <div className="offer-date">
-                <Icon name="clock" />
-                <div>
-                  <strong>
-                    {dateText("2026-10-08")} · {timeText("2:00 PM")}
-                  </strong>
-                  <p>{t("30-minute consultation · Isla Care, San Juan")}</p>
-                </div>
-              </div>
-              <p className="offer-explanation">
-                {" "}
-                {t(
-                  "This is a simulated offer. Confirming updates only the fictional schedule in this browser. No real appointment or message is created.",
-                )}{" "}
-              </p>
+                </>
+              )}
               {hasOffer && !confirming && (
                 <div className="offer-actions">
                   <button
@@ -161,7 +199,7 @@ export default function PatientWorkspace({
                     onClick={() => setConfirming(true)}
                   >
                     {" "}
-                    {t("Preview acceptance")} <Icon name="arrow" />
+                    {t("Accept earlier visit")} <Icon name="arrow" />
                   </button>
                   <button
                     type="button"
@@ -192,9 +230,11 @@ export default function PatientWorkspace({
                   ref={confirmation}
                   tabIndex={-1}
                   role="group"
-                  aria-label={t("Confirm preview acceptance")}
+                  aria-label={t("Confirm earlier visit")}
                 >
-                  <h3>{t("Preview accepting October 8 at 2:00 PM?")}</h3>
+                  <h3>
+                    {t("Move your appointment to October 8 at 2:00 PM?")}
+                  </h3>
                   <p>
                     {" "}
                     {t(
@@ -211,7 +251,7 @@ export default function PatientWorkspace({
                       }}
                     >
                       {" "}
-                      {t("Confirm preview")}{" "}
+                      {t("Yes, move my appointment")}{" "}
                     </button>
                     <button
                       type="button"
@@ -232,27 +272,29 @@ export default function PatientWorkspace({
                   </div>
                 )}
               </div>
-              {response && (
-                <button
-                  type="button"
-                  className="text-button"
-                  onClick={() => {
-                    onAction({ type: "reset" });
-                    setConfirming(false);
-                  }}
-                >
-                  <Icon name="reset" /> {t("Restart demo scenario")}{" "}
-                </button>
+              {accepted && (
+                <div className="offer-actions success-actions">
+                  <button
+                    type="button"
+                    className="primary-button"
+                    onClick={onProvider}
+                  >
+                    {" "}
+                    {t("See what the office sees")} <Icon name="arrow" />
+                  </button>
+                </div>
               )}
-              <div className="panel-note">
-                <Icon name="shield" />
-                <p>
-                  {" "}
-                  {t(
-                    "You’re in control. The demo changes the appointment only after your explicit confirmation.",
-                  )}{" "}
-                </p>
-              </div>
+              {!accepted && (
+                <div className="panel-note">
+                  <Icon name="shield" />
+                  <p>
+                    {" "}
+                    {t(
+                      "You’re in control. The demo changes the appointment only after your explicit confirmation.",
+                    )}{" "}
+                  </p>
+                </div>
+              )}
             </section>
           )}
         </div>
@@ -262,7 +304,6 @@ export default function PatientWorkspace({
               <Avatar name={patient.name} />
               <div>
                 <h2>{patient.name}</h2>
-                <PriorityBadge demo={demo} priority={patient.priority} />
                 <p>
                   {t("Synthetic patient")} · {patient.id}
                 </p>

@@ -25,12 +25,16 @@ import {
 export function PriorityBadge({
   demo,
   priority,
+  hideDefault = false,
 }: {
   demo: DemoState;
   priority?: PriorityId;
+  // Busy lists show only levels that differ from the default.
+  hideDefault?: boolean;
 }) {
   const { t } = useLanguage();
   const level = priorityLevel(demo.config, priority);
+  if (hideDefault && level.id === demo.config.defaultId) return null;
   return (
     <span
       className={`priority-badge priority-${level.tone}`}
