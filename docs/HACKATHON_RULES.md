@@ -2,7 +2,7 @@
 
 **Summary**: The official Caribbean AI Summit 2026 hackathon rules, copied word for word from Devpost, followed by a checklist the team uses to confirm compliance before and during the build. The rules section is a copy; do not edit it. Only the checklist is updated.
 **Sources**: [raw/devpost-hackathon-rules-2026-10-07.txt](raw/devpost-hackathon-rules-2026-10-07.txt) (pasted from https://caribbean-ai-summit-hackathon.devpost.com/rules on 2026-10-07 16:12 AST; Devpost blocks automated fetches); judging criteria from the CaribbeanAI_Summit2026 repo, `CervelAI/Research/HACKATHON_RESEARCH.md` (2026-10-03)
-**Last updated**: 2026-10-08
+**Last updated**: 2026-10-09
 
 ---
 
@@ -67,8 +67,8 @@ Status values: `open`, `done`, `n/a` (reason required). Owner = team member resp
 
 | # | Requirement | Rule | Owner | Status |
 |---|---|---|---|---|
-| R1 | Every team member holds a valid conference ticket | Participation | | open |
-| R2 | Every team member is registered for the hackathon on Devpost | Participation | | open |
+| R1 | Every team member holds a valid conference ticket | Participation | team | open: human check; owner: team |
+| R2 | Every team member is registered for the hackathon on Devpost | Participation | team | open: human check on Devpost; owner: team |
 | R3 | Team has 2–4 members (or a solo entry) and the roster is recorded in `participants/` | Team | | open |
 | R4 | Official start time, submission deadline and timezone recorded here | Build | | done (2026-10-08): kickoff Thursday 2026-10-08, 6:00pm AST at Centro Unido de Detallistas (wrap-up 10:00pm, remote work afterwards); Friday 2026-10-09 teams work at their own pace, Room 207 is the hackathon lounge during conference hours, mentorship from 6:00pm in Room 209A; **final submissions due Saturday 2026-10-10 at 12:00pm AST** on Devpost. Presentation and awards time not announced (the summit page placed finalist demos 3:30–4:15pm). Source: Devpost organizer email "Hackathon Starts Tomorrow", 2026-10-07 9:09pm AST |
 | R5 | Problem is a healthcare challenge relevant to Puerto Rico | Build | | done: missed and cancelled appointments in PR medical offices (see `wiki/idea-3-pitch-evidence.md`) |
@@ -78,32 +78,32 @@ Status values: `open`, `done`, `n/a` (reason required). Owner = team member resp
 | # | Requirement | Rule | Owner | Status |
 |---|---|---|---|---|
 | R6 | No prototype code written before the official start; pre-event work limited to research and planning documents | Build | | open |
-| R7 | Pre-existing components listed and credited (frameworks, libraries, models, templates, any reused code) in the repo README | Build | | open |
-| R8 | Only synthetic or approved data; no real patient records or secrets in the repo | Overview (verify) | | open |
-| R9 | Git history shows the core features were built during October 8–10 | Build (evidence) | | open |
+| R7 | Pre-existing components listed and credited (frameworks, libraries, models, templates, any reused code) in the repo README | Build | | done (2026-10-09): README "Pre-existing components" credits every package in `frontend/package.json` (dependencies and devDependencies) and `backend/requirements.txt` with its license, plus Ollama/Qwen2.5, GitHub Actions, Gitleaks, Vercel and Node.js; `frontend/tests/submission.test.mjs` fails if a package is not credited |
+| R8 | Only synthetic or approved data; no real patient records or secrets in the repo | Overview (verify) | | done (2026-10-09): CI scans the full Git history with Gitleaks 8.30.1 before every deploy (`.github/workflows/deploy-vercel.yml`; the run for commit 32b519e passed); demo data in `frontend/src/demo/` is fictional and labeled as such; the public build blocks network requests |
+| R9 | Git history shows the core features were built during October 8–10 | Build (evidence) | | done (2026-10-09): `git log --reverse --date=iso` shows the first commit at 2026-10-08 20:32 -0400 (after the 6:00pm AST kickoff) and the latest at 2026-10-09 17:19 -0400; all 31 commits fall on October 8–9. Recheck the last commit before submitting |
 
 ### Submission
 
 | # | Requirement | Rule | Owner | Status |
 |---|---|---|---|---|
-| R10 | Project name final | Submission | | open |
-| R11 | Team members listed on Devpost | Submission | | open |
-| R12 | 2–3 sentence problem-and-solution description | Submission | | open |
-| R13 | Working demo or a demo video of 2 minutes or less | Submission | | open |
-| R14 | Code repository link; judges can open it (test from a signed-out browser) | Submission | | open |
-| R15 | Basic instructions for reviewing or running the project | Submission | | open |
+| R10 | Project name final | Submission | team | open: proposed "Smart Appointment Queue" in docs/SUBMISSION.md; owner: team |
+| R11 | Team members listed on Devpost | Submission | team | open: names drafted from Git authors in docs/SUBMISSION.md; confirm and enter on Devpost; owner: team |
+| R12 | 2–3 sentence problem-and-solution description | Submission | team | open: 3-sentence draft in docs/SUBMISSION.md (length checked by `submission.test.mjs`); team to approve; owner: team |
+| R13 | Working demo or a demo video of 2 minutes or less | Submission | team | open: live demo works (see R17); video not recorded; owner: team |
+| R14 | Code repository link; judges can open it (test from a signed-out browser) | Submission | | done (2026-10-09): https://github.com/Nexus-IT-Professionals/smart-queue returns HTTP 200 to an unauthenticated `curl`; recheck in a signed-out browser before submitting |
+| R15 | Basic instructions for reviewing or running the project | Submission | | done (2026-10-09): docs/SUBMISSION.md "How to review" (5 steps) and "Run locally"; README "Run locally" |
 | R16 | Optional: slide deck of 5 slides or fewer | Submission (optional) | | open |
-| R17 | Optional: live hosted demo | Submission (optional) | | open |
-| R18 | Submitted on Devpost before the deadline | Submission | | open |
+| R17 | Optional: live hosted demo | Submission (optional) | | done (2026-10-09): https://smart-queue-demo.vercel.app and its /presentation/index.html return HTTP 200 to an unauthenticated `curl`; CI deploys only after lint, unit and browser tests pass |
+| R18 | Submitted on Devpost before the deadline | Submission | team | open: owner: team |
 
 ### If selected as a finalist
 
 | # | Requirement | Rule | Owner | Status |
 |---|---|---|---|---|
-| R19 | 5-minute live presentation rehearsed and timed | Demo | | open |
-| R20 | Ready for 3 minutes of Q&A (see `wiki/idea-3-weaknesses.md` for likely questions) | Demo | | open |
-| R21 | 2-minute backup demo video | Demo | | open |
-| R22 | Every feature shown is labeled working, simulated or planned | Demo | | open |
+| R19 | 5-minute live presentation rehearsed and timed | Demo | team | open: owner: team |
+| R20 | Ready for 3 minutes of Q&A (see `wiki/idea-3-weaknesses.md` for likely questions) | Demo | team | open: owner: team |
+| R21 | 2-minute backup demo video | Demo | team | open: owner: team |
+| R22 | Every feature shown is labeled working, simulated or planned | Demo | | done (2026-10-09): feature table in docs/SUBMISSION.md labels each feature Working, Simulated or Planned; every Working/Simulated row cites a test title that `submission.test.mjs` checks exists |
 
 ### Conduct
 

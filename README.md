@@ -10,6 +10,10 @@ The synthetic, single-browser workflow now supports cancellation → offer → e
 
 See [Demo access](docs/DEMO_ACCESS.md) for direct entry links and boundaries, and [PENDING_TASKS.md](PENDING_TASKS.md) for validation and the roadmap. The demo is public; see [How the demo is hosted](#how-the-demo-is-hosted) below.
 
+## Submission
+
+Project name, team, description, review steps and the working / simulated / planned feature table for judges: [docs/SUBMISSION.md](docs/SUBMISSION.md).
+
 ## How the demo is hosted
 
 The public demo at **https://smart-queue-demo.vercel.app** is the React app in this repository, built as static files and served by Vercel. Anyone can open it, with no account or password.
@@ -147,7 +151,12 @@ The Provider schedule is dated **October 8, 2026**. Existing search, status/date
 
 ## Pre-existing components
 
-Built with open-source components, credited as the hackathon rules require: [FastAPI](https://fastapi.tiangolo.com/) (MIT), [Uvicorn](https://www.uvicorn.org/) (BSD-3), [Pydantic](https://docs.pydantic.dev/) (MIT), [HTTPX](https://www.python-httpx.org/) (BSD-3), [pytest](https://pytest.org/) (MIT), [SQLite](https://www.sqlite.org/) (public domain), [React](https://react.dev/) (MIT), [Vite](https://vite.dev/) (MIT), [TypeScript](https://www.typescriptlang.org/) (Apache-2.0), [Ollama](https://ollama.com/) (MIT), and the [Qwen2.5 1.5B](https://ollama.com/library/qwen2.5:1.5b) model (Apache-2.0). No templates or reused application code.
+Built with open-source components, credited as the hackathon rules require. No templates or reused application code.
+
+- **Frontend (`frontend/package.json`):** [React](https://react.dev/) `react` and `react-dom` (MIT); [Vite](https://vite.dev/) `vite` (MIT) with `@vitejs/plugin-react` (MIT); [TypeScript](https://www.typescriptlang.org/) `typescript` (Apache-2.0) with type definitions `@types/react` and `@types/react-dom` (MIT, DefinitelyTyped); [Playwright](https://playwright.dev/) `@playwright/test` (Apache-2.0) for browser tests; [axe-core](https://github.com/dequelabs/axe-core) via `@axe-core/playwright` (MPL-2.0) for accessibility scans; [Biome](https://biomejs.dev/) `@biomejs/biome` (MIT OR Apache-2.0) for lint.
+- **Backend (`backend/requirements.txt`):** [FastAPI](https://fastapi.tiangolo.com/) `fastapi` (MIT); [Starlette](https://www.starlette.io/) `starlette` (BSD-3-Clause); [Uvicorn](https://www.uvicorn.org/) `uvicorn` (BSD-3-Clause); [Pydantic](https://docs.pydantic.dev/) `pydantic` and `pydantic-core` (MIT); [HTTPX](https://www.python-httpx.org/) `httpx` (BSD-3-Clause); [pytest](https://pytest.org/) `pytest` (MIT); [SQLite](https://www.sqlite.org/) (public domain).
+- **Local AI groundwork (not used by the demo):** [Ollama](https://ollama.com/) (MIT) and the [Qwen2.5 1.5B](https://ollama.com/library/qwen2.5:1.5b) model (Apache-2.0).
+- **Build and hosting tools:** [GitHub Actions](https://github.com/features/actions) with the official `actions/checkout`, `actions/setup-node`, `actions/upload-artifact` and `actions/download-artifact` (MIT); [Gitleaks](https://github.com/gitleaks/gitleaks) (MIT) secret scanning; [Vercel](https://vercel.com/) hosting and the `vercel` CLI (Apache-2.0); [Node.js](https://nodejs.org/) (MIT).
 
 The UI takes visual inspiration from this [Pinterest dashboard reference](https://ru.pinterest.com/pin/1100285752847570247/): navy navigation, a pale canvas, white cards, and blue/coral accents. No artwork or template code was copied; icons are original inline SVGs and typography uses system fonts.
 
