@@ -45,7 +45,7 @@ In another terminal, from the repository root:
 node presentation/tests/capture.mjs
 ```
 
-The capture script uses a fresh session, synthetic fixtures, 1440×1000 viewport, 2× pixel density, and actual panel screenshots. It leaves application source and fixture identities unchanged. The schedule screenshot intentionally filters to SQ-006. `activity.png` is supplemental evidence, not an extra slide.
+The capture script uses a fresh session, synthetic fixtures, 1440×1000 viewport, 2× pixel density, and actual panel screenshots. It leaves application source and fixture identities unchanged. The schedule screenshot intentionally filters to SQ-006. Only the four panels displayed in the presentation are captured, directly to WebP at their original dimensions.
 
 ## Before presenting
 
@@ -55,3 +55,11 @@ The capture script uses a fresh session, synthetic fixtures, 1440×1000 viewport
 4. Keep the disclosure: browser simulation, synthetic data, no implemented AI or real bookings.
 
 No deployment or submission was performed. Team attribution, public links, the recorded backup video, and real-device rehearsal remain separate submission work.
+
+## Web image optimization
+
+The presentation loads five local WebP images totaling approximately **298 KB**. Dimensions are unchanged. The illustration uses lossy quality 88; screenshots use quality 96 for readable text. Superseded PNGs and the unused activity image are not shipped. No CDN or runtime dependency is needed.
+
+`tests/capture.mjs` encodes fresh screenshots directly to WebP using the existing Playwright Chromium installation; intermediate PNG buffers remain in memory. Keep an external original when editing the character illustration to avoid recompressing the delivery image. HTML dimensions and responsive CSS preserve aspect ratios.
+
+After refreshing screenshots, run `node presentation/tests/validate.mjs` and review text readability on the presentation device.

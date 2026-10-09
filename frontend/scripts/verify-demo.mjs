@@ -13,7 +13,7 @@ const DIRECTORIES = new Set([
 // The app shell, its favicon, and the exact runtime files of the offline presentation
 // (scripts/copy-presentation.mjs); no notes, tests, maps, or other types.
 const ARTIFACT =
-  /^(index\.html|favicon\.svg|assets\/[\w-]+-[\w-]+\.(js|css)|presentation\/(index\.html|script\.js|styles\.css|assets\/(characters|screenshots)\/[\w-]+\.png))$/;
+  /^(index\.html|favicon\.svg|assets\/[\w-]+-[\w-]+\.(js|css)|presentation\/(index\.html|script\.js|styles\.css|assets\/(characters|screenshots)\/[\w-]+\.(?:png|webp)))$/;
 const CSP =
   "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'";
 // Exactly one CSP meta, with the public-demo policy, ahead of any script.

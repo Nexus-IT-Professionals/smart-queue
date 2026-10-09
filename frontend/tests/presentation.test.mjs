@@ -40,7 +40,7 @@ test("copies only the presentation runtime files and passes the release guard", 
   ]);
   const shipped = (await walk(dir, "presentation/")).sort();
   assert.deepEqual(shipped, [...copied].sort());
-  assert.ok(shipped.includes("presentation/assets/characters/cast.png"));
+  assert.ok(shipped.includes("presentation/assets/characters/cast.webp"));
   assert.ok(!shipped.some((f) => /\.(md|mjs)$|tests\/|\.gitkeep/.test(f)));
   const files = await verifyDemo(dir);
   assert.equal(files.length, 4 + copied.length);
@@ -70,7 +70,7 @@ test("CSP injection replaces a looser source policy and keeps charset first", ()
   assert.throws(() => presentationIndexHtml("<html></html>"), /no <head>/);
 });
 
-test("skips non-PNG files in the image folders of a source", async (t) => {
+test("copies PNG and WebP while skipping unrelated image-folder files", async (t) => {
   const root = await mkdtemp(join(tmpdir(), "queue-deck-src-"));
   t.after(() => rm(root, { recursive: true, force: true }));
   const source = join(root, "presentation");
@@ -81,6 +81,7 @@ test("skips non-PNG files in the image folders of a source", async (t) => {
   await writeFile(join(source, "styles.css"), "");
   await writeFile(join(source, "README.md"), "notes");
   await writeFile(join(source, "assets/characters/cast.png"), "png");
+  await writeFile(join(source, "assets/characters/cast.webp"), "webp");
   await writeFile(join(source, "assets/characters/.gitkeep"), "");
   await writeFile(join(source, "assets/screenshots/notes.txt"), "x");
   const out = join(root, "dist");
@@ -89,5 +90,6 @@ test("skips non-PNG files in the image folders of a source", async (t) => {
     "presentation/script.js",
     "presentation/styles.css",
     "presentation/assets/characters/cast.png",
+    "presentation/assets/characters/cast.webp",
   ]);
 });

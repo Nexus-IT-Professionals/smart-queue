@@ -43,7 +43,7 @@ export async function copyPresentation(outDir, source = defaultSource) {
   }
   for (const dir of IMAGE_DIRS)
     for (const name of (await readdir(join(source, dir))).sort()) {
-      if (!/^[\w-]+\.png$/.test(name)) continue; // e.g. .gitkeep
+      if (!/^[\w-]+\.(?:png|webp)$/.test(name)) continue; // e.g. .gitkeep
       await regularFile(join(source, dir, name));
       files.push(`${dir}/${name}`);
     }
@@ -63,12 +63,13 @@ export async function copyPresentation(outDir, source = defaultSource) {
 // (with the same CSP), so the sidebar link works without a build. `vite
 // preview` serves dist/, which already holds the copied presentation.
 const DEV_FILE =
-  /^(index\.html|script\.js|styles\.css|assets\/(characters|screenshots)\/[\w-]+\.png)$/;
+  /^(index\.html|script\.js|styles\.css|assets\/(characters|screenshots)\/[\w-]+\.(?:png|webp))$/;
 const TYPES = {
   html: "text/html; charset=utf-8",
   js: "text/javascript; charset=utf-8",
   css: "text/css; charset=utf-8",
   png: "image/png",
+  webp: "image/webp",
 };
 export function presentationDevMiddleware(source = defaultSource) {
   return async (req, res, next) => {

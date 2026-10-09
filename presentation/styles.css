@@ -237,7 +237,7 @@ figcaption {
 	color: #a9d7cc;
 }
 .character {
-	background-image: url("assets/characters/cast.png");
+	background-image: url("assets/characters/cast.webp");
 	background-size: 410% 100%;
 	background-repeat: no-repeat;
 	mix-blend-mode: multiply;
@@ -692,3 +692,6 @@ blockquote small {
 		-webkit-print-color-adjust: exact;
 	}
 }
+
+/* Preserve intrinsic aspect ratios while scaling web-optimized images. */
+.slide img { height: auto; }
