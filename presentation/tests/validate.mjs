@@ -2,7 +2,7 @@ import {
 	chromium,
 	expect,
 } from "../../frontend/node_modules/@playwright/test/index.mjs";
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 const url = new URL("../index.html", import.meta.url).href;
 const output =
 	process.env.PRESENTATION_QA_DIR || "/tmp/smart-queue-presentation-qa";
@@ -21,7 +21,45 @@ page.on("request", (request) => {
 	if (/^https?:/.test(request.url())) external.push(request.url());
 });
 await page.goto(url);
-await expect(page.locator("#estimate")).toHaveText("Talk 2:40");
+// The control bar holds exactly: previous, counter, next, Deck mode select, fullscreen.
+const controlIds = await page
+	.locator("nav.controls")
+	.evaluate((nav) =>
+		[...nav.querySelectorAll("button,select,input,[id]")].map((el) => el.id),
+	);
+expect(controlIds, "Control bar contents").toEqual([
+	"previous",
+	"counter",
+	"next",
+	"mode",
+	"fullscreen",
+]);
+await expect(page.locator("nav.controls button")).toHaveCount(3);
+await expect(page.locator("#counter")).toHaveText("1 / 12");
+await expect(page.locator("#mode option")).toHaveText([
+	"Story · 12 slides",
+	"Submission · 5 slides",
+]);
+// Speaker notes panel and timer were removed; SPEAKER_NOTES.md is the source of truth.
+for (const removed of [
+	"#notes",
+	"#notes-toggle",
+	"#close-notes",
+	"#note-title",
+	"#timer",
+	"#timer-toggle",
+	"#timer-reset",
+	"#estimate",
+]) {
+	await expect(page.locator(removed), `${removed} is absent`).toHaveCount(0);
+}
+const source = await readFile(new URL("../script.js", import.meta.url), "utf8");
+for (const pattern of [
+	/notes-toggle|close-notes|note-(title|script|cue)/,
+	/timer|estimate|setInterval|toggleNotes|toggleTimer|resetTimer/,
+]) {
+	expect(source, `script.js has no ${pattern}`).not.toMatch(pattern);
+}
 for (let i = 1; i <= 12; i++) {
 	await expect(page.locator(".slide:visible")).toHaveCount(1);
 	await expect(page.locator(".slide:visible")).toHaveAttribute(
@@ -60,29 +98,26 @@ for (let i = 1; i <= 12; i++) {
 }
 await page.keyboard.press("Home");
 await expect(page.locator("#counter")).toHaveText("1 / 12");
-await page.keyboard.press("n");
-await expect(page.locator("#notes")).toBeVisible();
-await expect(page.locator("#note-title")).toContainText("9s");
-await page.keyboard.press("Escape");
-await expect(page.locator("#notes")).toBeHidden();
-await page.getByRole("button", { name: "Start timer", exact: true }).click();
-await expect(
-	page.getByRole("button", { name: "Pause timer", exact: true }),
-).toBeVisible();
-await expect(page.locator("#timer")).not.toHaveText("0:00", { timeout: 3000 });
-await page.keyboard.press("t");
-await expect(
-	page.getByRole("button", { name: "Start timer", exact: true }),
-).toBeVisible();
-await page.keyboard.press("r");
-await expect(page.locator("#timer")).toHaveText("0:00");
+// Former notes/timer shortcuts are inert: no panel appears, slide does not change.
+for (const key of ["n", "t", "r", "Escape"]) await page.keyboard.press(key);
+await expect(page.locator("#counter")).toHaveText("1 / 12");
+await expect(page.locator("aside")).toHaveCount(0);
+await page.keyboard.press("ArrowRight");
+await expect(page.locator("#counter")).toHaveText("2 / 12");
+await page.keyboard.press("ArrowLeft");
+await expect(page.locator("#counter")).toHaveText("1 / 12");
+await page.locator("body").press("f");
+await expect
+	.poll(() => page.evaluate(() => Boolean(document.fullscreenElement)))
+	.toBe(true);
+await page.evaluate(() => document.exitFullscreen());
 await page.locator("#fullscreen").click();
 await expect
 	.poll(() => page.evaluate(() => Boolean(document.fullscreenElement)))
 	.toBe(true);
 await page.evaluate(() => document.exitFullscreen());
 await page.locator("#mode").selectOption("submission");
-await expect(page.locator("#estimate")).toHaveText("Talk 1:50");
+await expect(page.locator("#counter")).toHaveText("1 / 5");
 for (const [index, slide] of [1, 2, 8, 9, 12].entries()) {
 	await expect(page.locator(".slide:visible")).toHaveAttribute(
 		"data-slide",
@@ -116,6 +151,6 @@ expect(errors).toEqual([]);
 expect(external).toEqual([]);
 await browser.close();
 console.log(
-	"PASS: 12 slides, 5-slide mode, offline assets, no external requests or JS errors, notes, timer, fullscreen, navigation, 3 viewport sizes; slide images in " +
+	"PASS: 12 slides, 5-slide mode, offline assets, no external requests or JS errors, exact control bar (prev/counter/next/mode/fullscreen; no notes or timer), fullscreen, navigation, 3 viewport sizes; slide images in " +
 		output,
 );

@@ -35,7 +35,7 @@ async function offer(page: Page) {
     .getByRole("button", { name: "Confirm demo cancellation", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Send demo offer to Elena", exact: true })
+    .getByRole("button", { name: "Send demo offer to José", exact: true })
     .click();
   await page.getByRole("button", { name: "Patient view", exact: true }).click();
 }
@@ -104,7 +104,7 @@ test("all provider sections, search, empty state and filters", async ({
   await nav.getByRole("button", { name: "Schedule", exact: true }).click();
   const search = page.getByRole("searchbox");
   await search.fill("SQ-006");
-  await expect(page.getByRole("table")).toContainText("Adrián López");
+  await expect(page.getByRole("table")).toContainText("María Rodríguez");
   await expect(page.getByRole("table").getByRole("row")).toHaveCount(2);
   await search.fill("no matching patient");
   await expect(page.getByRole("table")).not.toBeVisible();
@@ -154,7 +154,7 @@ test("explicit confirmation updates booking, waitlist and activity; reset restor
   await page.getByRole("button", { name: "Continue as Demo Provider" }).click();
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
-  ).toContainText("Elena Morales");
+  ).toContainText("José Pérez");
   await expect(page.getByRole("button", { name: "Waitlist 3" })).toBeVisible();
   await page.getByRole("button", { name: "Review activity" }).click();
   await expect(page.locator(".timeline li")).toHaveCount(3);
@@ -230,7 +230,7 @@ test("reload while an offer is pending returns to the initial scenario", async (
   await page.getByRole("button", { name: "Provider view", exact: true }).click();
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
-  ).toContainText("Adrián López");
+  ).toContainText("María Rodríguez");
   await expect(
     page.getByRole("button", { name: "Confirm demo cancellation", exact: true }),
   ).toBeVisible();
@@ -259,6 +259,6 @@ test("back/forward after completing the scenario keeps the accepted state", asyn
   await expect(page).toHaveURL(/#\/provider$/);
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
-  ).toContainText("Elena Morales");
+  ).toContainText("José Pérez");
   await expect(page.getByRole("button", { name: "Waitlist 3" })).toBeVisible();
 });

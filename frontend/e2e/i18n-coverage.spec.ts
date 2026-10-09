@@ -126,7 +126,7 @@ async function walkEveryState(page: Page, language: Language) {
   await click("Reset filters and demo date");
   await click("Confirm demo cancellation");
   await check("cancellation confirmed");
-  await click("Send demo offer to Elena");
+  await click("Send demo offer to José");
   await check("offer sent");
   await click("Patient view");
   await click("Accept earlier visit");
@@ -145,7 +145,7 @@ async function walkEveryState(page: Page, language: Language) {
   await check("provider after reset");
   await nav("Overview");
   await click("Confirm demo cancellation");
-  await click("Send demo offer to Elena");
+  await click("Send demo offer to José");
   await click("Patient view");
   await click("Accept earlier visit");
   await click("Yes, move my appointment");

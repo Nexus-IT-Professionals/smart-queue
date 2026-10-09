@@ -46,9 +46,9 @@ paraphrased; wording order varies by reader. Spanish text is in brackets.
    Hear: "The 2:00 PM slot is open. The best match is ranked first below; send the
    offer." [El espacio de las 2:00 p. m. está disponible. La mejor coincidencia aparece
    primero abajo; envíe la oferta.]
-7. **Offer.** Activate "Send demo offer to Elena" [Enviar oferta demo a Elena]. Hear:
-   "Offer sent to Elena Morales. Nothing changes until the patient accepts. Open the
-   Patient view to answer." [Oferta enviada a Elena Morales. Nada cambia hasta que el
+7. **Offer.** Activate "Send demo offer to José" [Enviar oferta demo a José]. Hear:
+   "Offer sent to José Pérez. Nothing changes until the patient accepts. Open the
+   Patient view to answer." [Oferta enviada a José Pérez. Nada cambia hasta que el
    paciente acepte. Abra la vista del paciente para responder.]
 8. **Patient.** Activate "Open Demo Patient" [Abrir paciente demo]. Focus moves to main.
 9. **Help.** Activate "I need help" [Necesito ayuda]. Hear: "Help request preview

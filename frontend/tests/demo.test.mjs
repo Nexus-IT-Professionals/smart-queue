@@ -34,7 +34,7 @@ test("cancellation to offer to acceptance updates schedule, waitlist and activit
     demoWorkspaceFromHash(hash);
   assert.equal(state.phase, "offered");
   state = demoReducer(state, { type: "respond", response: "accepted" });
-  assert.equal(slot(state).name, "Elena Morales");
+  assert.equal(slot(state).name, "José Pérez");
   assert.equal(slot(state).status, "Scheduled");
   assert.equal(demoWaitlist(state).length, 3);
   assert.equal(state.events.length, 3);
@@ -75,14 +75,14 @@ test("decline preserves waitlist and open capacity; help permits a later answer"
 test("reset and independent judge sessions do not share state", () => {
   const first = demoReducer(offer(), { type: "respond", response: "accepted" });
   const second = initialDemoState();
-  assert.equal(slot(second).name, "Adrián López");
+  assert.equal(slot(second).name, "María Rodríguez");
   assert.equal(second.events.length, 0);
   const reset = demoReducer(first, { type: "reset" });
   assert.deepEqual(reset, second);
   assert.equal(demoWaitlist(reset).length, 4);
 });
 
-test("María Rodríguez is the new first 8:30 AM slot; the day has 9 slots", () => {
+test("Adrián López is the first 8:30 AM slot; María Rodríguez holds the 2:00 PM slot; the day has 9 slots", () => {
   const day = demoAppointments(initialDemoState());
   assert.equal(day.length, 9);
   assert.deepEqual(day[0], {
@@ -91,11 +91,21 @@ test("María Rodríguez is the new first 8:30 AM slot; the day has 9 slots", () 
     office: "ISLA",
     provider: "DR-01",
     duration: 30,
-    name: "María Rodríguez",
+    name: "Adrián López",
     time: "8:30 AM",
     type: "Follow-up",
     status: "Scheduled",
   });
+  const twoPm = day.find((row) => row.id === "SQ-006");
+  assert.deepEqual(
+    [twoPm.name, twoPm.time, twoPm.status],
+    ["María Rodríguez", "2:00 PM", "Scheduled"],
+  );
+  assert.equal(
+    day.filter((row) => row.name === "María Rodríguez").length,
+    1,
+    "no duplicate María",
+  );
   assert.equal(new Set(day.map((row) => row.id)).size, 9, "record IDs unique");
   const counts = (status) => day.filter((row) => row.status === status).length;
   assert.deepEqual(
@@ -103,7 +113,7 @@ test("María Rodríguez is the new first 8:30 AM slot; the day has 9 slots", () 
     [6, 3, 0],
   );
 });
-test("José Pérez tops the waitlist; Elena still receives the offer and is the one removed", () => {
+test("José Pérez tops the waitlist, receives the offer and is the one removed; Elena stays waiting", () => {
   const names = (state) => demoWaitlist(state).map((person) => person.name);
   assert.deepEqual(names(initialDemoState()), [
     "José Pérez",
@@ -112,14 +122,15 @@ test("José Pérez tops the waitlist; Elena still receives the offer and is the 
     "Camila Soto",
   ]);
   const offered = offer();
-  assert.match(offered.events.at(-1), /offer to Elena Morales.$/);
+  assert.equal(offered.candidateId, "WL-004");
+  assert.match(offered.events.at(-1), /offer to José Pérez.$/);
   const accepted = demoReducer(offered, {
     type: "respond",
     response: "accepted",
   });
-  assert.equal(slot(accepted).name, "Elena Morales");
+  assert.equal(slot(accepted).name, "José Pérez");
   assert.deepEqual(names(accepted), [
-    "José Pérez",
+    "Elena Morales",
     "Nicolás Díaz",
     "Camila Soto",
   ]);
@@ -131,7 +142,8 @@ test("Ana Martínez is the fictional assistant and the actor on cancellation and
     name: "Ana Martínez",
     label: "Medical Office Assistant · fictional identity",
   });
-  assert.equal(demoIdentities.staff.name, "Dr. Alex Rivera");
+  assert.equal(demoIdentities.staff.name, "Dr. Carlos Rivera");
+  assert.equal(demoIdentities.patient.name, "José Pérez");
   assert.equal(
     spanish[demoAssistant.label],
     "Asistente de oficina médica · identidad ficticia",
@@ -143,7 +155,7 @@ test("Ana Martínez is the fictional assistant and the actor on cancellation and
   );
   assert.equal(
     offered,
-    "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Elena Morales.",
+    "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to José Pérez.",
   );
   assert.match(
     spanish[cancelled],
@@ -151,7 +163,7 @@ test("Ana Martínez is the fictional assistant and the actor on cancellation and
   );
   assert.match(
     spanish[offered],
-    /^Ana Martínez, asistente de oficina médica, envió .* a Elena Morales.$/,
+    /^Ana Martínez, asistente de oficina médica, envió .* a José Pérez.$/,
   );
 });
 

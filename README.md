@@ -29,7 +29,7 @@ The public demo at **https://smart-queue-demo.vercel.app** is the React app in t
 
 ## Judge presentation
 
-Open [presentation/index.html](presentation/index.html) offline for the 12-slide character story (2:40 estimated narration), or choose its five-slide submission mode (1:50). Includes original artwork, real synthetic POC screenshots, speaker notes, keyboard controls, fullscreen, and an optional timer. [Presentation instructions](presentation/README.md) cover rehearsal and the event’s five-slide / two-minute submission limits. AI is clearly labeled as future work.
+Open [presentation/index.html](presentation/index.html) offline for the 12-slide character story (2:40 estimated narration), or choose its five-slide submission mode (1:50). Includes original artwork, real synthetic POC screenshots, separate speaker notes, keyboard controls, and fullscreen. [Presentation instructions](presentation/README.md) cover rehearsal and the event’s five-slide / two-minute submission limits. AI is clearly labeled as future work.
 
 ## The problem
 
@@ -69,9 +69,9 @@ Booking rules control availability, offer expiry, and duplicate acceptance. Pati
 ## Demo workflow
 
 1. Enter Provider view and confirm the sample October 8, 2:00 PM cancellation.
-2. Send the demo offer to Elena, then open Patient view.
-3. Choose **Accept earlier visit** and confirm. Elena's fictional appointment moves from October 22 to October 8.
-4. Return to Provider: the schedule names Elena, the waitlist has two remaining patients, and the Activity log records the steps.
+2. Send the demo offer to José, then open Patient view.
+3. Choose **Accept earlier visit** and confirm. José's fictional appointment moves from October 22 to October 8.
+4. Return to Provider: the schedule names José, the waitlist has three remaining patients, and the Activity log records the steps.
 5. Reset the scenario to replay or try decline/help. No credentials are required at any step.
 
 AI reply interpretation, expiry, automatic next-candidate offers, persistence, and simultaneous users remain future work.
@@ -82,7 +82,7 @@ Provider → **Schedule** now supports **Day, Week and Month**, period navigatio
 
 Provider → **Waitlist** lets demo staff confirm P1–P4 scheduling priorities. **Priority configuration** controls labels, descriptions, indicators, ordering, enabled levels and an enabled non-urgent default. Candidates must meet office/provider, visit, duration, date/time and conflict constraints before priority ranking. Ties use request date, then record ID. Staff confirms an offer; the selected patient must still explicitly accept. The new booking and released old slot appear consistently across calendar views.
 
-Try assigning **Camila → P1**, check the qualified-staff review confirmation, save, then cancel the sample slot and review candidates. Camila ranks ahead of normal-priority Elena; morning-only Nicolás remains ineligible. No AI or condition-text analysis decides urgency. **Scheduling support is not emergency medical assessment.** Changes live in the existing shared browser memory and reset on reload; there is no backend persistence. See [rules, limits and manual scenarios](docs/PRIORITY_CALENDAR.md).
+Try assigning **Camila → P1**, check the qualified-staff review confirmation, save, then cancel the sample slot and review candidates. Camila ranks ahead of normal-priority José; morning-only Nicolás remains ineligible. No AI or condition-text analysis decides urgency. **Scheduling support is not emergency medical assessment.** Changes live in the existing shared browser memory and reset on reload; there is no backend persistence. See [rules, limits and manual scenarios](docs/PRIORITY_CALENDAR.md).
 
 ## Next steps
 

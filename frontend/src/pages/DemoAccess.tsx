@@ -72,7 +72,7 @@ export default function DemoAccess({
           <p>
             {" "}
             {t(
-              "Continue as Elena Morales to view a sample appointment and accept, decline, or ask for help with an earlier visit.",
+              "Continue as José Pérez to view a sample appointment and accept, decline, or ask for help with an earlier visit.",
             )}{" "}
           </p>
           <button
@@ -92,7 +92,7 @@ export default function DemoAccess({
           <p>
             {" "}
             {t(
-              "Continue as Dr. Alex Rivera to explore the schedule, confirm a sample cancellation, and offer the opening to a waiting patient.",
+              "Continue as Dr. Carlos Rivera to explore the schedule, confirm a sample cancellation, and offer the opening to a waiting patient.",
             )}{" "}
           </p>
           <button

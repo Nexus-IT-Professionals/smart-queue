@@ -54,8 +54,8 @@ export default function PatientWorkspace({
           <p className="eyebrow">{t("ISLA CARE / PATIENT WORKSPACE")}</p>
           <h1>{t("My appointment")}</h1>
           <p>
-            {patient.id === "WL-001"
-              ? t("Welcome, Elena. An earlier appointment could fit your day.")
+            {patient.id === "WL-004"
+              ? t("Welcome, José. An earlier appointment could fit your day.")
               : `${t("Selected patient")}: ${patient.name}`}
           </p>
         </div>

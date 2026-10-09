@@ -246,7 +246,7 @@ export default function StaffWorkspace({
           status={
             demo.phase === "scheduled" ? (
               t(
-                "Adrián López cancelled his October 8, 2:00 PM visit. Confirm it to open the slot.",
+                "María Rodríguez cancelled her October 8, 2:00 PM visit. Confirm it to open the slot.",
               )
             ) : demo.phase === "open" ? (
               t(
@@ -292,8 +292,8 @@ export default function StaffWorkspace({
               onClick={() => onAction({ type: "offer", candidateId })}
             >
               {" "}
-              {candidateId === "WL-001"
-                ? t("Send demo offer to Elena")
+              {candidateId === "WL-004"
+                ? t("Send demo offer to José")
                 : t("Confirm offer to selected patient")}{" "}
             </button>
           )}

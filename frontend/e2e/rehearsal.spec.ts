@@ -95,20 +95,20 @@ async function open(page: Page, language: Language): Promise<Translate> {
   return t;
 }
 
-// Provider: confirm cancellation, offer Elena, then switch to her view.
+// Provider: confirm cancellation, offer José, then switch to his view.
 async function offer(page: Page, t: Translate) {
   await page.getByRole("button", { name: t("Demo access"), exact: true }).click();
   await page
     .getByRole("button", { name: t("Continue as Demo Provider") })
     .click();
   const first = page.locator(".schedule-panel tbody tr").first();
-  await expect(first).toContainText("María Rodríguez");
+  await expect(first).toContainText("Adrián López");
   await expect(first.locator(".time-cell")).toContainText(/8:30/);
   await page
     .getByRole("button", { name: t("Confirm demo cancellation"), exact: true })
     .click();
   await page
-    .getByRole("button", { name: t("Send demo offer to Elena"), exact: true })
+    .getByRole("button", { name: t("Send demo offer to José"), exact: true })
     .click();
   await page.getByRole("button", { name: t("Patient view"), exact: true }).click();
 }
@@ -138,13 +138,13 @@ async function accept(page: Page, t: Translate, language: Language) {
   await page.getByRole("button", { name: t("Provider view"), exact: true }).click();
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
-  ).toContainText("Elena Morales");
+  ).toContainText("José Pérez");
   const nav = page.getByRole("navigation");
   await expect(
     nav.getByRole("button", { name: `${t("Waitlist")} 3` }),
   ).toBeVisible();
   expect(await waitlist(page, t)).toEqual([
-    "José Pérez",
+    "Elena Morales",
     "Nicolás Díaz",
     "Camila Soto",
   ]);
@@ -153,7 +153,7 @@ async function accept(page: Page, t: Translate, language: Language) {
   await expect(events).toHaveCount(3);
   await expect(events.nth(0)).toContainText("Ana Martínez");
   await expect(events.nth(1)).toContainText("Ana Martínez");
-  await expect(events.nth(1)).toContainText("Elena Morales");
+  await expect(events.nth(1)).toContainText("José Pérez");
   await expect(events.nth(2)).toHaveText(
     t(
       "Patient accepted: demo booking moved from October 22 to October 8, 2:00 PM; waitlist entry removed.",
@@ -164,7 +164,7 @@ async function accept(page: Page, t: Translate, language: Language) {
 async function expectInitial(page: Page, t: Translate) {
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
-  ).toContainText("Adrián López");
+  ).toContainText("María Rodríguez");
   await expect(
     page
       .getByRole("navigation")

@@ -161,7 +161,7 @@ for (const lang of ["en", "es"] as const) {
         })
         .click();
       const next = page.getByRole("button", {
-        name: tr(lang, "Send demo offer to Elena"),
+        name: tr(lang, "Send demo offer to José"),
         exact: true,
       });
       await expect(next).toBeVisible();
