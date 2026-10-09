@@ -132,8 +132,8 @@ The UI takes visual inspiration from this [Pinterest dashboard reference](https:
 - Production build: strict TypeScript and Vite passed.
 - Backend tests: **1 passed**; an upstream Starlette/HTTPX deprecation warning remains.
 - FastAPI served the production HTML, JavaScript, CSS, and health endpoint successfully.
-- Demo tests: `cd frontend && npm test` — **26 passed** covering public navigation resolution, workflow transitions, the credential-free health request, and public artifact rejection cases.
-- QA-2: `npm run lint` — zero warnings; `npm run test:e2e` — **9 Chromium tests passed**.
+- Demo tests: `cd frontend && npm test` — **29 passed** covering public navigation resolution, workflow transitions, the credential-free health request, and public artifact rejection cases.
+- QA-2: `npm run lint` — zero warnings; `npm run test:e2e` — **19 Chromium tests passed**.
 - Desktop Firefox: checked credential-free entry, Provider cancellation/offer, Patient acceptance, appointment update, and return to the entry page without losing access.
 - Static-only Firefox: direct Patient access works with the health API unavailable.
 - Mobile/tablet, full accessibility, Docker, and automated Firefox/WebKit tests remain unverified. Biome lint and desktop Chromium browser tests are now configured.
@@ -152,7 +152,7 @@ This README was adapted from the team's pre-event planning documents (research a
 
 Run `cd frontend && npm run build:demo` and publish only `frontend/dist/` at the host's site root. This release makes no API requests, displays “Standalone demo · No API connection,” and includes a restrictive browser connection policy. The build verifies the output contains only expected UI assets; it rejects unexpected files, symlinks, source maps, API paths, and selected secret signatures. This guard does not replace review of synthetic data or detect every possible secret.
 
-`npm test` runs 26 tests; `npm run verify:demo` rechecks the artifact. Standard `npm run build` retains the development health check and overwrites the output, so use `build:demo` for publication. See [manual release acceptance](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1). Vercel with GitHub Actions is selected; configuration is prepared; activation and public deployment remain pending.
+`npm test` runs 29 tests; `npm run verify:demo` rechecks the artifact. Standard `npm run build` retains the development health check and overwrites the output, so use `build:demo` for publication. See [manual release acceptance](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1). Vercel with GitHub Actions is selected; configuration is prepared; activation and public deployment remain pending.
 
 ### Deployment readiness — October 9, 2026
 
@@ -195,3 +195,12 @@ Biome uses recommended rules with documented exceptions for intentional navigati
 Fixed horizontal Provider page overflow at 320px: the mobile shell can shrink and navigation uses two columns at ≤375px. The schedule table retains its own keyboard-scrollable region. Five new tests exercise all Provider sections and the appointment workflow at 320/375/768/1024/1440px without page overflow. The full suite now passes **14 Chromium tests**, plus **26 unit/artifact tests** and lint. Public-demo build verification passes. A native Firefox **200% zoom** walkthrough also passed through acceptance and reset; real-device/touch and full accessibility testing remain pending.
 
 For manual review, refresh http://127.0.0.1:8001/#/demo, try 320px/375px widths and 200% browser zoom, and complete cancellation → offer → acceptance → reset. See [UX-1 validation](PENDING_TASKS.md#ux-1--responsive-layout-and-zoom-validation). Changes await manual review before commit/push.
+
+
+### UX-2: English / Español
+
+Use the header language buttons on any demo page. Navigation, instructions, status/empty states, filters, confirmations, and activity history switch languages without resetting the appointment scenario or selected filter. Dates and times use Puerto Rico locale formatting; native date-picker controls follow browser/OS settings. Document language/title update with the selection.
+
+English is the default. Only the language preference is saved locally; blocked browser storage still allows switching. Reset preserves the language, while reload resets the synthetic scenario and restores the saved language. No account, patient data storage, or new runtime dependency is involved.
+
+Validation: **29 unit/artifact tests, 19 browser tests, lint, and both builds passed**. Spanish workflow tests cover 320/768/1440px, active-filter/confirmation switching, persistence, empty/decline/help states, and storage failure. For manual review, refresh http://127.0.0.1:8001/#/demo, choose Español, and switch languages midway through an offer before confirming. See [UX-2 results](PENDING_TASKS.md#ux-2--english-spanish-ui-and-date-formatting). The owner authorized committing and pushing UX-2; human language/accessibility review remains pending.

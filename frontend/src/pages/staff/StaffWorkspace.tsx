@@ -1,3 +1,4 @@
+import { useLanguage } from "../../i18n/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import type { StaffView } from "../../App";
 import {
@@ -42,15 +43,18 @@ function WaitlistPanel({
   demo: DemoState;
   onNavigate: (view: StaffView) => void;
 }) {
+  const { t, dateText } = useLanguage();
   const waitlist = demoWaitlist(demo);
   return (
     <section className="panel">
       <div className="panel-heading">
         <div>
-          <h2>Ready for an earlier visit</h2>
-          <p>Sample waitlist · order is illustrative</p>
+          <h2>{t("Ready for an earlier visit")}</h2>
+          <p>{t("Sample waitlist · order is illustrative")}</p>
         </div>
-        <Badge tone="blue">{waitlist.length} patients</Badge>
+        <Badge tone="blue">
+          {waitlist.length} {t("patients")}
+        </Badge>
       </div>
       <div className="waitlist-list">
         {waitlist.map((person) => (
@@ -58,10 +62,12 @@ function WaitlistPanel({
             <Avatar name={person.name} />
             <div className="person-details">
               <strong>{person.name}</strong>
-              <span>{person.availability}</span>
+              <span>{t(person.availability)}</span>
               {full && (
                 <span>
-                  {person.reason} · Joined {person.since} · {person.language}
+                  {t(person.reason)} {t("· Joined")}{" "}
+                  {dateText(person.since, { month: "short", day: "numeric" })} ·{" "}
+                  {t(person.language)}
                 </span>
               )}
             </div>
@@ -75,16 +81,18 @@ function WaitlistPanel({
           className="panel-link"
           onClick={() => onNavigate("waitlist")}
         >
-          View waitlist <Icon name="arrow" />
+          {" "}
+          {t("View waitlist")} <Icon name="arrow" />
         </button>
       )}
       {full && (
         <div className="panel-note">
           <Icon name="shield" />
           <p>
-            Availability helps staff review a match. Insurance labels and AI do
-            not decide who receives care. Patient registration and matching are
-            not connected yet.
+            {" "}
+            {t(
+              "Availability helps staff review a match. Insurance labels and AI do not decide who receives care. Patient registration and matching are not connected yet.",
+            )}{" "}
           </p>
         </div>
       )}
@@ -104,6 +112,7 @@ export default function StaffWorkspace({
   onAction: (action: DemoAction) => void;
   onPatient: () => void;
 }) {
+  const { t, dateText, timeText } = useLanguage();
   const scenarioStatus = useRef<HTMLParagraphElement>(null);
   const previousPhase = useRef(demo.phase);
   useEffect(() => {
@@ -165,17 +174,17 @@ export default function StaffWorkspace({
     <div className="workspace-content">
       <div className="page-heading">
         <div>
-          <p className="eyebrow">ISLA CARE / PROVIDER WORKSPACE</p>
-          <h1>{titles[view][0]}</h1>
-          <p>{titles[view][1]}</p>
+          <p className="eyebrow">{t("ISLA CARE / PROVIDER WORKSPACE")}</p>
+          <h1>{t(titles[view][0])}</h1>
+          <p>{t(titles[view][1])}</p>
         </div>
         {(view === "overview" || view === "schedule") && (
           <label className="date-control">
             <Icon name="calendar" />
-            <span className="sr-only">Schedule date</span>
+            <span className="sr-only">{t("Schedule date")}</span>
             <input
               type="date"
-              aria-label="Schedule date"
+              aria-label={t("Schedule date")}
               value={date}
               onChange={(event) => setDate(event.target.value)}
             />
@@ -184,22 +193,34 @@ export default function StaffWorkspace({
       </div>
       <section
         className="panel demo-scenario"
-        aria-label="Demo appointment workflow"
+        aria-label={t("Demo appointment workflow")}
       >
         <div>
-          <h2>Try the appointment queue</h2>
+          <h2>{t("Try the appointment queue")}</h2>
           <p role="status" ref={scenarioStatus} tabIndex={-1}>
             {demo.phase === "scheduled"
-              ? "Step 1: Confirm the fictional patient's cancellation for October 8 at 2:00 PM."
+              ? t(
+                  "Step 1: Confirm the fictional patient's cancellation for October 8 at 2:00 PM.",
+                )
               : demo.phase === "open"
-                ? "Step 2: The slot is open. Offer it to Elena Morales, who is available in the afternoon."
+                ? t(
+                    "Step 2: The slot is open. Offer it to Elena Morales, who is available in the afternoon.",
+                  )
                 : demo.phase === "offered"
-                  ? "Step 3: Switch to Patient to respond to the simulated offer."
+                  ? t(
+                      "Step 3: Switch to Patient to respond to the simulated offer.",
+                    )
                   : demo.phase === "accepted"
-                    ? "Complete: Elena now has the October 8 demo appointment. The schedule, waitlist, and activity are updated."
+                    ? t(
+                        "Complete: Elena now has the October 8 demo appointment. The schedule, waitlist, and activity are updated.",
+                      )
                     : demo.phase === "declined"
-                      ? "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay."
-                      : "Elena requested help. Return to Patient to accept or decline; no message leaves this browser."}
+                      ? t(
+                          "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay.",
+                        )
+                      : t(
+                          "Elena requested help. Return to Patient to accept or decline; no message leaves this browser.",
+                        )}
           </p>
         </div>
         <div className="demo-scenario-actions">
@@ -209,7 +230,8 @@ export default function StaffWorkspace({
               className="primary-button"
               onClick={() => onAction({ type: "cancel" })}
             >
-              Confirm demo cancellation
+              {" "}
+              {t("Confirm demo cancellation")}{" "}
             </button>
           )}
           {demo.phase === "open" && (
@@ -218,7 +240,8 @@ export default function StaffWorkspace({
               className="primary-button"
               onClick={() => onAction({ type: "offer" })}
             >
-              Send demo offer to Elena
+              {" "}
+              {t("Send demo offer to Elena")}{" "}
             </button>
           )}
           {(demo.phase === "offered" || demo.phase === "help") && (
@@ -227,7 +250,8 @@ export default function StaffWorkspace({
               className="primary-button"
               onClick={onPatient}
             >
-              Open Demo Patient <Icon name="arrow" />
+              {" "}
+              {t("Open Demo Patient")} <Icon name="arrow" />
             </button>
           )}
           {(demo.phase === "accepted" || demo.phase === "declined") && (
@@ -236,7 +260,8 @@ export default function StaffWorkspace({
               className="secondary-button"
               onClick={() => onNavigate("activity")}
             >
-              Review activity
+              {" "}
+              {t("Review activity")}{" "}
             </button>
           )}
         </div>
@@ -245,9 +270,9 @@ export default function StaffWorkspace({
         <>
           <div className="metrics-grid">
             {metrics.map((metric) => (
-              <section className="metric-card" key={metric.label}>
+              <section className="metric-card" key={t(metric.label)}>
                 <div className="metric-top">
-                  <span>{metric.label}</span>
+                  <span>{t(metric.label)}</span>
                   <span className={`metric-icon ${metric.tone}`}>
                     <Icon name={metric.icon} />
                   </span>
@@ -255,7 +280,7 @@ export default function StaffWorkspace({
                 <strong className="metric-value">
                   {metric.value.toString().padStart(2, "0")}
                 </strong>
-                <p>{metric.detail}</p>
+                <p>{t(metric.detail)}</p>
               </section>
             ))}
           </div>
@@ -264,10 +289,10 @@ export default function StaffWorkspace({
               <section className="panel day-panel">
                 <div className="panel-heading">
                   <div>
-                    <h2>A snapshot of your day</h2>
-                    <p>Appointment status · selected demo date</p>
+                    <h2>{t("A snapshot of your day")}</h2>
+                    <p>{t("Appointment status · selected demo date")}</p>
                   </div>
-                  <Badge>Sample data</Badge>
+                  <Badge>{t("Sample data")}</Badge>
                 </div>
                 <div className="day-chart">
                   <div
@@ -278,55 +303,67 @@ export default function StaffWorkspace({
                         : "var(--border)",
                     }}
                     role="img"
-                    aria-label={`${scheduled} scheduled, ${completed} completed, ${open} open slots`}
+                    aria-label={`${scheduled} ${t("Scheduled")}, ${completed} ${t("Completed")}, ${open} ${t("Open slots")}`}
                   >
                     <div>
                       <strong>{day.length}</strong>
-                      <span>total slots</span>
+                      <span>{t("total slots")}</span>
                     </div>
                   </div>
                   <div className="chart-legend">
                     <div>
-                      <span className="legend-dot scheduled" />
-                      Scheduled <strong>{scheduled}</strong>
+                      <span className="legend-dot scheduled" /> {t("Scheduled")}{" "}
+                      <strong>{scheduled}</strong>
                     </div>
                     <div>
-                      <span className="legend-dot completed" />
-                      Completed <strong>{completed}</strong>
+                      <span className="legend-dot completed" /> {t("Completed")}{" "}
+                      <strong>{completed}</strong>
                     </div>
                     <div>
-                      <span className="legend-dot open" />
-                      Open slots <strong>{open}</strong>
+                      <span className="legend-dot open" /> {t("Open slots")}{" "}
+                      <strong>{open}</strong>
                     </div>
-                    <p>Each open slot is a chance to shorten someone’s wait.</p>
+                    <p>
+                      {t(
+                        "Each open slot is a chance to shorten someone’s wait.",
+                      )}
+                    </p>
                   </div>
                 </div>
               </section>
               <section className="opportunity-card">
                 <div className="opportunity-label">
-                  <Icon name="heart" />
-                  MAKE ROOM FOR EARLIER CARE
+                  <Icon name="heart" /> {t("MAKE ROOM FOR EARLIER CARE")}{" "}
                 </div>
                 <h2>
                   {open
-                    ? "One opening.\nA new possibility."
-                    : "A little planning.\nA better patient day."}
+                    ? t("One opening.\nA new possibility.")
+                    : t("A little planning.\nA better patient day.")}
                 </h2>
                 <p>
                   {open
-                    ? "The 2:00 PM sample slot is open. Explore the waitlist to see who is available."
+                    ? t(
+                        "The 2:00 PM sample slot is open. Explore the waitlist to see who is available.",
+                      )
                     : date !== DEMO_DATE
-                      ? "Choose October 8 to explore the sample schedule and waitlist."
+                      ? t(
+                          "Choose October 8 to explore the sample schedule and waitlist.",
+                        )
                       : demo.phase === "accepted"
-                        ? "An earlier visit is confirmed in the demo. Review the activity log to follow each step."
-                        : "Use the scenario controls to open a slot and offer an earlier visit."}
+                        ? t(
+                            "An earlier visit is confirmed in the demo. Review the activity log to follow each step.",
+                          )
+                        : t(
+                            "Use the scenario controls to open a slot and offer an earlier visit.",
+                          )}
                 </p>
                 <button
                   type="button"
                   className="light-button"
                   onClick={() => onNavigate("waitlist")}
                 >
-                  Explore waitlist <Icon name="arrow" />
+                  {" "}
+                  {t("Explore waitlist")} <Icon name="arrow" />
                 </button>
                 <span className="opportunity-decoration" aria-hidden="true">
                   +
@@ -338,60 +375,63 @@ export default function StaffWorkspace({
             <section className="panel schedule-panel">
               <div className="panel-heading">
                 <div>
-                  <h2>Daily schedule</h2>
+                  <h2>{t("Daily schedule")}</h2>
                   <p>
-                    {date === DEMO_DATE
-                      ? "Thursday, October 8"
-                      : "Selected date"}{" "}
-                    · Atlantic Standard Time
+                    {dateText(date)} {t("· Atlantic Standard Time")}{" "}
                   </p>
                 </div>
-                <Badge>{day.length} slots</Badge>
+                <Badge>
+                  {day.length} {t("slots")}
+                </Badge>
               </div>
               <div className="table-toolbar">
                 <label className="search-field">
                   <Icon name="search" />
                   <span className="sr-only">
-                    Search schedule by name or record ID
+                    {" "}
+                    {t("Search schedule by name or record ID")}{" "}
                   </span>
                   <input
                     type="search"
-                    placeholder="Search name or record ID"
+                    placeholder={t("Search name or record ID")}
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                   />
                 </label>
                 <label>
-                  <span className="sr-only">Filter by appointment status</span>
+                  <span className="sr-only">
+                    {t("Filter by appointment status")}
+                  </span>
                   <select
                     value={status}
                     onChange={(event) => setStatus(event.target.value)}
-                    aria-label="Appointment status"
+                    aria-label={t("Appointment status")}
                   >
-                    <option>All statuses</option>
-                    <option>Scheduled</option>
-                    <option>Completed</option>
-                    <option>Open slot</option>
+                    <option value="All statuses">{t("All statuses")}</option>
+                    <option value="Scheduled">{t("Scheduled")}</option>
+                    <option value="Completed">{t("Completed")}</option>
+                    <option value="Open slot">{t("Open slot")}</option>
                   </select>
                 </label>
               </div>
               {filtered.length ? (
                 <section
                   className="table-scroll"
-                  aria-label="Daily appointments"
+                  aria-label={t("Daily appointments")}
                   // biome-ignore lint/a11y/noNoninteractiveTabindex: Scrollable region needs keyboard scrolling.
                   tabIndex={0}
                 >
                   <table>
                     <caption className="sr-only">
-                      Synthetic appointment schedule
+                      {" "}
+                      {t("Synthetic appointment schedule")}{" "}
                     </caption>
                     <thead>
                       <tr>
-                        <th scope="col">TIME</th>
-                        <th scope="col">PATIENT</th>
-                        <th scope="col">VISIT TYPE</th>
-                        <th scope="col">STATUS</th>
+                        <th scope="col">{t("TIME")}</th>
+                        <th scope="col">{t("PATIENT")}</th>
+                        <th scope="col">{t("VISIT TYPE")}</th>
+                        <th scope="col">{t("STATUS")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -403,8 +443,8 @@ export default function StaffWorkspace({
                           }
                         >
                           <td className="time-cell">
-                            {appointment.time}
-                            <span>30 min</span>
+                            {timeText(appointment.time)}
+                            <span>{t("30 min")}</span>
                           </td>
                           <td>
                             <div className="table-person">
@@ -413,19 +453,19 @@ export default function StaffWorkspace({
                                   <Icon name="calendar" />
                                 </span>
                               ) : (
-                                <Avatar name={appointment.name} />
+                                <Avatar name={t(appointment.name)} />
                               )}
                               <div>
-                                <strong>{appointment.name}</strong>
+                                <strong>{t(appointment.name)}</strong>
                                 <span>
                                   {appointment.status === "Open slot"
-                                    ? "Staff-confirmed sample cancellation"
+                                    ? t("Staff-confirmed sample cancellation")
                                     : appointment.id}
                                 </span>
                               </div>
                             </div>
                           </td>
-                          <td>{appointment.type}</td>
+                          <td>{t(appointment.type)}</td>
                           <td>
                             <Badge
                               tone={
@@ -436,7 +476,7 @@ export default function StaffWorkspace({
                                     : "blue"
                               }
                             >
-                              {appointment.status}
+                              {t(appointment.status)}
                             </Badge>
                           </td>
                         </tr>
@@ -448,14 +488,16 @@ export default function StaffWorkspace({
                 <EmptyState
                   title={
                     day.length
-                      ? "No matching appointments"
-                      : "No sample appointments on this date"
+                      ? t("No matching appointments")
+                      : t("No sample appointments on this date")
                   }
                 >
                   <p>
                     {day.length
-                      ? "Try another name or clear your filters."
-                      : "Sample appointments are available on October 8, 2026."}
+                      ? t("Try another name or clear your filters.")
+                      : t(
+                          "Sample appointments are available on October 8, 2026.",
+                        )}
                   </p>
                   <button
                     type="button"
@@ -466,15 +508,18 @@ export default function StaffWorkspace({
                       setDate(DEMO_DATE);
                     }}
                   >
-                    Reset filters and demo date
+                    {" "}
+                    {t("Reset filters and demo date")}{" "}
                   </button>
                 </EmptyState>
               )}
               <div className="table-footer">
                 <span role="status">
-                  Showing {filtered.length} of {day.length} sample slots
+                  {" "}
+                  {t("Showing")} {filtered.length} {t("of")} {day.length}{" "}
+                  {t("sample slots")}{" "}
                 </span>
-                <span>Single office · 30-minute visits</span>
+                <span>{t("Single office · 30-minute visits")}</span>
               </div>
             </section>
             {view === "overview" && (
@@ -484,10 +529,12 @@ export default function StaffWorkspace({
                   <span className="metric-icon green">
                     <Icon name="shield" />
                   </span>
-                  <h3>Patient choice comes first</h3>
+                  <h3>{t("Patient choice comes first")}</h3>
                   <p>
-                    Earlier appointments are always an offer. An existing
-                    booking stays in place until a replacement is confirmed.
+                    {" "}
+                    {t(
+                      "Earlier appointments are always an offer. An existing booking stays in place until a replacement is confirmed.",
+                    )}{" "}
                   </p>
                 </section>
               </div>
@@ -500,10 +547,10 @@ export default function StaffWorkspace({
           <div className="section-notice">
             <Icon name="users" />
             <p>
-              <strong>A smaller wait starts with a good match.</strong> This
-              demo uses fictional availability. Use the scenario controls above
-              to offer the opening to Elena; live matching remains
-              unimplemented.
+              <strong>{t("A smaller wait starts with a good match.")}</strong>{" "}
+              {t(
+                "This demo uses fictional availability. Use the scenario controls above to offer the opening to Elena; live matching remains unimplemented.",
+              )}{" "}
             </p>
           </div>
           <WaitlistPanel full onNavigate={onNavigate} demo={demo} />
@@ -513,29 +560,35 @@ export default function StaffWorkspace({
         <section className="panel activity-panel">
           <div className="panel-heading">
             <div>
-              <h2>Preview activity</h2>
-              <p>Illustrative events, not a persisted audit log</p>
+              <h2>{t("Preview activity")}</h2>
+              <p>{t("Illustrative events, not a persisted audit log")}</p>
             </div>
-            <Badge tone="amber">Session only</Badge>
+            <Badge tone="amber">{t("Session only")}</Badge>
           </div>
           {demo.events.length ? (
             <ol className="timeline">
               {demo.events.map((event, index) => (
-                <li key={event}>
+                <li key={t(event)}>
                   <span className="timeline-icon">
                     <Icon name="check" />
                   </span>
                   <div>
-                    <strong>Demo event {index + 1}</strong>
-                    <p>{event}</p>
-                    <Badge tone="blue">This browser only</Badge>
+                    <strong>
+                      {t("Demo event")} {index + 1}
+                    </strong>
+                    <p>{t(event)}</p>
+                    <Badge tone="blue">{t("This browser only")}</Badge>
                   </div>
                 </li>
               ))}
             </ol>
           ) : (
-            <EmptyState title="No demo actions yet">
-              <p>Confirm the sample cancellation to start the activity log.</p>
+            <EmptyState title={t("No demo actions yet")}>
+              <p>
+                {t(
+                  "Confirm the sample cancellation to start the activity log.",
+                )}
+              </p>
             </EmptyState>
           )}
         </section>

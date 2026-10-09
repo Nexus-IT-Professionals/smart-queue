@@ -72,3 +72,12 @@ The nine Chromium tests cover anonymous root/login/role links, entry from both r
 ## Responsive review (UX-1)
 
 `npm run test:e2e` now runs 14 Chromium cases, including five responsive workflows at 320/375/768/1024/1440px. At ≤375px Provider navigation uses two columns. The page must fit horizontally while the schedule table remains independently keyboard-scrollable. Native Firefox 200% zoom was manually checked through acceptance and reset; this is separate from viewport automation. Repeat these checks on your presentation device before final acceptance.
+
+
+## Language selection (UX-2)
+
+English/Español controls are available on entry, Patient, and Provider pages. Changing language updates instructions, labels, response/activity copy, and displayed dates/times without clearing the current scenario, filter, or confirmation. The document language/title also update. Native date-picker controls use the browser/OS locale.
+
+Only the `smart-queue-language` preference (`en` or `es`) is saved in localStorage. Blocked storage does not prevent access or language switching. Reset retains the language; refreshing clears the demo scenario but restores the saved language. This does not persist bookings or patient information.
+
+Latest checks: 29 unit/artifact tests and 19 Chromium browser tests pass, along with lint and both builds. Rehearse the full scenario in Spanish, switch languages during confirmation, check decline/help and an empty schedule, then reload. Human Spanish copy review and full assistive-technology testing remain pending.

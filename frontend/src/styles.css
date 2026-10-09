@@ -1646,3 +1646,56 @@ dd {
     grid-column: 1 / -1;
   }
 }
+
+/* Language controls remain available in both roles without resetting the demo. */
+.app-shell {
+  grid-template-rows: auto 1fr;
+}
+.topbar {
+  flex-wrap: wrap;
+  min-height: 80px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.language-switch {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  margin: 0;
+  min-width: 0;
+  border: 1px solid #8798b3;
+  border-radius: 8px;
+}
+.language-switch button {
+  padding: 8px;
+  min-height: 36px;
+  color: white;
+  background: transparent;
+  border-radius: 5px;
+  font-size: 12px;
+}
+.language-switch button[aria-pressed="true"] {
+  background: white;
+  color: var(--navy);
+}
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-rows: auto auto 1fr;
+  }
+}
+@media (max-width: 650px) {
+  .workspace-switch {
+    width: 100%;
+  }
+  .workspace-switch button {
+    flex: 1;
+    min-width: 0;
+  }
+  .demo-scenario-actions {
+    flex-shrink: 1;
+    max-width: 100%;
+  }
+  .demo-scenario-actions button {
+    max-width: 100%;
+  }
+}

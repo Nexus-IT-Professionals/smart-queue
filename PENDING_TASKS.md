@@ -52,7 +52,7 @@ Original UI inspiration: the [Pinterest dashboard](https://ru.pinterest.com/pin/
 | ID | Priority | Status / basis | Task and acceptance criteria |
 |---|---|---|---|
 | UX-1 | P1 | Implemented · Locally verified; awaiting manual review | Fixed 320px Provider page overflow with a shrinkable mobile grid and two-column navigation at ≤375px. Workflow and all provider sections pass at 320/375/768/1024/1440px; keyboard table scrolling verified. Native Firefox 200% zoom workflow passed. See validation update below. |
-| UX-2 | P1 | Open · Verified gap | Add Spanish/English UI copy and date formatting. Patient/provider instructions and error/confirmation states are understandable in either language. |
+| UX-2 | P1 | Implemented · Locally verified; awaiting manual review | Shared English/Español selector translates entry, both roles, filters, empty/health states, confirmation, response and activity copy. Puerto Rico dates/times use Intl. Language changes preserve scenario/filter/confirmation state; preference survives reload when storage is available. 29 unit/artifact and 19 browser tests pass; see update below. |
 | UX-3 | P1 | Open · Recommendation | Complete keyboard/screen-reader/contrast review. Verify focus after reset, cancellation, offer, role changes, and back/forward; no lost focus or ambiguous state announcements. |
 
 ### Frontend
@@ -184,7 +184,7 @@ Reproduce from `frontend/`: `npm ci`, `npx playwright install chromium`, `npm ru
 
 Manual review: open http://127.0.0.1:8001/#/demo using the existing local static server; choose Provider, cancel/send offer, switch to Patient, preview/go back, then explicitly confirm. Verify Provider shows Elena at 2:00 PM and waitlist 2. Reset, test decline/help, and check direct `#/login` and browser back/forward. If the server has stopped, run `python3 -m http.server 8001 --bind 127.0.0.1 --directory frontend/dist` from the project root.
 
-Next non-deployment task after review: **UX-2 (P1)** Spanish/English UI copy and date formatting. Keep P1 tasks incremental; do not reactivate deferred production authentication or deployment.
+Next non-deployment task after review: **UX-3 (P1)** keyboard, screen-reader, and contrast review. Keep P1 tasks incremental; do not reactivate deferred production authentication or deployment.
 
 
 ### UX-1 — responsive layout and zoom validation
@@ -196,3 +196,16 @@ Next non-deployment task after review: **UX-2 (P1)** Spanish/English UI copy and
 - Limits: viewport tests do not establish real-device/touch, screen-reader, or every browser/zoom combination coverage. UX-3 remains open. No commit/push or deployment performed for this task.
 
 Manual acceptance: refresh http://127.0.0.1:8001/#/demo; inspect 320px and 375px widths, switch through all Provider sections, and complete the offer flow. Verify only the schedule table scrolls horizontally and all role/reset controls remain reachable. Repeat at browser 200% zoom, then restore 100%. Reproduce automated checks with `cd frontend && npm run lint && npm test && npm run test:e2e`.
+
+
+### UX-2 — English/Spanish UI and date formatting
+
+- Added `src/i18n/LanguageProvider.tsx`, `catalog.ts`, and `locale.ts`. English remains the default; the header exposes English/Español on entry and both role pages. The document language and title update for assistive technology. No runtime dependencies added.
+- Translated navigation, instructions, accessible labels, filters, empty/health states, confirmations, synthetic response messages, waitlist descriptions, and activity events. Names, IDs, role routes, reducer phases, and filter values stay stable. Changing language preserves the current scenario, selected filter, and open confirmation.
+- Calendar dates and visit times use `Intl.DateTimeFormat` with `en-US`/`es-PR` and `America/Puerto_Rico`; waitlist dates are now ISO calendar fixtures. The schedule subtitle formats the actual selected date. Native date-picker controls follow browser/OS conventions; surrounding copy and displayed dates use the app language.
+- Only the `en`/`es` preference is stored under `smart-queue-language`; no appointment or patient data is persisted. Blocked storage falls back safely to in-memory selection. Reset keeps the language; reload restores the language preference and resets the synthetic scenario.
+- Header/role controls wrap for longer Spanish labels; the Spanish 320px Provider screenshot was visually inspected. No booking, auth, or network behavior changed.
+- Tests: **29 unit/artifact tests**, **19 Chromium browser tests**, lint with zero warnings, standard build, and public-demo build/artifact verification passed. New coverage checks catalog/event translations, Puerto Rico date formatting, Spanish acceptance/help at 320/768/1440px, switching with active filters/confirmation, language persistence, empty/decline states, and blocked storage. Existing English and responsive cases remain green.
+- Limits: human Spanish editorial review and full bilingual screen-reader/contrast audit remain recommended under UX-3. Hosted CI results for UX-2 are not yet verified. UX-1 was committed/pushed as `d157b78`; the owner authorized committing/pushing UX-2. Human editorial/accessibility review remains pending.
+
+Manual acceptance: refresh http://127.0.0.1:8001/#/demo and choose Español. Enter Proveedor → confirm cancellation → send offer → Paciente → review acceptance. Switch to English and back before confirming: the offer and confirmation must remain intact. Confirm, inspect the translated activity/list, and reset. Try a status filter before switching language, an empty date, decline/help, and reload. Only the language preference should survive reload. Next task: UX-3 after review.

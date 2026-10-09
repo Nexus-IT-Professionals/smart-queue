@@ -1,3 +1,4 @@
+import { useLanguage } from "./i18n/LanguageProvider";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { getHealth } from "./api/client";
 import { Icon, type IconName } from "./components/ui";
@@ -22,6 +23,7 @@ const navigation: { id: StaffView; label: string; icon: IconName }[] = [
   { id: "activity", label: "Activity log", icon: "activity" },
 ];
 export default function App() {
+  const { t, dateText, language, setLanguage } = useLanguage();
   // A public role selector, not a login/session or a backend permission.
   const [workspace, setWorkspace] = useState<DemoWorkspace>(() =>
     demoWorkspaceFromHash(window.location.hash),
@@ -86,14 +88,15 @@ export default function App() {
           main.current?.focus();
         }}
       >
-        Skip to main content
+        {" "}
+        {t("Skip to main content")}{" "}
       </a>
       <header className="topbar">
         {/* biome-ignore lint/a11y/useValidAnchor: This link navigates to a public hash route and resets the selected view. */}
         <a
           href="#/demo"
           className="brand"
-          aria-label="Smart Queue home"
+          aria-label={t("Smart Queue home")}
           onClick={() => {
             navigate("demo");
             setView("overview");
@@ -102,52 +105,73 @@ export default function App() {
           <span className="brand-mark">+</span>
           <span>
             smart<span className="brand-light">queue</span>
-            <small>MORE ACCESS. LESS WAITING.</small>
+            <small>{t("MORE ACCESS. LESS WAITING.")}</small>
           </span>
         </a>
         <div className="office-label">
           <Icon name="heart" />
           <span>
             {OFFICE}
-            <small>Fictional medical office</small>
+            <small>{t("Fictional medical office")}</small>
           </span>
         </div>
         {/* biome-ignore lint/a11y/useSemanticElements: Role selector is a navigation group, not a group of form fields. */}
         <div
           className="workspace-switch"
           role="group"
-          aria-label="Demo workspace"
+          aria-label={t("Demo workspace")}
         >
           <button
             type="button"
             aria-pressed={workspace === "demo"}
             onClick={() => navigate("demo")}
           >
-            Demo access
+            {" "}
+            {t("Demo access")}{" "}
           </button>
           <button
             type="button"
             aria-pressed={workspace === "staff"}
             onClick={() => navigate("staff")}
           >
-            Provider view
+            {" "}
+            {t("Provider view")}{" "}
           </button>
           <button
             type="button"
             aria-pressed={workspace === "patient"}
             onClick={() => navigate("patient")}
           >
-            Patient view
+            {" "}
+            {t("Patient view")}{" "}
           </button>
         </div>
+        <fieldset className="language-switch" aria-label="Language / Idioma">
+          <button
+            type="button"
+            lang="en"
+            aria-pressed={language === "en"}
+            onClick={() => setLanguage("en")}
+          >
+            English
+          </button>
+          <button
+            type="button"
+            lang="es"
+            aria-pressed={language === "es"}
+            onClick={() => setLanguage("es")}
+          >
+            Español
+          </button>
+        </fieldset>
         <span className="header-avatar" aria-hidden="true">
           SQ
         </span>
       </header>
-      <aside className="sidebar" aria-label="Workspace sidebar">
+      <aside className="sidebar" aria-label={t("Workspace sidebar")}>
         <div>
-          <p className="nav-label">WORKSPACE</p>
-          <nav aria-label="Main navigation">
+          <p className="nav-label">{t("WORKSPACE")}</p>
+          <nav aria-label={t("Main navigation")}>
             {workspace === "staff" ? (
               navigation.map((item) => (
                 <button
@@ -158,7 +182,7 @@ export default function App() {
                   onClick={() => setView(item.id)}
                 >
                   <Icon name={item.icon} />
-                  {item.label}
+                  {t(item.label)}
                   {item.id === "waitlist" && (
                     <span className="nav-count">{waitlist.length}</span>
                   )}
@@ -167,7 +191,9 @@ export default function App() {
             ) : (
               <div className="nav-item patient-nav">
                 <Icon name="heart" />
-                {workspace === "patient" ? "My care" : "Welcome to the demo"}
+                {workspace === "patient"
+                  ? t("My care")
+                  : t("Welcome to the demo")}
               </div>
             )}
           </nav>
@@ -175,23 +201,26 @@ export default function App() {
         <div className="sidebar-bottom">
           <div className="demo-card">
             <Icon name="shield" />
-            <strong>A safe space to explore</strong>
+            <strong>{t("A safe space to explore")}</strong>
             <p>
-              Fictional people. Simulated offers. No real patient information.
+              {" "}
+              {t(
+                "Fictional people. Simulated offers. No real patient information.",
+              )}{" "}
             </p>
-            <span className="demo-tag">DEMO / POC MODE</span>
+            <span className="demo-tag">{t("DEMO / POC MODE")}</span>
           </div>
           <div className="connection" role="status">
             <span
               className={`status-dot ${import.meta.env.MODE === "public-demo" ? "ok" : apiStatus}`}
             />
             {import.meta.env.MODE === "public-demo"
-              ? "Standalone demo · No API connection"
+              ? t("Standalone demo · No API connection")
               : apiStatus === "ok"
-                ? "Health API connected"
+                ? t("Health API connected")
                 : apiStatus === "checking"
-                  ? "Checking health API…"
-                  : "Health API unavailable"}
+                  ? t("Checking health API…")
+                  : t("Health API unavailable")}
           </div>
           {import.meta.env.MODE !== "public-demo" &&
             apiStatus === "offline" && (
@@ -203,37 +232,41 @@ export default function App() {
                   setHealthAttempt((n) => n + 1);
                 }}
               >
-                Retry connection
+                {" "}
+                {t("Retry connection")}{" "}
               </button>
             )}
           <p className="sidebar-foot">
-            Made for Puerto Rico <span aria-hidden="true">↗</span>
+            {" "}
+            {t("Made for Puerto Rico")} <span aria-hidden="true">↗</span>
           </p>
         </div>
       </aside>
       <main id="main-content" ref={main} tabIndex={-1}>
         <div className="preview-banner">
           <span>
-            <span className="preview-dot" />
-            Demo / POC Mode · Synthetic data
+            <span className="preview-dot" />{" "}
+            {t("Demo / POC Mode · Synthetic data")}{" "}
           </span>
           <span>
-            No credentials required. Simulated bookings stay in this browser.
+            {" "}
+            {t(
+              "No credentials required. Simulated bookings stay in this browser.",
+            )}{" "}
           </span>
         </div>
         {workspace !== "demo" && (
           <div className="demo-identity">
             <span>
               <strong>{demoIdentities[workspace].name}</strong> ·{" "}
-              {demoIdentities[workspace].label}
+              {t(demoIdentities[workspace].label)}
             </span>
             <button
               type="button"
               className="text-button"
               onClick={() => dispatch({ type: "reset" })}
             >
-              <Icon name="reset" />
-              Reset demo scenario
+              <Icon name="reset" /> {t("Reset demo scenario")}{" "}
             </button>
           </div>
         )}
@@ -256,7 +289,15 @@ export default function App() {
         )}
         <footer className="page-footer">
           <span>Smart Queue · Caribbean AI 2026 Hackathon</span>
-          <span>Demo date: Oct 8, 2026 · Atlantic Standard Time</span>
+          <span>
+            {t("Demo date:")}{" "}
+            {dateText("2026-10-08", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}{" "}
+            · {t("Atlantic Standard Time")}
+          </span>
         </footer>
       </main>
     </div>

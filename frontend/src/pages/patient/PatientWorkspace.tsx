@@ -1,3 +1,4 @@
+import { useLanguage } from "../../i18n/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import { Avatar, Badge, Icon } from "../../components/ui";
 import {
@@ -15,6 +16,7 @@ export default function PatientWorkspace({
   onAction: (action: DemoAction) => void;
   onProvider: () => void;
 }) {
+  const { t, dateText, timeText } = useLanguage();
   const response = ["accepted", "declined", "help"].includes(demo.phase)
     ? (demo.phase as "accepted" | "declined" | "help")
     : null;
@@ -41,19 +43,21 @@ export default function PatientWorkspace({
     <div className="workspace-content patient-content">
       <div className="page-heading">
         <div>
-          <p className="eyebrow">ISLA CARE / PATIENT WORKSPACE</p>
-          <h1>Your care, a little closer.</h1>
-          <p>Welcome, Elena. An earlier appointment could fit your day.</p>
+          <p className="eyebrow">{t("ISLA CARE / PATIENT WORKSPACE")}</p>
+          <h1>{t("Your care, a little closer.")}</h1>
+          <p>
+            {t("Welcome, Elena. An earlier appointment could fit your day.")}
+          </p>
         </div>
-        <Badge tone="blue">Fictional patient</Badge>
+        <Badge tone="blue">{t("Fictional patient")}</Badge>
       </div>
       <div className="patient-grid">
         <div>
           <section className="panel patient-appointment">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">YOUR CURRENT APPOINTMENT</p>
-                <h2>A spot on your calendar</h2>
+                <p className="eyebrow">{t("YOUR CURRENT APPOINTMENT")}</p>
+                <h2>{t("A spot on your calendar")}</h2>
               </div>
               <span className="metric-icon blue">
                 <Icon name="calendar" />
@@ -61,23 +65,32 @@ export default function PatientWorkspace({
             </div>
             <div className="appointment-date">
               <div className="calendar-tile">
-                <span>OCT</span>
+                <span>
+                  {dateText("2026-10-08", {
+                    month: "short",
+                  }).toLocaleUpperCase()}
+                </span>
                 <strong>{demo.phase === "accepted" ? "08" : "22"}</strong>
               </div>
               <div>
                 <h3>
-                  Thursday, October {demo.phase === "accepted" ? "8" : "22"}
+                  {dateText(
+                    demo.phase === "accepted" ? "2026-10-08" : "2026-10-22",
+                  )}
                 </h3>
-                <p>2:00–2:30 PM · Atlantic Standard Time</p>
-                <p>Isla Care · San Juan · Consultation</p>
+                <p>
+                  {timeText("2:00 PM")}–{timeText("2:30 PM")} ·{" "}
+                  {t("Atlantic Standard Time")}
+                </p>
+                <p>{t("Isla Care · San Juan · Consultation")}</p>
               </div>
             </div>
             <div className="appointment-footer">
-              <Badge tone="green">Scheduled · sample</Badge>
+              <Badge tone="green">{t("Scheduled · sample")}</Badge>
               <span>
                 {demo.phase === "accepted"
-                  ? "Moved 14 days earlier in the demo only."
-                  : "Your current appointment stays in place."}
+                  ? t("Moved 14 days earlier in the demo only.")
+                  : t("Your current appointment stays in place.")}
               </span>
             </div>
           </section>
@@ -87,40 +100,47 @@ export default function PatientWorkspace({
               ref={noOffer}
               tabIndex={-1}
             >
-              <h2>No earlier offer yet</h2>
+              <h2>{t("No earlier offer yet")}</h2>
               <p>
-                Your October 22 sample appointment is unchanged. Switch to
-                Provider, confirm the fictional cancellation, and send the demo
-                offer.
+                {" "}
+                {t(
+                  "Your October 22 sample appointment is unchanged. Switch to Provider, confirm the fictional cancellation, and send the demo offer.",
+                )}{" "}
               </p>
               <button
                 type="button"
                 className="primary-button"
                 onClick={onProvider}
               >
-                Open Demo Provider <Icon name="arrow" />
+                {" "}
+                {t("Open Demo Provider")} <Icon name="arrow" />
               </button>
             </section>
           ) : (
             <section className="panel offer-panel">
               <div className="panel-heading">
                 <div>
-                  <p className="eyebrow">AN OPPORTUNITY TO BE SEEN SOONER</p>
-                  <h2>Does an earlier visit work for you?</h2>
+                  <p className="eyebrow">
+                    {t("AN OPPORTUNITY TO BE SEEN SOONER")}
+                  </p>
+                  <h2>{t("Does an earlier visit work for you?")}</h2>
                 </div>
-                <Badge tone="green">14 days earlier</Badge>
+                <Badge tone="green">{t("14 days earlier")}</Badge>
               </div>
               <div className="offer-date">
                 <Icon name="clock" />
                 <div>
-                  <strong>Thursday, October 8 · 2:00 PM</strong>
-                  <p>30-minute consultation · Isla Care, San Juan</p>
+                  <strong>
+                    {dateText("2026-10-08")} · {timeText("2:00 PM")}
+                  </strong>
+                  <p>{t("30-minute consultation · Isla Care, San Juan")}</p>
                 </div>
               </div>
               <p className="offer-explanation">
-                This is a simulated offer. Confirming updates only the fictional
-                schedule in this browser. No real appointment or message is
-                created.
+                {" "}
+                {t(
+                  "This is a simulated offer. Confirming updates only the fictional schedule in this browser. No real appointment or message is created.",
+                )}{" "}
               </p>
               {hasOffer && !confirming && (
                 <div className="offer-actions">
@@ -130,7 +150,8 @@ export default function PatientWorkspace({
                     className="primary-button"
                     onClick={() => setConfirming(true)}
                   >
-                    Preview acceptance <Icon name="arrow" />
+                    {" "}
+                    {t("Preview acceptance")} <Icon name="arrow" />
                   </button>
                   <button
                     type="button"
@@ -139,7 +160,8 @@ export default function PatientWorkspace({
                       onAction({ type: "respond", response: "declined" })
                     }
                   >
-                    Keep my current visit
+                    {" "}
+                    {t("Keep my current visit")}{" "}
                   </button>
                   <button
                     type="button"
@@ -148,7 +170,8 @@ export default function PatientWorkspace({
                       onAction({ type: "respond", response: "help" })
                     }
                   >
-                    I need help
+                    {" "}
+                    {t("I need help")}{" "}
                   </button>
                 </div>
               )}
@@ -159,12 +182,14 @@ export default function PatientWorkspace({
                   ref={confirmation}
                   tabIndex={-1}
                   role="group"
-                  aria-label="Confirm preview acceptance"
+                  aria-label={t("Confirm preview acceptance")}
                 >
-                  <h3>Preview accepting October 8 at 2:00 PM?</h3>
+                  <h3>{t("Preview accepting October 8 at 2:00 PM?")}</h3>
                   <p>
-                    This moves your fictional appointment to October 8 and
-                    updates the Provider view. No real appointment is reserved.
+                    {" "}
+                    {t(
+                      "This moves your fictional appointment to October 8 and updates the Provider view. No real appointment is reserved.",
+                    )}{" "}
                   </p>
                   <div className="offer-actions">
                     <button
@@ -175,14 +200,16 @@ export default function PatientWorkspace({
                         setConfirming(false);
                       }}
                     >
-                      Confirm preview
+                      {" "}
+                      {t("Confirm preview")}{" "}
                     </button>
                     <button
                       type="button"
                       className="secondary-button"
                       onClick={() => setConfirming(false)}
                     >
-                      Go back
+                      {" "}
+                      {t("Go back")}{" "}
                     </button>
                   </div>
                 </div>
@@ -191,7 +218,7 @@ export default function PatientWorkspace({
                 {response && (
                   <div className="response-notice" ref={result} tabIndex={-1}>
                     <Icon name="check" />
-                    <p>{responseMessages[response]}</p>
+                    <p>{t(responseMessages[response])}</p>
                   </div>
                 )}
               </div>
@@ -204,15 +231,16 @@ export default function PatientWorkspace({
                     setConfirming(false);
                   }}
                 >
-                  <Icon name="reset" />
-                  Restart demo scenario
+                  <Icon name="reset" /> {t("Restart demo scenario")}{" "}
                 </button>
               )}
               <div className="panel-note">
                 <Icon name="shield" />
                 <p>
-                  You’re in control. The demo changes the appointment only after
-                  your explicit confirmation.
+                  {" "}
+                  {t(
+                    "You’re in control. The demo changes the appointment only after your explicit confirmation.",
+                  )}{" "}
                 </p>
               </div>
             </section>
@@ -224,44 +252,50 @@ export default function PatientWorkspace({
               <Avatar name="Elena Morales" />
               <div>
                 <h2>Elena Morales</h2>
-                <p>Synthetic patient · SQ-P01</p>
+                <p>{t("Synthetic patient · SQ-P01")}</p>
               </div>
             </div>
             <dl className="profile-list">
               <div>
-                <dt>Preferred language</dt>
-                <dd>Spanish</dd>
+                <dt>{t("Preferred language")}</dt>
+                <dd>{t("Spanish")}</dd>
               </div>
               <div>
-                <dt>Availability</dt>
-                <dd>Afternoons · 1–4 PM</dd>
+                <dt>{t("Availability")}</dt>
+                <dd>{t("Afternoons · 1–4 PM")}</dd>
               </div>
               <div>
-                <dt>Contact preference</dt>
-                <dd>In-app inbox · simulated</dd>
+                <dt>{t("Contact preference")}</dt>
+                <dd>{t("In-app inbox · simulated")}</dd>
               </div>
               <div>
-                <dt>Waitlist preference</dt>
-                <dd>Earlier appointment</dd>
+                <dt>{t("Waitlist preference")}</dt>
+                <dd>{t("Earlier appointment")}</dd>
               </div>
             </dl>
             <p className="profile-note">
-              Sample preferences are read-only. Profile editing is not connected
-              yet.
+              {" "}
+              {t(
+                "Sample preferences are read-only. Profile editing is not connected yet.",
+              )}{" "}
             </p>
           </section>
           <section className="care-note">
             <span className="metric-icon purple">
               <Icon name="heart" />
             </span>
-            <h3>Less waiting. Your choice.</h3>
+            <h3>{t("Less waiting. Your choice.")}</h3>
             <p>
-              Declining an earlier offer does not mean losing your current
-              appointment.
+              {" "}
+              {t(
+                "Declining an earlier offer does not mean losing your current appointment.",
+              )}{" "}
             </p>
             <p className="small-text">
-              AI reply assistance is not connected. This preview uses explicit
-              response buttons.
+              {" "}
+              {t(
+                "AI reply assistance is not connected. This preview uses explicit response buttons.",
+              )}{" "}
             </p>
           </section>
         </div>
