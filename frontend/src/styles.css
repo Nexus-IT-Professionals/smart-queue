@@ -1246,7 +1246,7 @@ dd {
 }
 @media (max-width: 900px) {
   .app-shell {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto 1fr;
   }
   .topbar {
@@ -1633,5 +1633,16 @@ dd {
   }
   .workspace-switch {
     margin-left: 0;
+  }
+}
+
+/* Keep provider navigation readable at narrow widths and browser zoom. */
+@media (max-width: 375px) {
+  .sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .patient-nav {
+    grid-column: 1 / -1;
   }
 }

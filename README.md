@@ -188,3 +188,10 @@ npm run test:e2e
 Validated locally: lint passes with zero warnings, 26 unit/artifact tests pass, and 9 Chromium tests pass. The browser suite rebuilds the public demo and starts an isolated loopback server at port 4175 without a backend. It covers direct public routes, role/entry navigation, back/forward, provider sections and filters, acceptance confirmation/focus, help/decline, and reset/reload; API/external requests and uncaught browser errors fail tests. CI runs these checks before packaging; publishing remains gated off. Browser traces/screenshots on failure are ignored by Git.
 
 Biome uses recommended rules with documented exceptions for intentional navigation/focus and the existing CSS cascade. TypeScript compilation remains a separate check. Desktop Chromium coverage does not replace mobile, screen-reader, or cross-browser review. See [QA-2 results and manual steps](PENDING_TASKS.md#qa-2--lint-and-automated-browser-regression-tests).
+
+
+### UX-1: responsive layout checks
+
+Fixed horizontal Provider page overflow at 320px: the mobile shell can shrink and navigation uses two columns at ≤375px. The schedule table retains its own keyboard-scrollable region. Five new tests exercise all Provider sections and the appointment workflow at 320/375/768/1024/1440px without page overflow. The full suite now passes **14 Chromium tests**, plus **26 unit/artifact tests** and lint. Public-demo build verification passes. A native Firefox **200% zoom** walkthrough also passed through acceptance and reset; real-device/touch and full accessibility testing remain pending.
+
+For manual review, refresh http://127.0.0.1:8001/#/demo, try 320px/375px widths and 200% browser zoom, and complete cancellation → offer → acceptance → reset. See [UX-1 validation](PENDING_TASKS.md#ux-1--responsive-layout-and-zoom-validation). Changes await manual review before commit/push.

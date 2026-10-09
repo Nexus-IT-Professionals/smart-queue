@@ -67,3 +67,8 @@ To restart the local preview from the project root after building: `python3 -m h
 After `npm ci`, install the test browser once with `npx playwright install chromium` (Linux CI uses `--with-deps`). Run `npm run lint`, `npm test`, and `npm run test:e2e` from `frontend/`. The browser command rebuilds the public demo, verifies the artifact, and starts its own server on port 4175; it refuses to reuse an existing server. No backend or account setup is needed.
 
 The nine Chromium tests cover anonymous root/login/role links, entry from both roles, back/forward, all provider sections, search/filter/empty states, confirmation focus and cancellation, accepted booking/waitlist/activity updates, help/decline, reset, and reload. Each test fails on API/external/non-GET traffic or uncaught browser exceptions. Failure screenshots/traces stay in ignored test output directories. Coverage is desktop Chromium only; responsive, screen-reader, and additional browser review remain pending. CI runs these checks before packaging; deployment remains disabled until explicitly enabled.
+
+
+## Responsive review (UX-1)
+
+`npm run test:e2e` now runs 14 Chromium cases, including five responsive workflows at 320/375/768/1024/1440px. At ≤375px Provider navigation uses two columns. The page must fit horizontally while the schedule table remains independently keyboard-scrollable. Native Firefox 200% zoom was manually checked through acceptance and reset; this is separate from viewport automation. Repeat these checks on your presentation device before final acceptance.

@@ -51,7 +51,7 @@ Original UI inspiration: the [Pinterest dashboard](https://ru.pinterest.com/pin/
 
 | ID | Priority | Status / basis | Task and acceptance criteria |
 |---|---|---|---|
-| UX-1 | P1 | Open · Verified validation gap | Check 320/375/768/1024/1440px and 200% zoom. Roles, scenario actions, and reset remain reachable; only the table may scroll horizontally. |
+| UX-1 | P1 | Implemented · Locally verified; awaiting manual review | Fixed 320px Provider page overflow with a shrinkable mobile grid and two-column navigation at ≤375px. Workflow and all provider sections pass at 320/375/768/1024/1440px; keyboard table scrolling verified. Native Firefox 200% zoom workflow passed. See validation update below. |
 | UX-2 | P1 | Open · Verified gap | Add Spanish/English UI copy and date formatting. Patient/provider instructions and error/confirmation states are understandable in either language. |
 | UX-3 | P1 | Open · Recommendation | Complete keyboard/screen-reader/contrast review. Verify focus after reset, cancellation, offer, role changes, and back/forward; no lost focus or ambiguous state announcements. |
 
@@ -184,4 +184,15 @@ Reproduce from `frontend/`: `npm ci`, `npx playwright install chromium`, `npm ru
 
 Manual review: open http://127.0.0.1:8001/#/demo using the existing local static server; choose Provider, cancel/send offer, switch to Patient, preview/go back, then explicitly confirm. Verify Provider shows Elena at 2:00 PM and waitlist 2. Reset, test decline/help, and check direct `#/login` and browser back/forward. If the server has stopped, run `python3 -m http.server 8001 --bind 127.0.0.1 --directory frontend/dist` from the project root.
 
-Next non-deployment task after review: **UX-1 (P1)** responsive widths and zoom validation. Keep P1 tasks incremental; do not reactivate deferred production authentication or deployment.
+Next non-deployment task after review: **UX-2 (P1)** Spanish/English UI copy and date formatting. Keep P1 tasks incremental; do not reactivate deferred production authentication or deployment.
+
+
+### UX-1 — responsive layout and zoom validation
+
+- Fixed a reproduced Provider overflow: at 320px the document expanded to 326px. `styles.css` now uses `minmax(0, 1fr)` for the mobile shell and two-column Provider navigation at widths ≤375px. Table scrolling stays within its focusable region; no page-level overflow hiding was added.
+- Added `e2e/responsive.spec.ts`: five viewport cases (320/375/768/1024/1440px, 900px height), covering entry, all Provider sections, cancellation/offer, Patient confirmation/acceptance, and reset. Every checkpoint asserts the document/body fit the viewport; narrow cases verify ArrowRight scrolls the table. Screenshots are saved to ignored test output.
+- Validation: **14 Chromium tests passed** (9 existing + 5 responsive), **26 unit/artifact tests passed**, lint passed with zero warnings, and public-demo TypeScript/build/artifact verification passed. Existing CI automatically includes the new tests.
+- Native Firefox at **200% browser zoom**: entry → Provider cancellation/offer → Patient confirmation/acceptance → reset passed; confirmation layout visually inspected and zoom restored to 100%. This is a manual desktop browser check, not automated zoom emulation.
+- Limits: viewport tests do not establish real-device/touch, screen-reader, or every browser/zoom combination coverage. UX-3 remains open. No commit/push or deployment performed for this task.
+
+Manual acceptance: refresh http://127.0.0.1:8001/#/demo; inspect 320px and 375px widths, switch through all Provider sections, and complete the offer flow. Verify only the schedule table scrolls horizontally and all role/reset controls remain reachable. Repeat at browser 200% zoom, then restore 100%. Reproduce automated checks with `cd frontend && npm run lint && npm test && npm run test:e2e`.
