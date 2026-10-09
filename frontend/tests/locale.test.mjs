@@ -32,3 +32,42 @@ test("all response and reducer event messages have Spanish translations", () => 
   }
   for (const person of waitlist) assert.ok(formatDate("es", person.since));
 });
+// The catalog is keyed by the English source text, so EN/ES key parity is
+// structural; what can drift is the content of each pair. Every Spanish value
+// must keep the English placeholders, line breaks and numbers (times, dates,
+// counts, IDs) and must actually be translated unless explicitly allowlisted.
+const sameInBothLanguages = new Set(["30 min"]); // "min" is also Spanish.
+test("catalog pairs keep placeholders, line breaks and numbers", () => {
+  const tokens = (text, pattern) => (text.match(pattern) ?? []).sort();
+  for (const [en, es] of Object.entries(spanish)) {
+    assert.equal(en, en.trim(), `untrimmed key: ${en}`);
+    assert.equal(es, es.trim(), `untrimmed value: ${en}`);
+    assert.deepEqual(tokens(es, /\{\w+\}/g), tokens(en, /\{\w+\}/g), en);
+    assert.deepEqual(tokens(es, /\n/g), tokens(en, /\n/g), en);
+    assert.deepEqual(tokens(es, /\d+/g), tokens(en, /\d+/g), en);
+    if (!sameInBothLanguages.has(en)) assert.notEqual(es, en, en);
+  }
+});
+// Explicit expected strings: these only hold if the formatter pins
+// America/Puerto_Rico, so tests/timezone.test.mjs reruns this file under
+// far-away host timezones. Whitespace is normalized because ICU may emit
+// narrow/no-break spaces before AM/PM.
+test("formatter output matches Puerto Rico wall-clock values exactly", () => {
+  const plain = (text) => text.replace(/\s/g, " ");
+  const expected = {
+    en: ["9:00 AM", "2:00 PM", "2:30 PM", "Thursday, October 22", "Oct 8, 2026", "Oct 5"],
+    es: ["9:00 a. m.", "2:00 p. m.", "2:30 p. m.", "jueves, 22 de octubre", "8 oct 2026", "5 oct"],
+  };
+  for (const [language, values] of Object.entries(expected))
+    assert.deepEqual(
+      [
+        formatTime(language, "9:00 AM"),
+        formatTime(language, "2:00 PM"),
+        formatTime(language, "2:30 PM"),
+        formatDate(language, "2026-10-22"),
+        formatDate(language, "2026-10-08", { month: "short", day: "numeric", year: "numeric" }),
+        formatDate(language, "2026-10-05", { month: "short", day: "numeric" }),
+      ].map(plain),
+      values,
+    );
+});
