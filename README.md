@@ -51,4 +51,4 @@ Multi-office routing, real messaging, EHR integrations, predictive no-show scori
 - [Hackathon rules and checklist](docs/HACKATHON_RULES.md): recorded rules and open submission tasks; recheck the official rules before submitting.
 - Background research: [waitlist backfill](docs/wiki/waitlist-backfill.md), [Puerto Rico no-show data](docs/wiki/pr-no-show-data.md), and [competitors](docs/wiki/idea-3-competitors.md). These notes distinguish measured results from estimates and vendor claims.
 
-This README was adapted from the planning README at `/Users/tarisadmin/Projects/CaribbeanAI2026_Hackathon/README.md`.
+This README was adapted from the team's pre-event planning documents (research and planning only; no application code was written before the official build period).
