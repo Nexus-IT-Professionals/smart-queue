@@ -1,4 +1,90 @@
 export const spanish: Record<string, string> = {
+  "Staff updated monthly demo scheduling.": "El personal actualizó la programación de la demostración mensual.",
+  "Capacity & statistics": "Capacidad y estadísticas",
+  "Guided cancellation demo": "Demostración guiada de cancelación",
+  "Demo/POC Mode": "Modo demostración/POC",
+  "Synthetic monthly operations · session only":
+    "Operaciones mensuales ficticias · solo esta sesión",
+  "Statistics period": "Período de estadísticas",
+  "Provider resource": "Recurso del proveedor",
+  "All resources": "Todos los recursos",
+  Resource: "Recurso",
+  "Generated month": "Mes generado",
+  "Operating hours": "Horario de servicio",
+  minutes: "minutos",
+  "seats per resource": "cupos por recurso",
+  "Partial coverage: only the generated month contributes capacity. Generate this month to explore it.":
+    "Cobertura parcial: solo el mes generado aporta capacidad. Genere este mes para explorarlo.",
+  "Total capacity": "Capacidad total",
+  "Occupied seats": "Cupos ocupados",
+  "Available seats": "Cupos disponibles",
+  "Waiting-list fill rate": "Tasa de cobertura desde la lista de espera",
+  Cancellations: "Cancelaciones",
+  "Rescheduled appointments": "Citas reprogramadas",
+  "Successfully reassigned appointments": "Citas reasignadas correctamente",
+  "Occupancy rate": "Tasa de ocupación",
+  "Cancellation rate": "Tasa de cancelación",
+  "Eligible released slots": "Cupos liberados elegibles",
+  "Previous month occupancy": "Ocupación del mes anterior",
+  Change: "Cambio",
+  "percentage points": "puntos porcentuales",
+  "No previous-month snapshot available.":
+    "No hay datos guardados del mes anterior.",
+  "Completed visits consume capacity. Rates use aggregate counts; zero denominators display 0%. Waiting-list counts are the current session snapshot.":
+    "Las visitas completadas consumen capacidad. Las tasas usan totales; los denominadores cero muestran 0%. La lista de espera refleja la sesión actual.",
+  "Select a day": "Seleccione un día",
+  occupied: "ocupado",
+  available: "disponibles",
+  "Weekly occupancy trend": "Tendencia semanal de ocupación",
+  "Daily occupancy trend": "Tendencia diaria de ocupación",
+  "Busiest day": "Día más ocupado",
+  "Least busy day": "Día menos ocupado",
+  "Choose an appointment to cancel, complete, reschedule, or refill with staff confirmation.":
+    "Seleccione una cita para cancelar, completar, reprogramar o cubrir con confirmación del personal.",
+  "No bookable slots in this day or resource.":
+    "No hay cupos reservables para este día o recurso.",
+  "Selected appointment": "Cita seleccionada",
+  "Staff confirmation · synthetic scheduling only":
+    "Confirmación del personal · solo citas ficticias",
+  "Cancel selected appointment": "Cancelar cita seleccionada",
+  "Mark completed": "Marcar como completada",
+  "Reschedule destination": "Destino de reprogramación",
+  "Select an available slot": "Seleccione un cupo disponible",
+  "Confirm reschedule": "Confirmar reprogramación",
+  "Book synthetic patient": "Reservar paciente ficticio",
+  "Eligible waiting-list candidates":
+    "Candidatos elegibles de la lista de espera",
+  "No eligible candidates": "Sin candidatos elegibles",
+  "Confirm waiting-list assignment":
+    "Confirmar asignación de la lista de espera",
+  "Monthly demo waiting list": "Lista de espera de la demostración mensual",
+  "Seeded priorities are fictional staff-confirmed scheduling examples, never automated triage.":
+    "Las prioridades iniciales son ejemplos ficticios confirmados por el personal, nunca triaje automatizado.",
+  "Capacity configuration & regenerate":
+    "Configuración de capacidad y regeneración",
+  "Applying configuration regenerates the selected month and resets its bookings and waitlist. Other generated months retain their last snapshot. Reload clears all demo data.":
+    "Aplicar la configuración regenera el mes seleccionado y restablece sus citas y lista de espera. Los otros meses generados conservan sus últimos datos. Recargar borra toda la demostración.",
+  "Current month": "Mes actual",
+  "Opening time": "Hora de apertura",
+  "Closing time": "Hora de cierre",
+  "Slot duration": "Duración de cita",
+  "Seats per day per resource": "Cupos diarios por recurso",
+  "Provider resources": "Recursos del proveedor",
+  "Operating days": "Días de servicio",
+  Sunday: "Domingo",
+  Monday: "Lunes",
+  Tuesday: "Martes",
+  Wednesday: "Miércoles",
+  Thursday: "Jueves",
+  Friday: "Viernes",
+  Saturday: "Sábado",
+  "Confirm reset of generated month":
+    "Confirmar restablecimiento del mes generado",
+  "Apply & regenerate demo": "Aplicar y regenerar demostración",
+  "Demo data updated.": "Datos de demostración actualizados.",
+  "Invalid capacity: seats must fit operating hours and slot duration.":
+    "Capacidad inválida: los cupos deben caber en el horario y duración de cita.",
+
   "Synthetic routine follow-up; morning visit requested":
     "Seguimiento de rutina ficticio; solicita visita por la mañana",
   "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Camila Soto.":

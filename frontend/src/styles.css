@@ -1780,3 +1780,39 @@ dd {
 .table-person .priority-badge { font-size: 12px; margin: 5px 0; }
 
 .priority-settings textarea { resize: vertical; font: inherit; }
+
+.capacity-entry { margin-bottom: 20px; }
+.capacity-dashboard { display: grid; gap: 20px; margin-bottom: 24px; }
+.capacity-header, .capacity-summary, .capacity-grid-panel { padding: 24px; }
+.capacity-header h2 { margin: 8px 0; }
+.capacity-controls, .capacity-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 18px 0; }
+.capacity-dashboard label { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 14px; }
+.capacity-dashboard .check-label { flex-direction: row; align-items: center; }
+.capacity-dashboard input:not([type=checkbox]), .capacity-dashboard select { min-width: 0; max-width: 100%; padding: 10px; border: 1px solid #a6b2c6; border-radius: 7px; background: white; color: var(--navy); }
+.capacity-dashboard input[type=checkbox] { width: 18px; height: 18px; flex-shrink: 0; }
+.capacity-kpis { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }
+.capacity-kpis .metric-value { display: block; font-size: 30px; }
+.capacity-dashboard meter { display: block; width: 100%; height: 18px; accent-color: #218269; }
+.capacity-calendar { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 7px; }
+.capacity-calendar button, .capacity-slots button { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px solid #b9c7d9; border-radius: 9px; background: white; color: #344965; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.capacity-calendar button[aria-pressed=true], .capacity-slots button[aria-pressed=true] { background: #eff4ff; outline: 2px solid #365db5; outline-offset: -2px; }
+.capacity-calendar .outside-month { background: #f3f5f8; }
+.capacity-calendar span { font-size: 12px; }
+.capacity-slots { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.capacity-actions { padding: 18px; background: #f1f6fc; border-radius: 12px; }
+.capacity-actions h3 { width: 100%; }
+.capacity-trends { display: grid; gap: 12px; }
+.capacity-trends button { display: grid; grid-template-columns: 100px 1fr 180px; align-items: center; gap: 15px; border: 0; background: #f3f6fb; padding: 12px; border-radius: 8px; color: var(--navy); text-align: left; cursor: pointer; }
+.capacity-config { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin: 20px 0; }
+.capacity-days { display: flex; flex-wrap: wrap; gap: 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; }
+.capacity-days label { flex-direction: row; align-items: center; }
+.capacity-waiting { padding: 18px 0; border-bottom: 1px solid var(--border); }
+.capacity-dashboard summary { cursor: pointer; font-weight: 700; font-size: 18px; }
+.capacity-dashboard p { line-height: 1.6; }
+@media(max-width: 900px) { .capacity-kpis, .capacity-slots { grid-template-columns: repeat(2,minmax(0,1fr)); } .capacity-calendar { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+@media(max-width: 600px) { .capacity-header, .capacity-summary, .capacity-grid-panel { padding: 16px; } .capacity-config, .capacity-trends button { grid-template-columns: minmax(0,1fr); } .capacity-calendar { grid-template-columns: repeat(2,minmax(0,1fr)); } .capacity-kpis, .capacity-slots { grid-template-columns: minmax(0,1fr); } .capacity-controls > *, .capacity-actions > * { max-width: 100%; } }
+
+.demo-scenario[hidden] { display: none; }
+.capacity-grid-panel { min-width: 0; }
+.capacity-calendar-scroll { overflow-x: auto; padding: 2px; }
+.capacity-calendar { min-width: 700px; grid-template-columns: repeat(7,minmax(0,1fr)); }

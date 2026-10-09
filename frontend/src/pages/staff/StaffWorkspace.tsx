@@ -1,3 +1,4 @@
+import CapacityDashboard from "./CapacityDashboard";
 import {
   PriorityBadge,
   PriorityEditor,
@@ -138,6 +139,7 @@ export default function StaffWorkspace({
     if (previousPhase.current !== demo.phase) scenarioStatus.current?.focus();
     previousPhase.current = demo.phase;
   }, [demo.phase]);
+  const [utilization, setUtilization] = useState(false);
   const [date, setDate] = useState(DEMO_DATE);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All statuses");
@@ -203,7 +205,7 @@ export default function StaffWorkspace({
           <h1>{t(titles[view][0])}</h1>
           <p>{t(titles[view][1])}</p>
         </div>
-        {(view === "overview" || view === "schedule") && (
+        {!utilization && (view === "overview" || view === "schedule") && (
           <label className="date-control">
             <Icon name="calendar" />
             <span className="sr-only">{t("Schedule date")}</span>
@@ -218,7 +220,27 @@ export default function StaffWorkspace({
           </label>
         )}
       </div>
+      {(view === "overview" || view === "schedule") && (
+        <div className="capacity-entry">
+          <button
+            type="button"
+            className="secondary-button"
+            aria-pressed={utilization}
+            onClick={() => setUtilization(!utilization)}
+          >
+            {t(
+              utilization
+                ? "Guided cancellation demo"
+                : "Capacity & statistics",
+            )}
+          </button>
+        </div>
+      )}
+      {utilization && (view === "overview" || view === "schedule") && (
+        <CapacityDashboard demo={demo} onAction={onAction} />
+      )}
       <section
+        hidden={utilization && (view === "overview" || view === "schedule")}
         className="panel demo-scenario"
         aria-label={t("Demo appointment workflow")}
       >
@@ -312,7 +334,7 @@ export default function StaffWorkspace({
           <PriorityBadge demo={demo} priority={patient.priority} />
         </p>
       )}
-      {(view === "overview" || view === "schedule") && (
+      {!utilization && (view === "overview" || view === "schedule") && (
         <>
           <ProviderCalendar demo={demo} date={date} onDate={setDate} />
           <div className="metrics-grid">

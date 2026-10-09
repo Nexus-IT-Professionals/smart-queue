@@ -1,4 +1,11 @@
 import {
+  capacityReducer,
+  currentMonth,
+  generateCapacity,
+  type CapacityState,
+  type CapacityAction,
+} from "./capacity.ts";
+import {
   defaultPriorityConfig,
   eligible,
   priorityLevel,
@@ -249,6 +256,8 @@ export type DemoPhase =
   | "declined"
   | "help";
 export type DemoState = {
+  capacity: CapacityState;
+  capacityArchives: Record<string, CapacityState>;
   phase: DemoPhase;
   events: string[];
   config: PriorityConfig;
@@ -256,6 +265,7 @@ export type DemoState = {
   candidateId?: string;
 };
 export type DemoAction =
+  | { type: "capacity"; action: CapacityAction }
   | { type: "cancel" | "reset" }
   | { type: "offer"; candidateId?: string }
   | {
@@ -268,6 +278,8 @@ export type DemoAction =
   | { type: "respond"; response: Exclude<PreviewResponse, null> };
 export function initialDemoState(): DemoState {
   return {
+    capacity: generateCapacity(currentMonth()),
+    capacityArchives: {},
     phase: "scheduled",
     events: [],
     config: defaultPriorityConfig(),
@@ -293,6 +305,28 @@ export function eligibleCandidates(state: DemoState) {
 // Browser memory is the existing POC storage boundary, not authorization.
 export function demoReducer(state: DemoState, action: DemoAction): DemoState {
   if (action.type === "reset") return initialDemoState();
+  if (action.type === "capacity") {
+    const capacity = capacityReducer(
+      state.capacity,
+      action.action,
+      state.config,
+    );
+    if (capacity === state.capacity) return state;
+    const capacityArchives =
+      action.action.type === "generate" &&
+      capacity.month !== state.capacity.month
+        ? {
+            ...state.capacityArchives,
+            [state.capacity.month]: structuredClone(state.capacity),
+          }
+        : state.capacityArchives;
+    return {
+      ...state,
+      capacity,
+      capacityArchives,
+      events: [...state.events, "Staff updated monthly demo scheduling."],
+    };
+  }
   if (action.type === "configure") {
     if (!validConfig(action.config)) return state;
     const config = {
@@ -306,6 +340,19 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     return {
       ...state,
       config,
+      capacity: {
+        ...state.capacity,
+        slots: state.capacity.slots.map((s) => ({
+          ...s,
+          priority: s.priority
+            ? priorityLevel(config, s.priority).id
+            : undefined,
+        })),
+        waiting: state.capacity.waiting.map((p) => ({
+          ...p,
+          priority: priorityLevel(config, p.priority).id,
+        })),
+      },
       patients: state.patients.map((p) => ({
         ...p,
         priority: priorityLevel(config, p.priority).id,

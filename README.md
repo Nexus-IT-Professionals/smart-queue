@@ -151,6 +151,16 @@ Built with open-source components, credited as the hackathon rules require: [Fas
 
 The UI takes visual inspiration from this [Pinterest dashboard reference](https://ru.pinterest.com/pin/1100285752847570247/): navy navigation, a pale canvas, white cards, and blue/coral accents. No artwork or template code was copied; icons are original inline SVGs and typography uses system fonts.
 
+## Capacity and statistics
+
+Open **Provider → Capacity & statistics** for a deterministic current-month demo with roughly **90% occupancy**, a synchronized Day/Week/Month calendar, resource filters, KPI cards and clickable occupancy trends. Default capacity is **20 seats per resource per operating day**, Monday–Friday, 8 AM–6 PM, with 30-minute visits.
+
+Select a visit and confirm cancellation, booking, completion, rescheduling or a priority-ranked waiting-list assignment. Counts update immediately. Expand **Capacity configuration & regenerate** to change weekdays, hours, duration, daily cap or resources; confirmation resets that month's synthetic bookings. Previous generated months are retained as comparison snapshots for this browser session.
+
+Capacity excludes closed days; rates divide aggregate counts, not daily percentages. Completed visits consume capacity. Release fill rate measures eligible cancellations filled from the waiting list. Zero denominators show 0%; unloaded months are explicitly marked. See [calculation definitions, boundaries and a short rehearsal](docs/CAPACITY_STATISTICS.md).
+
+The fixed October **Guided cancellation demo** remains separately available, with its existing patient acceptance flow. Monthly staff assignments use a separate synthetic dataset and share priority configuration and the root in-memory state; they do not send offers to that fixed Patient inbox. Reload/reset clears edits. No real appointments or backend resources are exposed.
+
 ## Validation status
 
 Every push to `main` runs lint, unit tests and Chromium browser tests before anything is published (see [How the demo is hosted](#how-the-demo-is-hosted)). The browser tests cover the full demo workflow, direct links to each view, English and Spanish, screen widths from phone to desktop (320 to 1440px), keyboard-only use, and automated accessibility scans (axe, WCAG A/AA). To run them from `frontend/`:

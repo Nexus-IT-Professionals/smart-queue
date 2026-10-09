@@ -57,6 +57,22 @@ Original UI inspiration: the [Pinterest dashboard](https://ru.pinterest.com/pin/
 Validation: **63 frontend unit/artifact tests, 86 Chromium browser tests, and 1 backend smoke test passed**. Lint, standard build, public-demo build/CSP packaging and diff whitespace checks passed. Fixed a badge contrast regression and preserved patient start/end times while generalizing the recipient. Existing Starlette/HTTPX deprecation warning remains. No added dependencies. Priority/configuration state survives view/role changes but intentionally resets on reload, following the current POC storage approach.
 
 
+## Capacity and statistics update — October 9, 2026
+
+| ID | Priority | Status / basis | Result / acceptance criteria |
+|---|---|---|---|
+| CAP-1 | P1 | Implemented · automated verification | Configurable days, hours, duration, daily seats and 1–4 resources; invalid capacity rejected; confirmed regeneration; deterministic current month around 90% occupied. |
+| STAT-1 | P1 | Implemented · automated verification | Shared Day/Week/Month state, aggregate KPI formulas, cancellation denominator, priority distribution, release fill rate, trends, frozen previous-month comparison and explicit missing-period coverage. |
+| CAP-FLOW | P1 | Implemented · automated verification | Monthly staff cancellation, booking, completion, waiting-list assignment and atomic rescheduling update all periods. Conflicts and duplicate actions are blocked. Fixed guided Patient acceptance remains separate. |
+| CAP-QA | P1 | Pending · manual acceptance | Owner completes the [short rehearsal](docs/CAPACITY_STATISTICS.md), tests configuration/reset and both languages on the presentation device. Native screen-reader/touch and additional browser engines remain unverified. |
+| CAP-PROD | P2 | Post-POC recommendation | Before real use: transactional backend booking, immutable audit/reservation IDs, durable snapshots, provider-specific schedules, and patient consent/notification integration for arbitrary monthly appointments. |
+
+Modified: `demo/capacity.ts`, root `demo/data.ts`, `CapacityDashboard.tsx`, `StaffWorkspace.tsx`, catalog/CSS; added `tests/capacity.test.mjs` and `e2e/capacity.spec.ts`. No new dependencies or backend changes. In-memory persistence, explicit staff scheduling priority and synthetic-only boundaries remain.
+
+Validation: **73 frontend unit/artifact tests and 90 Chromium browser tests passed**, including the unchanged guided walkthrough and new capacity scenarios. Lint and standard/public-demo builds pass. Browser checks include 320px/1280px layouts and EN/ES axe scans; desktop/narrow renders reviewed. Final focused browser rerun: **4 passed** after denominator/conflict guard refinements. No hosted deployment or manual owner acceptance is claimed.
+
+Calculation definitions and limits: [Capacity statistics](docs/CAPACITY_STATISTICS.md). The older validation sections above/below are historical results, not the latest suite totals. CAL-NEXT remains deferred specifically for arbitrary **Patient inbox** offers; monthly **staff-confirmed** operations are implemented by CAP-FLOW.
+
 ## Remaining POC tasks
 
 **P0:** blocks public judge delivery. **P1:** improves demo reliability/readiness. **P2:** optional follow-up. **Verified** means source/runtime evidence; **Recommendation** means proposed work. Production priorities below apply only when pursuing a real deployment.
