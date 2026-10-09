@@ -95,7 +95,7 @@ docker-compose.yml  app + local Ollama; only the app is published, on 127.0.0.1:
 
 ## Run locally
 
-Requires Python 3.12+ and Node 22+.
+Node 24.14.1 tested locally; CI runs Node 25.9.0. `frontend/.nvmrc` pins 25.9.0 and `package.json` `engines` allows `>=24.14.0 <26`. Install with `npm ci` — `package-lock.json` is authoritative. `backend/requirements.txt` is pinned exactly; it installs cleanly and passes the backend tests on Python 3.14.2 and 3.11.9. The Docker image targets Python 3.12.15 (not yet tested). On Windows, use `py -3 -m venv .venv` and `.venv\Scripts\python`.
 
 ```bash
 # Frontend build

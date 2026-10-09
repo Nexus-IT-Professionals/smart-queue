@@ -1,6 +1,9 @@
-# Pin after hardware smoke test (TECHNICAL_PROPOSAL §3)
-fastapi
-uvicorn[standard]
-pydantic
-httpx
-pytest
+# Exact pins. Tested 2026-10-09: clean venv install + pytest pass on Python 3.14.2 and 3.11.9 (Windows).
+# Container target is Python 3.12 (Dockerfile); not separately tested here.
+fastapi==0.115.0
+starlette==0.38.6
+uvicorn[standard]==0.30.0
+pydantic==2.12.5
+pydantic-core==2.41.5
+httpx==0.27.2
+pytest==9.0.3

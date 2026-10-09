@@ -1,14 +1,14 @@
 # One image: build the frontend, serve it with the API (TECHNICAL_PROPOSAL §3 Packaging).
-# TODO: pin base image tags after the hardware smoke test.
+# Base images pinned to exact tags (Node matches frontend/.nvmrc). Image build not yet smoke-tested.
 
-FROM node:22-slim AS web
+FROM node:25.9.0-slim AS web
 WORKDIR /web
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
 RUN npm run build
 
-FROM python:3.12-slim
+FROM python:3.12.15-slim
 WORKDIR /app
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
