@@ -144,7 +144,8 @@ These checks validate the synthetic browser workflow and health endpoint, not pe
 
 - [Technical proposal](docs/TECHNICAL_PROPOSAL.md): proposed scope, architecture, interfaces, and implementation plan. The React/FastAPI skeleton exists; most workflow and integration decisions remain unimplemented.
 - [Hackathon rules and checklist](docs/HACKATHON_RULES.md): recorded rules and open submission tasks; recheck the official rules before submitting.
-- Background research: [waitlist backfill](docs/wiki/waitlist-backfill.md), [Puerto Rico no-show data](docs/wiki/pr-no-show-data.md), and [competitors](docs/wiki/idea-3-competitors.md). These notes distinguish measured results from estimates and vendor claims.
+- [Why this idea](docs/WHY_THIS_IDEA.md): why a cancellation-refill queue for Puerto Rico although backfill exists in the United States; the differentiators with their evidence, the one-paragraph answer for judges, and the Q&A table.
+- Background research ([index](docs/wiki/index.md)): [waitlist backfill](docs/wiki/waitlist-backfill.md), [Puerto Rico no-show data](docs/wiki/pr-no-show-data.md), [competitors](docs/wiki/idea-3-competitors.md), and the Puerto Rico landscape pages added 2026-10-09: [front desk today](docs/wiki/pr-front-desk-today.md), [office systems](docs/wiki/pr-office-systems.md), [US vendors and the barriers](docs/wiki/us-vendors-and-pr-barriers.md), [plans and access standards](docs/wiki/pr-plans-and-access-standards.md). These notes distinguish measured results from estimates and vendor claims.
 
 This README was adapted from the team's pre-event planning documents (research and planning only; no application code was written before the official build period).
 

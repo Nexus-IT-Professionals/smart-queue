@@ -82,6 +82,8 @@ Citations are to `raw/idea-3-gap-research-urls-2026-10-07.txt`; see [[idea-3-gap
 - The PR search was not exhaustive. A plan-internal tool could exist without public coverage.
 
 ## Related pages
+- [[pr-office-systems]] (added 2026-10-09: what each Puerto Rico system does about appointments, Practice Fusion, evidence of use)
+- [[us-vendors-and-pr-barriers]] (added 2026-10-09: the seven US vendors in detail and why they are absent from Puerto Rico)
 - [[idea-3-pitch-evidence]]
 - [[waitlist-backfill]]
 - [[idea-3-unit-economics]]
