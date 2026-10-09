@@ -4,7 +4,11 @@ Help Puerto Rico medical offices fill cancelled appointments by offering availab
 
 ## Project status
 
-Built for the Caribbean AI 2026 Hackathon. The project skeleton was created on 2026-10-08, during the official build period. The React UI now includes a responsive staff dashboard, searchable daily schedule, waitlist, preview activity, and a patient workspace with simulated offer responses. All displayed records are fictional, and responses live only in memory until a page reload. The FastAPI health endpoint works; authentication, persisted scheduling, offers, and AI reply handling remain unimplemented. See [PENDING_TASKS.md](PENDING_TASKS.md) for validation results and the prioritized roadmap. The MVP below is still proposed; the stack follows the [technical proposal](docs/TECHNICAL_PROPOSAL.md) §3.
+Built for the Caribbean AI 2026 Hackathon. The POC is open to judges without accounts, passwords, or verification. Choose **Continue as Demo Provider** or **Continue as Demo Patient** on the entry page. The Provider workspace reuses the staff scheduling tools; there is no separate Admin interface.
+
+The synthetic, single-browser workflow now supports cancellation → offer → explicit acceptance → updated appointment, waitlist, and activity. State lives in memory and resets on refresh. No real appointment, message, or backend write occurs. `/api/health` remains the only implemented API. Production authentication, authorization, registration, and account management are **Post-POC enhancements**, not demo prerequisites.
+
+See [Demo access](docs/DEMO_ACCESS.md) for direct entry links and boundaries, and [PENDING_TASKS.md](PENDING_TASKS.md) for validation and the roadmap. Public hosting still needs a destination; localhost is not a public judge URL.
 
 ## The problem
 
@@ -41,19 +45,24 @@ Interpret short Spanish or English replies as acceptance, decline, or a request 
 
 Booking rules control availability, offer expiry, and duplicate acceptance. Patients must confirm before their appointments change.
 
-## Planned end-to-end demo
+## Demo workflow
 
-A fictional office cancels a 2 p.m. appointment. A waitlisted patient receives an offer and replies, “Sí, puedo llegar.” The planned system interprets the reply, confirms the replacement, and records the change. Expired offers and duplicate acceptance will also need verification. The current UI previews explicit response buttons only; this end-to-end flow and AI interpretation are not implemented.
+1. Enter Provider view and confirm the sample October 8, 2:00 PM cancellation.
+2. Send the demo offer to Elena, then open Patient view.
+3. Preview acceptance and confirm. Elena's fictional appointment moves from October 22 to October 8.
+4. Return to Provider: the schedule names Elena, the waitlist has two remaining patients, and the Activity log records the steps.
+5. Reset the scenario to replay or try decline/help. No credentials are required at any step.
+
+AI reply interpretation, expiry, automatic next-candidate offers, persistence, and simultaneous users remain future work.
 
 ## Next steps
 
-1. Agree on offer order, expiry, and availability rules.
-2. Implement seeded persistence and server-side sessions/authorization.
-3. Connect the existing UI to schedule, waitlist, and transactional booking APIs.
-4. Add a persisted inbox, audit log, metrics, and optional AI reply interpretation.
-5. Verify concurrency, expiry, access isolation, mobile layouts, and accessibility; prepare the judge demo package.
+1. Choose and publish to a public static hosting destination; verify access in a signed-out browser.
+2. Validate mobile layouts, keyboard navigation, and screen-reader behavior.
+3. Rehearse the synthetic workflow and prepare the judge video and feature-status list.
+4. If needed for the POC, add simulated expiry/next-candidate handling and optional bounded AI assistance.
 
-See [PENDING_TASKS.md](PENDING_TASKS.md) for P0/P1/P2 priorities, status, and acceptance criteria.
+Production accounts and protected live APIs are deliberately deferred. Priorities and acceptance criteria are in [PENDING_TASKS.md](PENDING_TASKS.md).
 
 Multi-office routing, real messaging, EHR integrations, predictive no-show scoring, clinical prioritization, and payments are outside the initial MVP.
 
@@ -70,8 +79,9 @@ backend/            FastAPI app (Python)
   tests/            pytest suite
 frontend/           React + TypeScript + Vite; one app with Staff and Patient workspaces
   src/components/  shared icons, badges, avatars, and empty states
-  src/demo/        fictional UI fixtures (not database seed data)
-  src/pages/       staff dashboard/schedule/waitlist/activity and patient offer preview
+  src/demo/        fictional fixtures, public role resolution, and local workflow reducer
+  src/pages/       public demo entry, Provider tools, and Patient workspace
+  tests/           dependency-free demo navigation/state tests
   src/styles.css   shared design tokens and responsive layouts
 PENDING_TASKS.md     completed improvements, validation evidence, and remaining tasks
 data/               local SQLite file (ignored by Git)
@@ -107,9 +117,9 @@ All data is synthetic. Do not enter real patient information.
 
 ### Explore the UI preview
 
-Use **Staff view** to switch between Overview, Schedule, Waitlist, and Activity log. The sample schedule is dated **October 8, 2026**; search by name or record ID, filter by status, or select another date to see the empty state. Counts and the chart describe these fixtures, not measured product outcomes.
+Open the root URL or `#/demo` to choose a fictional identity. `#/login` is an always-public alias with **Continue as Demo Patient**; it collects no input. `#/provider` and `#/patient` open the workspaces directly. The **Demo access** header button remains available after any action.
 
-Use **Patient view** to preview acceptance, decline, or a help request. Acceptance has a separate confirmation step. Responses appear in the staff preview activity; **Reset offer preview** clears the response. No booking, notification, AI inference, or database write occurs. Switching views is demo navigation, not authentication.
+The Provider schedule is dated **October 8, 2026**. Existing search, status/date filters, and empty-state recovery remain available. Role switching and visiting the entry page preserve the local scenario. **Reset demo scenario** or reload starts over; separate tabs do not share data. No login, registration, database seed, or Ollama setup is needed to demonstrate the synthetic workflow.
 
 ## Pre-existing components
 
@@ -122,8 +132,10 @@ The UI takes visual inspiration from this [Pinterest dashboard reference](https:
 - Production build: strict TypeScript and Vite passed.
 - Backend tests: **1 passed**; an upstream Starlette/HTTPX deprecation warning remains.
 - FastAPI served the production HTML, JavaScript, CSS, and health endpoint successfully.
-- Desktop Firefox: checked staff/patient rendering, schedule search, status filtering, empty-state reset, and the acceptance confirmation preview.
-- Mobile/tablet, full accessibility, Docker, and automated frontend tests remain unverified. No lint script is configured.
+- Demo tests: `cd frontend && npm test` — **6 passed** covering public navigation resolution, workflow transitions, and the credential-free health request.
+- Desktop Firefox: checked credential-free entry, Provider cancellation/offer, Patient acceptance, appointment update, and return to the entry page without losing access.
+- Static-only Firefox: direct Patient access works with the health API unavailable.
+- Mobile/tablet, full accessibility, Docker, and automated browser tests remain unverified. No lint script is configured.
 
 These checks validate the UI preview and health endpoint, not a complete booking workflow. Detailed results and limitations are in [PENDING_TASKS.md](PENDING_TASKS.md).
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { StaffView } from "../../App";
 import {
   Avatar,
@@ -8,10 +8,11 @@ import {
   type IconName,
 } from "../../components/ui";
 import {
-  appointments,
+  demoAppointments,
+  demoWaitlist,
   DEMO_DATE,
-  waitlist,
-  type PreviewResponse,
+  type DemoState,
+  type DemoAction,
 } from "../../demo/data";
 
 const titles: Record<StaffView, [string, string]> = {
@@ -35,10 +36,13 @@ const titles: Record<StaffView, [string, string]> = {
 function WaitlistPanel({
   full = false,
   onNavigate,
+  demo,
 }: {
   full?: boolean;
+  demo: DemoState;
   onNavigate: (view: StaffView) => void;
 }) {
+  const waitlist = demoWaitlist(demo);
   return (
     <section className="panel">
       <div className="panel-heading">
@@ -86,16 +90,27 @@ function WaitlistPanel({
 export default function StaffWorkspace({
   view,
   onNavigate,
-  response,
+  demo,
+  onAction,
+  onPatient,
 }: {
   view: StaffView;
   onNavigate: (view: StaffView) => void;
-  response: PreviewResponse;
+  demo: DemoState;
+  onAction: (action: DemoAction) => void;
+  onPatient: () => void;
 }) {
+  const scenarioStatus = useRef<HTMLParagraphElement>(null);
+  const previousPhase = useRef(demo.phase);
+  useEffect(() => {
+    if (previousPhase.current !== demo.phase) scenarioStatus.current?.focus();
+    previousPhase.current = demo.phase;
+  }, [demo.phase]);
   const [date, setDate] = useState(DEMO_DATE);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All statuses");
-  const day = date === DEMO_DATE ? appointments : [];
+  const day = date === DEMO_DATE ? demoAppointments(demo) : [];
+  const waitlist = demoWaitlist(demo);
   const filtered = day.filter(
     (a) =>
       `${a.name} ${a.id}`
@@ -146,7 +161,7 @@ export default function StaffWorkspace({
     <div className="workspace-content">
       <div className="page-heading">
         <div>
-          <p className="eyebrow">ISLA CARE / STAFF WORKSPACE</p>
+          <p className="eyebrow">ISLA CARE / PROVIDER WORKSPACE</p>
           <h1>{titles[view][0]}</h1>
           <p>{titles[view][1]}</p>
         </div>
@@ -163,6 +178,58 @@ export default function StaffWorkspace({
           </label>
         )}
       </div>
+      <section
+        className="panel demo-scenario"
+        aria-label="Demo appointment workflow"
+      >
+        <div>
+          <h2>Try the appointment queue</h2>
+          <p role="status" ref={scenarioStatus} tabIndex={-1}>
+            {demo.phase === "scheduled"
+              ? "Step 1: Confirm the fictional patient's cancellation for October 8 at 2:00 PM."
+              : demo.phase === "open"
+                ? "Step 2: The slot is open. Offer it to Elena Morales, who is available in the afternoon."
+                : demo.phase === "offered"
+                  ? "Step 3: Switch to Patient to respond to the simulated offer."
+                  : demo.phase === "accepted"
+                    ? "Complete: Elena now has the October 8 demo appointment. The schedule, waitlist, and activity are updated."
+                    : demo.phase === "declined"
+                      ? "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay."
+                      : "Elena requested help. Return to Patient to accept or decline; no message leaves this browser."}
+          </p>
+        </div>
+        <div className="demo-scenario-actions">
+          {demo.phase === "scheduled" && (
+            <button
+              className="primary-button"
+              onClick={() => onAction({ type: "cancel" })}
+            >
+              Confirm demo cancellation
+            </button>
+          )}
+          {demo.phase === "open" && (
+            <button
+              className="primary-button"
+              onClick={() => onAction({ type: "offer" })}
+            >
+              Send demo offer to Elena
+            </button>
+          )}
+          {(demo.phase === "offered" || demo.phase === "help") && (
+            <button className="primary-button" onClick={onPatient}>
+              Open Demo Patient <Icon name="arrow" />
+            </button>
+          )}
+          {(demo.phase === "accepted" || demo.phase === "declined") && (
+            <button
+              className="secondary-button"
+              onClick={() => onNavigate("activity")}
+            >
+              Review activity
+            </button>
+          )}
+        </div>
+      </section>
       {(view === "overview" || view === "schedule") && (
         <>
           <div className="metrics-grid">
@@ -237,7 +304,11 @@ export default function StaffWorkspace({
                 <p>
                   {open
                     ? "The 2:00 PM sample slot is open. Explore the waitlist to see who is available."
-                    : "Choose October 8 to explore the sample schedule and waitlist."}
+                    : date !== DEMO_DATE
+                      ? "Choose October 8 to explore the sample schedule and waitlist."
+                      : demo.phase === "accepted"
+                        ? "An earlier visit is confirmed in the demo. Review the activity log to follow each step."
+                        : "Use the scenario controls to open a slot and offer an earlier visit."}
                 </p>
                 <button
                   className="light-button"
@@ -395,7 +466,7 @@ export default function StaffWorkspace({
             </section>
             {view === "overview" && (
               <div className="right-column">
-                <WaitlistPanel onNavigate={onNavigate} />
+                <WaitlistPanel onNavigate={onNavigate} demo={demo} />
                 <section className="care-note">
                   <span className="metric-icon green">
                     <Icon name="shield" />
@@ -417,11 +488,12 @@ export default function StaffWorkspace({
             <Icon name="users" />
             <p>
               <strong>A smaller wait starts with a good match.</strong> This
-              preview shows availability only. Sending offers and managing
-              entries require the backend.
+              demo uses fictional availability. Use the scenario controls above
+              to offer the opening to Elena; live matching remains
+              unimplemented.
             </p>
           </div>
-          <WaitlistPanel full onNavigate={onNavigate} />
+          <WaitlistPanel full onNavigate={onNavigate} demo={demo} />
         </>
       )}
       {view === "activity" && (
@@ -433,51 +505,26 @@ export default function StaffWorkspace({
             </div>
             <Badge tone="amber">Session only</Badge>
           </div>
-          <ol className="timeline">
-            <li>
-              <span className="timeline-icon">
-                <Icon name="calendar" />
-              </span>
-              <div>
-                <strong>A sample slot became available</strong>
-                <p>
-                  October 8 · 2:00 PM · Fictional staff-confirmed cancellation.
-                </p>
-                <Badge>Fixture</Badge>
-              </div>
-            </li>
-            <li>
-              <span className="timeline-icon">
-                <Icon name="users" />
-              </span>
-              <div>
-                <strong>An earlier-visit offer is ready to preview</strong>
-                <p>
-                  Elena Morales · Explore accept, decline, and help in Patient
-                  view.
-                </p>
-                <Badge>Fixture</Badge>
-              </div>
-            </li>
-            {response && (
-              <li>
-                <span className="timeline-icon">
-                  <Icon name="check" />
-                </span>
-                <div>
-                  <strong>
-                    {response === "accepted"
-                      ? "Patient preview: accepted"
-                      : response === "declined"
-                        ? "Patient preview: declined"
-                        : "Patient preview: requested help"}
-                  </strong>
-                  <p>Local response only. No booking or message was created.</p>
-                  <Badge tone="blue">This session</Badge>
-                </div>
-              </li>
-            )}
-          </ol>
+          {demo.events.length ? (
+            <ol className="timeline">
+              {demo.events.map((event, index) => (
+                <li key={`${index}-${event}`}>
+                  <span className="timeline-icon">
+                    <Icon name="check" />
+                  </span>
+                  <div>
+                    <strong>Demo event {index + 1}</strong>
+                    <p>{event}</p>
+                    <Badge tone="blue">This browser only</Badge>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <EmptyState title="No demo actions yet">
+              <p>Confirm the sample cancellation to start the activity log.</p>
+            </EmptyState>
+          )}
         </section>
       )}
     </div>

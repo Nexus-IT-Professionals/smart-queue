@@ -1,7 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { getHealth } from "./api/client";
 import { Icon, type IconName } from "./components/ui";
-import { OFFICE, waitlist, type PreviewResponse } from "./demo/data";
+import {
+  OFFICE,
+  demoIdentities,
+  demoReducer,
+  demoWaitlist,
+  demoWorkspaceFromHash,
+  initialDemoState,
+  type DemoWorkspace,
+} from "./demo/data";
+import DemoAccess from "./pages/DemoAccess";
 import StaffWorkspace from "./pages/staff/StaffWorkspace";
 import PatientWorkspace from "./pages/patient/PatientWorkspace";
 
@@ -13,10 +22,23 @@ const navigation: { id: StaffView; label: string; icon: IconName }[] = [
   { id: "activity", label: "Activity log", icon: "activity" },
 ];
 export default function App() {
-  // Preview navigation is not authentication. Backend sessions are unimplemented.
-  const [workspace, setWorkspace] = useState<"staff" | "patient">("staff");
+  // A public role selector, not a login/session or a backend permission.
+  const [workspace, setWorkspace] = useState<DemoWorkspace>(() =>
+    demoWorkspaceFromHash(window.location.hash),
+  );
+  const [demo, dispatch] = useReducer(demoReducer, undefined, initialDemoState);
+  const waitlist = demoWaitlist(demo);
+  function navigate(next: DemoWorkspace) {
+    window.location.hash = next === "staff" ? "/provider" : `/${next}`;
+    setWorkspace(next);
+  }
+  useEffect(() => {
+    const onHashChange = () =>
+      setWorkspace(demoWorkspaceFromHash(window.location.hash));
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
   const [view, setView] = useState<StaffView>("overview");
-  const [response, setResponse] = useState<PreviewResponse>(null);
   const [apiStatus, setApiStatus] = useState<"checking" | "ok" | "offline">(
     "checking",
   );
@@ -53,16 +75,23 @@ export default function App() {
   }, [healthAttempt]);
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main-content">
+      <a
+        className="skip-link"
+        href="#main-content"
+        onClick={(event) => {
+          event.preventDefault();
+          main.current?.focus();
+        }}
+      >
         Skip to main content
       </a>
       <header className="topbar">
         <a
-          href="#main-content"
+          href="#/demo"
           className="brand"
           aria-label="Smart Queue home"
           onClick={() => {
-            setWorkspace("staff");
+            navigate("demo");
             setView("overview");
           }}
         >
@@ -85,14 +114,20 @@ export default function App() {
           aria-label="Demo workspace"
         >
           <button
-            aria-pressed={workspace === "staff"}
-            onClick={() => setWorkspace("staff")}
+            aria-pressed={workspace === "demo"}
+            onClick={() => navigate("demo")}
           >
-            Staff view
+            Demo access
+          </button>
+          <button
+            aria-pressed={workspace === "staff"}
+            onClick={() => navigate("staff")}
+          >
+            Provider view
           </button>
           <button
             aria-pressed={workspace === "patient"}
-            onClick={() => setWorkspace("patient")}
+            onClick={() => navigate("patient")}
           >
             Patient view
           </button>
@@ -123,7 +158,7 @@ export default function App() {
             ) : (
               <div className="nav-item patient-nav">
                 <Icon name="heart" />
-                My care
+                {workspace === "patient" ? "My care" : "Welcome to the demo"}
               </div>
             )}
           </nav>
@@ -135,7 +170,7 @@ export default function App() {
             <p>
               Fictional people. Simulated offers. No real patient information.
             </p>
-            <span className="demo-tag">HACKATHON PREVIEW</span>
+            <span className="demo-tag">DEMO / POC MODE</span>
           </div>
           <div className="connection" role="status">
             <span className={`status-dot ${apiStatus}`} />
@@ -165,18 +200,43 @@ export default function App() {
         <div className="preview-banner">
           <span>
             <span className="preview-dot" />
-            UI preview · Synthetic data
+            Demo / POC Mode · Synthetic data
           </span>
-          <span>Changes stay in this session. No appointments are booked.</span>
+          <span>
+            No credentials required. Simulated bookings stay in this browser.
+          </span>
         </div>
-        {workspace === "staff" ? (
+        {workspace !== "demo" && (
+          <div className="demo-identity">
+            <span>
+              <strong>{demoIdentities[workspace].name}</strong> ·{" "}
+              {demoIdentities[workspace].label}
+            </span>
+            <button
+              className="text-button"
+              onClick={() => dispatch({ type: "reset" })}
+            >
+              <Icon name="reset" />
+              Reset demo scenario
+            </button>
+          </div>
+        )}
+        {workspace === "demo" ? (
+          <DemoAccess onNavigate={navigate} />
+        ) : workspace === "staff" ? (
           <StaffWorkspace
             view={view}
             onNavigate={setView}
-            response={response}
+            demo={demo}
+            onAction={dispatch}
+            onPatient={() => navigate("patient")}
           />
         ) : (
-          <PatientWorkspace response={response} onRespond={setResponse} />
+          <PatientWorkspace
+            demo={demo}
+            onAction={dispatch}
+            onProvider={() => navigate("staff")}
+          />
         )}
         <footer className="page-footer">
           <span>Smart Queue · Caribbean AI 2026 Hackathon</span>

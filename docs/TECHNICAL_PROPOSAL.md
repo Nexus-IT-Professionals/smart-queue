@@ -4,6 +4,8 @@
 **Sources:** [README](README.md), [BOOTSTRAP](BOOTSTRAP.md), [design guideline](ProposedDesign.md), [original Idea 3](caribbean-ai-summit-hackathon-health-ideas.md#idea-3-smart-appointment-queue-for-medical-offices). Official technology references are linked below and were checked October 7, 2026. Added 2026-10-08: the insurer row in §2, the channel boundary and schedule-access notes in §6, and the Puerto Rico statute flag in §7.
 **Last updated:** 2026-10-08
 
+> **POC access decision:** [Demo access](DEMO_ACCESS.md) supersedes this proposal's login, registration, session, account setup, and protected-role prerequisites for the public hackathon demo. Judges select fictional Patient or Provider identities without credentials. The current workflow is browser-only synthetic state; account management and server authorization belong to Post-POC work. No separate Admin interface is implemented. Other sections below describe the original future backend proposal, not current behavior.
+
 ## 1. Objective and scope
 
 Demonstrate a confirmed cancellation becoming one accepted replacement, while staff can explain every change. The guideline includes patient registration, office/insurance grouping, schedule, waitlist, cancellations, notifications and statistics; it explicitly remains an unapproved whiteboard transcription. (source: ProposedDesign.md, §§1–9)
@@ -140,7 +142,7 @@ Acceptance checks session ownership, pending state, expiry and slot availability
 
 One short model call returns only accept/decline/help/unclear intent. Validate the schema, limit input/output length and set a proposed 10-second timeout. Show the suggestion for patient confirmation; valid JSON is not evidence of correct meaning. No model access to database writes, scheduling priority or arbitrary tools. Failure falls back to explicit buttons; no retries that delay booking. Evaluate paired EN/ES replies, negation, conflicting statements and injected instructions. No RAG or fine-tuning.
 
-**Recommended demo security:** pre-provision separate staff/patient accounts; synthetic registration attaches a profile to the signed-in patient account. Hash passwords; use opaque server-side sessions, HttpOnly/SameSite cookies, expiry/logout and CSRF protection for changes. Use Secure cookies with HTTPS; local HTTP is limited to loopback demonstration. Rate-limit login and bound inputs. Never use a client-supplied role as authorization.
+**Post-POC / production security (not required for demo access):** pre-provision separate staff/patient accounts; synthetic registration attaches a profile to the signed-in patient account. Hash passwords; use opaque server-side sessions, HttpOnly/SameSite cookies, expiry/logout and CSRF protection for changes. Use Secure cookies with HTTPS; local HTTP is limited to loopback demonstration. Rate-limit login and bound inputs. Never use a client-supplied role as authorization.
 
 API checks office membership for staff and patient ownership for every object; enforce these on writes as well as reads. Staff sees only its office. Record actor, time, action and record IDs in audit events; avoid raw reply/contact text in logs. This is application auditing, not tamper-proof storage.
 

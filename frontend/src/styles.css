@@ -1557,3 +1557,81 @@ dd {
     scroll-behavior: auto !important;
   }
 }
+
+/* Public POC entry and synthetic workflow controls. */
+.demo-access-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.demo-access-card {
+  padding: 28px;
+}
+.demo-access-card h2 {
+  margin: 16px 0 10px;
+  font-size: 21px;
+}
+.demo-access-card p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+.demo-guide {
+  margin-top: 24px;
+}
+.demo-guide ol {
+  padding-left: 22px;
+  line-height: 1.9;
+  font-size: 14px;
+}
+.demo-identity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 15px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.demo-scenario {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px;
+  margin-bottom: 24px;
+  border-color: #b7c9e6;
+}
+.demo-scenario p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+  max-width: 620px;
+}
+.demo-scenario-actions {
+  flex-shrink: 0;
+}
+@media (max-width: 900px) {
+  .demo-scenario {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .topbar {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 650px) {
+  .demo-access-grid {
+    grid-template-columns: 1fr;
+  }
+  .demo-access-card {
+    padding: 22px;
+  }
+  .demo-access-card .primary-button {
+    width: 100%;
+  }
+  .workspace-switch {
+    margin-left: 0;
+  }
+}
