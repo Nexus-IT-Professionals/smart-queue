@@ -4,7 +4,7 @@ Help Puerto Rico medical offices fill cancelled appointments by offering availab
 
 ## Project status
 
-Built for the Caribbean AI 2026 Hackathon. The project skeleton was created on 2026-10-08, during the official build period: a FastAPI backend and a React frontend that run together and show placeholder Staff and Patient workspaces. Scheduling, waitlist, offers and AI reply handling are not implemented yet. The MVP below is still proposed; the stack follows the [technical proposal](docs/TECHNICAL_PROPOSAL.md) §3.
+Built for the Caribbean AI 2026 Hackathon. The project skeleton was created on 2026-10-08, during the official build period. The React UI now includes a responsive staff dashboard, searchable daily schedule, waitlist, preview activity, and a patient workspace with simulated offer responses. All displayed records are fictional, and responses live only in memory until a page reload. The FastAPI health endpoint works; authentication, persisted scheduling, offers, and AI reply handling remain unimplemented. See [PENDING_TASKS.md](PENDING_TASKS.md) for validation results and the prioritized roadmap. The MVP below is still proposed; the stack follows the [technical proposal](docs/TECHNICAL_PROPOSAL.md) §3.
 
 ## The problem
 
@@ -41,17 +41,19 @@ Interpret short Spanish or English replies as acceptance, decline, or a request 
 
 Booking rules control availability, offer expiry, and duplicate acceptance. Patients must confirm before their appointments change.
 
-## Demo scenario
+## Planned end-to-end demo
 
-A fictional office cancels a 2 p.m. appointment. A waitlisted patient receives an offer and replies, “Sí, puedo llegar.” The system interprets the reply, confirms the replacement, and records the change. Additional scenarios demonstrate expired offers and duplicate acceptance handling.
+A fictional office cancels a 2 p.m. appointment. A waitlisted patient receives an offer and replies, “Sí, puedo llegar.” The planned system interprets the reply, confirms the replacement, and records the change. Expired offers and duplicate acceptance will also need verification. The current UI previews explicit response buttons only; this end-to-end flow and AI interpretation are not implemented.
 
 ## Next steps
 
 1. Agree on offer order, expiry, and availability rules.
-2. Confirm the proposed stack and AI model on the demo laptop (skeleton in place; model not yet tested).
-3. Build the schedule, waitlist, and cancellation-to-booking flow.
-4. Add reply interpretation, manual review, and the activity log.
-5. Verify expiry, duplicate acceptance, ambiguous replies, and AI failure behavior.
+2. Implement seeded persistence and server-side sessions/authorization.
+3. Connect the existing UI to schedule, waitlist, and transactional booking APIs.
+4. Add a persisted inbox, audit log, metrics, and optional AI reply interpretation.
+5. Verify concurrency, expiry, access isolation, mobile layouts, and accessibility; prepare the judge demo package.
+
+See [PENDING_TASKS.md](PENDING_TASKS.md) for P0/P1/P2 priorities, status, and acceptance criteria.
 
 Multi-office routing, real messaging, EHR integrations, predictive no-show scoring, clinical prioritization, and payments are outside the initial MVP.
 
@@ -67,6 +69,11 @@ backend/            FastAPI app (Python)
   seed/seed.py      synthetic demo data (stub)
   tests/            pytest suite
 frontend/           React + TypeScript + Vite; one app with Staff and Patient workspaces
+  src/components/  shared icons, badges, avatars, and empty states
+  src/demo/        fictional UI fixtures (not database seed data)
+  src/pages/       staff dashboard/schedule/waitlist/activity and patient offer preview
+  src/styles.css   shared design tokens and responsive layouts
+PENDING_TASKS.md     completed improvements, validation evidence, and remaining tasks
 data/               local SQLite file (ignored by Git)
 Dockerfile          builds the frontend, then serves it from the Python image
 docker-compose.yml  app + local Ollama; only the app is published, on 127.0.0.1:8000
@@ -79,28 +86,50 @@ Requires Python 3.12+ and Node 22+.
 ```bash
 # Frontend build
 cd frontend
-npm install
+npm ci
 npm run build
 
+# Isolated Python environment (from the project root)
+cd ..
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r backend/requirements.txt
+
 # Backend (serves the built frontend)
-cd ../backend
-pip install -r requirements.txt
-STATIC_DIR=../frontend/dist DATABASE_PATH=../data/smart_queue.db uvicorn app.main:app --host 127.0.0.1 --port 8000
+cd backend
+STATIC_DIR=../frontend/dist DATABASE_PATH=../data/smart_queue.db ../.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open http://127.0.0.1:8000. `GET /api/health` should return `{"status":"ok"}`. For frontend work, run `npm run dev` in `frontend/`; it proxies `/api` to port 8000. Run tests with `pytest` from `backend/`.
+Open http://127.0.0.1:8000. `GET /api/health` should return `{"status":"ok"}`. For frontend work, run `npm run dev` in `frontend/`; it proxies `/api` to port 8000. Run tests with `../.venv/bin/python -m pytest -q` from `backend/`.
 
 With Docker: `docker compose up --build` (Compose 2.24+). It also starts Ollama; pull the model once with `docker compose exec ollama ollama pull qwen2.5:1.5b`. The Docker path has not been tested yet.
 
 All data is synthetic. Do not enter real patient information.
 
+### Explore the UI preview
+
+Use **Staff view** to switch between Overview, Schedule, Waitlist, and Activity log. The sample schedule is dated **October 8, 2026**; search by name or record ID, filter by status, or select another date to see the empty state. Counts and the chart describe these fixtures, not measured product outcomes.
+
+Use **Patient view** to preview acceptance, decline, or a help request. Acceptance has a separate confirmation step. Responses appear in the staff preview activity; **Reset offer preview** clears the response. No booking, notification, AI inference, or database write occurs. Switching views is demo navigation, not authentication.
+
 ## Pre-existing components
 
 Built with open-source components, credited as the hackathon rules require: [FastAPI](https://fastapi.tiangolo.com/) (MIT), [Uvicorn](https://www.uvicorn.org/) (BSD-3), [Pydantic](https://docs.pydantic.dev/) (MIT), [HTTPX](https://www.python-httpx.org/) (BSD-3), [pytest](https://pytest.org/) (MIT), [SQLite](https://www.sqlite.org/) (public domain), [React](https://react.dev/) (MIT), [Vite](https://vite.dev/) (MIT), [TypeScript](https://www.typescriptlang.org/) (Apache-2.0), [Ollama](https://ollama.com/) (MIT), and the [Qwen2.5 1.5B](https://ollama.com/library/qwen2.5:1.5b) model (Apache-2.0). No templates or reused application code.
 
+The UI takes visual inspiration from this [Pinterest dashboard reference](https://ru.pinterest.com/pin/1100285752847570247/): navy navigation, a pale canvas, white cards, and blue/coral accents. No artwork or template code was copied; icons are original inline SVGs and typography uses system fonts.
+
+## Validation status
+
+- Production build: strict TypeScript and Vite passed.
+- Backend tests: **1 passed**; an upstream Starlette/HTTPX deprecation warning remains.
+- FastAPI served the production HTML, JavaScript, CSS, and health endpoint successfully.
+- Desktop Firefox: checked staff/patient rendering, schedule search, status filtering, empty-state reset, and the acceptance confirmation preview.
+- Mobile/tablet, full accessibility, Docker, and automated frontend tests remain unverified. No lint script is configured.
+
+These checks validate the UI preview and health endpoint, not a complete booking workflow. Detailed results and limitations are in [PENDING_TASKS.md](PENDING_TASKS.md).
+
 ## Planning documents
 
-- [Technical proposal](docs/TECHNICAL_PROPOSAL.md): proposed scope, architecture, interfaces, and implementation plan. Its stack and workflow decisions have not been implemented.
+- [Technical proposal](docs/TECHNICAL_PROPOSAL.md): proposed scope, architecture, interfaces, and implementation plan. The React/FastAPI skeleton exists; most workflow and integration decisions remain unimplemented.
 - [Hackathon rules and checklist](docs/HACKATHON_RULES.md): recorded rules and open submission tasks; recheck the official rules before submitting.
 - Background research: [waitlist backfill](docs/wiki/waitlist-backfill.md), [Puerto Rico no-show data](docs/wiki/pr-no-show-data.md), and [competitors](docs/wiki/idea-3-competitors.md). These notes distinguish measured results from estimates and vendor claims.
 

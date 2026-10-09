@@ -25,6 +25,6 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 export type Health = { status: string };
 
-export function getHealth(): Promise<Health> {
-  return api<Health>("/health");
+export function getHealth(signal?: AbortSignal): Promise<Health> {
+  return api<Health>("/health", { signal });
 }
