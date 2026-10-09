@@ -10,6 +10,15 @@ export type Appointment = {
 };
 export const appointments: Appointment[] = [
   {
+    // Record IDs are assigned in booking order, not by time: SQ-009 is the
+    // next unused ID, so the existing SQ-001…SQ-008 references stay stable.
+    id: "SQ-009",
+    name: "María Rodríguez",
+    time: "8:30 AM",
+    type: "Follow-up",
+    status: "Scheduled",
+  },
+  {
     id: "SQ-001",
     name: "Lucía Rivera",
     time: "9:00 AM",
@@ -68,6 +77,16 @@ export const appointments: Appointment[] = [
 ];
 export const waitlist = [
   {
+    // Top of the list, but available only in the morning: the 2:00 PM demo
+    // opening is still offered to Elena Morales (WL-001).
+    id: "WL-004",
+    name: "José Pérez",
+    availability: "Mornings · 8–10 AM",
+    since: "2026-10-04",
+    reason: "Earlier appointment",
+    language: "Spanish",
+  },
+  {
     id: "WL-001",
     name: "Elena Morales",
     availability: "Afternoons · 1–4 PM",
@@ -117,6 +136,11 @@ export const demoIdentities = {
     label: "Demo Patient · fictional identity",
   },
 };
+// Shown beside the provider identity; not a separate role or login.
+export const demoAssistant = {
+  name: "Ana Martínez",
+  label: "Medical Office Assistant · fictional identity",
+};
 export type DemoPhase =
   "scheduled" | "open" | "offered" | "accepted" | "declined" | "help";
 export type DemoState = { phase: DemoPhase; events: string[] };
@@ -134,7 +158,7 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
       phase: "open",
       events: [
         ...state.events,
-        "Provider confirmed the sample cancellation: October 8, 2:00 PM.",
+        "Ana Martínez, Medical Office Assistant, confirmed the sample cancellation: October 8, 2:00 PM.",
       ],
     };
   }
@@ -143,7 +167,7 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
       phase: "offered",
       events: [
         ...state.events,
-        "Provider sent a simulated in-app offer to Elena Morales.",
+        "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Elena Morales.",
       ],
     };
   }

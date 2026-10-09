@@ -26,7 +26,8 @@ export const spanish: Record<string, string> = {
   "Checking health API…": "Verificando la API de estado…",
   "Health API unavailable": "API de estado no disponible",
   "Retry connection": "Reintentar conexión",
-  "Made for Puerto Rico": "Hecho para Puerto Rico",
+  "Made in and for Puerto Rico with love!":
+    "¡Hecho en y para Puerto Rico con amor!",
   "Demo / POC Mode · Synthetic data": "Modo Demo / POC · Datos sintéticos",
   "No credentials required. Simulated bookings stay in this browser.":
     "No se requieren credenciales. Las citas simuladas permanecen en este navegador.",
@@ -98,6 +99,7 @@ export const spanish: Record<string, string> = {
   Availability: "Disponibilidad",
   "Afternoons · 1–4 PM": "Tardes · 1–4 p. m.",
   "Mornings · 9–11 AM": "Mañanas · 9–11 a. m.",
+  "Mornings · 8–10 AM": "Mañanas · 8–10 a. m.",
   "Afternoons · 2–5 PM": "Tardes · 2–5 p. m.",
   "Contact preference": "Preferencia de contacto",
   "In-app inbox · simulated": "Buzón de la aplicación · simulado",
@@ -230,13 +232,15 @@ export const spanish: Record<string, string> = {
     "Confirme la cancelación de ejemplo para iniciar el registro.",
   "Demo Provider · fictional identity": "Proveedor demo · identidad ficticia",
   "Demo Patient · fictional identity": "Paciente demo · identidad ficticia",
+  "Medical Office Assistant · fictional identity":
+    "Asistente de oficina médica · identidad ficticia",
   "Follow-up": "Seguimiento",
   Consultation: "Consulta",
   "Available appointment": "Cita disponible",
-  "Provider confirmed the sample cancellation: October 8, 2:00 PM.":
-    "El proveedor confirmó la cancelación de ejemplo: 8 de octubre, 2:00 p. m.",
-  "Provider sent a simulated in-app offer to Elena Morales.":
-    "El proveedor envió una oferta simulada a Elena Morales.",
+  "Ana Martínez, Medical Office Assistant, confirmed the sample cancellation: October 8, 2:00 PM.":
+    "Ana Martínez, asistente de oficina médica, confirmó la cancelación de ejemplo: 8 de octubre, 2:00 p. m.",
+  "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Elena Morales.":
+    "Ana Martínez, asistente de oficina médica, envió una oferta simulada a Elena Morales.",
   "Patient accepted: demo booking moved from October 22 to October 8, 2:00 PM; waitlist entry removed.":
     "La paciente aceptó: cita demo adelantada del 22 al 8 de octubre, 2:00 p. m.; retirada de la lista de espera.",
   "Patient declined: October 22 demo booking preserved; October 8 slot remains open.":

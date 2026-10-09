@@ -4,6 +4,7 @@ import { getHealth } from "./api/client";
 import { Icon, type IconName } from "./components/ui";
 import {
   OFFICE,
+  demoAssistant,
   demoIdentities,
   demoReducer,
   demoWaitlist,
@@ -41,6 +42,14 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
   const [view, setView] = useState<StaffView>("overview");
+  // Entering the Provider workspace by any route (entry card, header switch,
+  // #/provider link or back/forward, patient "Open Demo Provider") always
+  // starts on Overview; switching sections inside it is unaffected.
+  const [enteredWorkspace, setEnteredWorkspace] = useState(workspace);
+  if (enteredWorkspace !== workspace) {
+    setEnteredWorkspace(workspace);
+    if (workspace === "staff") setView("overview");
+  }
   const [apiStatus, setApiStatus] = useState<"checking" | "ok" | "offline">(
     "checking",
   );
@@ -240,7 +249,7 @@ export default function App() {
             )}
           <p className="sidebar-foot">
             {" "}
-            {t("Made for Puerto Rico")} <span aria-hidden="true">↗</span>
+            {t("Made in and for Puerto Rico with love!")} <span aria-hidden="true">↗</span>
           </p>
         </div>
       </aside>
@@ -259,9 +268,17 @@ export default function App() {
         </div>
         {workspace !== "demo" && (
           <div className="demo-identity">
-            <span>
-              <strong>{demoIdentities[workspace].name}</strong> ·{" "}
-              {t(demoIdentities[workspace].label)}
+            <span className="demo-identity-people">
+              <span>
+                <strong>{demoIdentities[workspace].name}</strong> ·{" "}
+                {t(demoIdentities[workspace].label)}
+              </span>
+              {workspace === "staff" && (
+                <span className="demo-identity-assistant">
+                  <strong>{demoAssistant.name}</strong> ·{" "}
+                  {t(demoAssistant.label)}
+                </span>
+              )}
             </span>
             <button
               type="button"

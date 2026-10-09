@@ -22,48 +22,7 @@ export default function DemoAccess({
           </p>
         </div>
       </div>
-      <div className="demo-access-grid">
-        <section className="panel demo-access-card">
-          <span className="metric-icon blue">
-            <Icon name="users" />
-          </span>
-          <h2>{t("Provider workspace")}</h2>
-          <p>
-            {" "}
-            {t(
-              "Continue as Dr. Alex Rivera to explore the schedule, confirm a sample cancellation, and offer the opening to a waiting patient.",
-            )}{" "}
-          </p>
-          <button
-            type="button"
-            className="primary-button"
-            onClick={() => onNavigate("staff")}
-          >
-            {" "}
-            {t("Continue as Demo Provider")} <Icon name="arrow" />
-          </button>
-        </section>
-        <section className="panel demo-access-card">
-          <span className="metric-icon green">
-            <Icon name="heart" />
-          </span>
-          <h2>{t("Patient workspace")}</h2>
-          <p>
-            {" "}
-            {t(
-              "Continue as Elena Morales to view a sample appointment and accept, decline, or ask for help with an earlier visit.",
-            )}{" "}
-          </p>
-          <button
-            type="button"
-            className="primary-button"
-            onClick={() => onNavigate("patient")}
-          >
-            {" "}
-            {t("Continue as Demo Patient")} <Icon name="arrow" />
-          </button>
-        </section>
-      </div>
+      {/* Instructions first, then the role cards (Patient left, Provider right). */}
       <section className="care-note demo-guide">
         <h2>{t("A complete demo in one browser")}</h2>
         <ol>
@@ -85,6 +44,48 @@ export default function DemoAccess({
           )}{" "}
         </p>
       </section>
+      <div className="demo-access-grid">
+        <section className="panel demo-access-card patient-access">
+          <span className="metric-icon green">
+            <Icon name="heart" />
+          </span>
+          <h2>{t("Patient workspace")}</h2>
+          <p>
+            {" "}
+            {t(
+              "Continue as Elena Morales to view a sample appointment and accept, decline, or ask for help with an earlier visit.",
+            )}{" "}
+          </p>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => onNavigate("patient")}
+          >
+            {" "}
+            {t("Continue as Demo Patient")} <Icon name="arrow" />
+          </button>
+        </section>
+        <section className="panel demo-access-card provider-access">
+          <span className="metric-icon blue">
+            <Icon name="users" />
+          </span>
+          <h2>{t("Provider workspace")}</h2>
+          <p>
+            {" "}
+            {t(
+              "Continue as Dr. Alex Rivera to explore the schedule, confirm a sample cancellation, and offer the opening to a waiting patient.",
+            )}{" "}
+          </p>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => onNavigate("staff")}
+          >
+            {" "}
+            {t("Continue as Demo Provider")} <Icon name="arrow" />
+          </button>
+        </section>
+      </div>
     </div>
   );
 }

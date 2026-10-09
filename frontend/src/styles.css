@@ -1577,7 +1577,7 @@ dd {
   margin-bottom: 24px;
 }
 .demo-guide {
-  margin-top: 24px;
+  margin-bottom: 24px;
 }
 .demo-guide ol {
   padding-left: 22px;
@@ -1593,6 +1593,11 @@ dd {
   padding-top: 15px;
   font-size: 12px;
   color: var(--muted);
+}
+.demo-identity-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
 }
 .demo-scenario {
   display: flex;

@@ -113,7 +113,7 @@ test("all provider sections, search, empty state and filters", async ({
     .getByRole("combobox", { name: "Appointment status" })
     .selectOption("Completed");
   await expect(page.getByRole("table").getByRole("row")).toHaveCount(4);
-  await nav.getByRole("button", { name: "Waitlist 3" }).click();
+  await nav.getByRole("button", { name: "Waitlist 4" }).click();
   await expect(
     page.getByRole("heading", { name: "Ready for an earlier visit" }),
   ).toBeVisible();
@@ -155,7 +155,7 @@ test("explicit confirmation updates booking, waitlist and activity; reset restor
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
   ).toContainText("Elena Morales");
-  await expect(page.getByRole("button", { name: "Waitlist 2" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Waitlist 3" })).toBeVisible();
   await page.getByRole("button", { name: "Review activity" }).click();
   await expect(page.locator(".timeline li")).toHaveCount(3);
   await page
@@ -164,7 +164,7 @@ test("explicit confirmation updates booking, waitlist and activity; reset restor
   await expect(
     page.getByRole("heading", { name: "No demo actions yet" }),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Waitlist 3" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Waitlist 4" })).toBeVisible();
 });
 test("help permits a later response; decline preserves appointment; reload clears state", async ({
   page,
@@ -211,7 +211,7 @@ test("double activation of confirm applies the acceptance only once", async ({
     page.getByRole("heading", { name: "Thursday, October 8", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Provider view", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Waitlist 2" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Waitlist 3" })).toBeVisible();
   await page.getByRole("button", { name: "Activity log" }).click();
   await expect(page.locator(".timeline li")).toHaveCount(3);
 });
@@ -246,7 +246,7 @@ test("back/forward after completing the scenario keeps the accepted state", asyn
     .getByRole("button", { name: "Confirm preview", exact: true })
     .click();
   await page.getByRole("button", { name: "Provider view", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Waitlist 2" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Waitlist 3" })).toBeVisible();
   await page.goBack();
   await expect(page).toHaveURL(/#\/patient$/);
   await expect(
@@ -260,5 +260,5 @@ test("back/forward after completing the scenario keeps the accepted state", asyn
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
   ).toContainText("Elena Morales");
-  await expect(page.getByRole("button", { name: "Waitlist 2" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Waitlist 3" })).toBeVisible();
 });

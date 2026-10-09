@@ -181,14 +181,14 @@ for (const timezoneId of ["Asia/Tokyo", "Pacific/Honolulu"]) {
           current: "Thursday, October 22",
           range: "2:00 PM–2:30 PM",
           schedule: "Thursday, October 8 · Atlantic Standard Time",
-          first: "9:00 AM",
+          first: "8:30 AM",
         },
         es: {
           footer: "Fecha de la demo: 8 oct 2026",
           current: "jueves, 22 de octubre",
           range: "2:00 p. m.–2:30 p. m.",
           schedule: "jueves, 8 de octubre · Hora estándar del Atlántico",
-          first: "9:00 a. m.",
+          first: "8:30 a. m.",
         },
       };
       const text = async (selector: string) =>
