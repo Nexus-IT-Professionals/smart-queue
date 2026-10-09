@@ -13,7 +13,7 @@ for (const language of ["en", "es"]) {
     const findings: unknown[] = [];
     async function audit(state: string) {
       const { violations } = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze();
       findings.push(
         ...violations.map((v) => ({

@@ -1710,3 +1710,27 @@ dd {
 .language-switch button {
   transition: none;
 }
+
+/* Forced colors (Windows High Contrast) drop author backgrounds, so selected
+   states use system highlight colors and filled buttons keep a visible border. */
+@media (forced-colors: active) {
+  .primary-button,
+  .secondary-button,
+  .light-button,
+  .workspace-switch button,
+  .language-switch button {
+    border: 1px solid ButtonText;
+  }
+  .workspace-switch button[aria-pressed="true"],
+  .workspace-switch button[aria-pressed="true"]:hover,
+  .language-switch button[aria-pressed="true"],
+  .nav-item[aria-current="page"] {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+  /* The faint "+" watermark would be forced to solid text color. */
+  .opportunity-decoration {
+    display: none;
+  }
+}

@@ -88,3 +88,5 @@ Latest checks: 29 unit/artifact tests and 19 Chromium browser tests pass, along 
 The full suite now passes 25 Chromium tests and 29 unit/artifact tests. Six browser tests cover bilingual keyboard navigation/focus, live-region semantics, focus contrast, and axe scans. Role/language buttons no longer fade through low-contrast intermediate colors.
 
 For manual acceptance, use keyboard-only navigation and VoiceOver/NVDA in both languages. Verify the skip link, headings/landmarks, button states and field labels; listen to cancellation/offer/help/decline/acceptance/reset announcements; check that confirmation instructions are read and focus remains reachable after back/forward or reset. Automated tests do not verify actual speech or establish complete accessibility compliance. See the detailed UX-3 checklist in `PENDING_TASKS.md`.
+
+Step-by-step Windows Narrator/NVDA script (pending human acceptance): [SCREEN_READER_CHECK.md](SCREEN_READER_CHECK.md).
