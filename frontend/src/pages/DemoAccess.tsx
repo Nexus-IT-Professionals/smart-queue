@@ -29,6 +29,7 @@ export default function DemoAccess({
             sample cancellation, and offer the opening to a waiting patient.
           </p>
           <button
+            type="button"
             className="primary-button"
             onClick={() => onNavigate("staff")}
           >
@@ -45,6 +46,7 @@ export default function DemoAccess({
             decline, or ask for help with an earlier visit.
           </p>
           <button
+            type="button"
             className="primary-button"
             onClick={() => onNavigate("patient")}
           >

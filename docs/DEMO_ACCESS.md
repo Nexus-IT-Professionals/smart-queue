@@ -45,13 +45,13 @@ From `frontend/`: `npm run build:demo`, `npm run verify:demo`, and `npm test` (N
 
 From `backend/`: `../.venv/bin/python -m pytest -q`.
 
-Automated tests cover public entry/role resolution, valid workflow transitions, invalid/repeated actions, decline/help, reset, and independent state. Browser checks should also cover all role links, entry after acceptance, direct `#/login`, keyboard confirmation, and health-API failure. No frontend lint configuration exists yet.
+Automated tests cover public entry/role resolution, valid workflow transitions, invalid/repeated actions, decline/help, reset, and independent state. Browser checks should also cover all role links, entry after acceptance, direct `#/login`, keyboard confirmation, and health-API failure. QA-2 adds `npm run lint` and `npm run test:e2e`; the latter builds and verifies the static public demo before testing in Chromium.
 
 ## Public artifact guard and manual acceptance (SEC-POC-1)
 
 `build:demo` type-checks, builds the public-demo mode, and verifies `dist/`. The verifier accepts only index HTML and fingerprinted JS/CSS, requires the restrictive CSP and local asset links, and rejects symlinks, unexpected files (including environment files/databases/maps), API paths, and selected secret signatures. It is a packaging safeguard, not proof that arbitrary data or secrets are absent. Review fixture changes before publishing. A normal `npm run build` overwrites `dist/`; always rebuild with `build:demo` before publication.
 
-All 19 automated tests pass (6 existing workflow/API tests, 13 release guard cases). Both standard and public builds pass. Firefox entry smoke check passed; complete the following manual acceptance before marking the task accepted:
+All 26 unit/artifact tests pass (6 workflow/API tests, 13 release guard cases, 7 deployment packaging cases), plus 9 Chromium browser tests. Lint passes with zero warnings. Both standard and public builds pass. Firefox entry smoke check passed; complete the following manual acceptance before marking the task accepted:
 
 1. Open http://127.0.0.1:8001/#/demo while the local static server is running. Confirm “Standalone demo · No API connection,” working styles, and no login requirement.
 2. In browser developer tools, open Network, clear requests, and reload. Only local static resources should load; no `/api/health`, external API, booking, or account requests.
@@ -60,3 +60,10 @@ All 19 automated tests pass (6 existing workflow/API tests, 13 release guard cas
 5. Run `cd frontend && npm test && npm run verify:demo` to reproduce automated checks.
 
 To restart the local preview from the project root after building: `python3 -m http.server 8001 --bind 127.0.0.1 --directory frontend/dist`. This is a local review server, not public deployment.
+
+
+## QA-2 browser regression suite
+
+After `npm ci`, install the test browser once with `npx playwright install chromium` (Linux CI uses `--with-deps`). Run `npm run lint`, `npm test`, and `npm run test:e2e` from `frontend/`. The browser command rebuilds the public demo, verifies the artifact, and starts its own server on port 4175; it refuses to reuse an existing server. No backend or account setup is needed.
+
+The nine Chromium tests cover anonymous root/login/role links, entry from both roles, back/forward, all provider sections, search/filter/empty states, confirmation focus and cancellation, accepted booking/waitlist/activity updates, help/decline, reset, and reload. Each test fails on API/external/non-GET traffic or uncaught browser exceptions. Failure screenshots/traces stay in ignored test output directories. Coverage is desktop Chromium only; responsive, screen-reader, and additional browser review remain pending. CI runs these checks before packaging; deployment remains disabled until explicitly enabled.

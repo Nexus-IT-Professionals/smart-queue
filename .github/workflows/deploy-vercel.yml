@@ -31,9 +31,13 @@ jobs:
         run: '"$RUNNER_TEMP/gitleaks" git --redact=100 --no-banner --log-opts="--all" .'
       - run: npm ci
         working-directory: frontend
+      - run: npm run lint
+        working-directory: frontend
       - run: npm test
         working-directory: frontend
-      - run: npm run build:demo
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: npm run test:e2e
         working-directory: frontend
       - run: npm run package:vercel
         working-directory: frontend

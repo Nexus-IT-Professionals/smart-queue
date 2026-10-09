@@ -33,15 +33,15 @@ Original UI inspiration: the [Pinterest dashboard](https://ru.pinterest.com/pin/
 | Check | Result / limit |
 |---|---|
 | `cd frontend && npm run build` | Passed: strict TypeScript and Vite production build. |
-| `cd frontend && npm test` | **19 passed** (6 workflow/API tests and 13 release guard tests): public route resolution; cancellation/offer/acceptance; invalid/duplicate actions; decline/help; reset and independent judge state; health request omits credentials and propagates cancellation. Uses Node's built-in runner/type stripping, tested on Node 25. |
+| `cd frontend && npm test` | **26 passed** (6 workflow/API, 13 release guard, and 7 deployment packaging tests): public route resolution; cancellation/offer/acceptance; invalid/duplicate actions; decline/help; reset and independent judge state; health request omits credentials and propagates cancellation. Uses Node's built-in runner/type stripping, tested on Node 25. |
 | `cd backend && ../.venv/bin/python -m pytest -q` | **1 passed** on Python 3.12; existing Starlette/HTTPX deprecation warning remains. |
 | Firefox, no credentials | Entry → Provider cancellation → offer → Patient confirmation → October 8 appointment → Provider schedule with Elena, two waitlist entries, and three activity events. Entry remains accessible after completion; direct `#/login` works. Confirmation/result focus verified. |
-| Existing UI regression checks | Prior pass covered record-ID search, status filter, empty state, and reset. This pass retains those components; broader automated browser regression coverage is still pending. |
-| Lint/formatting | No lint script/configuration exists; do not count `--if-present` as linting. Changed UI/test files formatted with one-off Prettier. |
+| Existing UI regression checks | Prior pass covered record-ID search, status filter, empty state, and reset. This pass retains those components; QA-2 now adds automated Chromium regression coverage; broader device/browser coverage remains pending. |
+| Lint/formatting | `npm run lint`: Biome 2.5.15 recommended rules, zero warnings/errors. Narrow documented exceptions retain intentional hash navigation, focus behavior, and existing CSS cascade. |
 | Boundaries | No backend permission/mutation endpoint added; database, dependencies, container exposure, and lockfile unchanged. Auth-router edit is explanatory comments only. |
 | Anonymous serving | FastAPI TestClient served HTML/assets/health without login, redirects, or a session cookie; no universal login endpoint exists. |
 | Static-only browser | Direct `#/patient` rendered without a backend, with Health API unavailable and the correct no-offer state. Full static-host rehearsal remains recommended. |
-| Outstanding validation | Mobile/tablet, full screen-reader/contrast audit, automated browser coverage, Docker, and public signed-out access. |
+| Outstanding validation | Mobile/tablet, full screen-reader/contrast audit, cross-browser coverage beyond Chromium, Docker, and public signed-out access. |
 
 ## Remaining POC tasks
 
@@ -76,7 +76,7 @@ No new backend or authentication service is required for the current browser-onl
 
 | ID | Priority | Status / basis | Task and acceptance criteria |
 |---|---|---|---|
-| QA-2 | P1 | Open · Verified gap | Add lint and automated browser tests. Cover entry/login alias from either role, direct links, all staff sections, back/forward, reset, and confirmation with the API offline. Existing reducer tests remain green. |
+| QA-2 | P1 | Implemented · Locally verified; awaiting manual review | Biome lint passes with zero warnings; 26 unit/artifact tests and 9 Chromium browser tests pass. Covers anonymous direct links, role/entry navigation, back/forward, all provider sections, filters, confirmation/focus, decline/help, reset/reload with no backend or API traffic. CI runs lint and browser tests before packaging; hosted Actions execution remains unverified. |
 | QA-3 | P1 | Open · Recommendation | Rehearse the complete one-tab scenario, decline/help, reset, and reload on the demo device. Confirm no credential prompt and no real network mutation. |
 | QA-4 | P2 | Open · Verified warning | Resolve the upstream Starlette/HTTPX test-client deprecation using a tested compatible dependency set. Do not merely suppress the warning. |
 
@@ -124,7 +124,7 @@ No new backend or authentication service is required for the current browser-onl
 ### SEC-POC-1 validation update
 
 - Modified `frontend/src/App.tsx`, `frontend/vite.config.ts`, and package scripts; added `frontend/scripts/verify-demo.mjs` and `frontend/tests/release.test.mjs`. No dependencies or backend permissions changed.
-- Standard build and public-demo build passed; release verification accepted exactly three generated files. All 19 frontend tests passed. No lint command is configured.
+- Standard build and public-demo build passed; release verification accepted exactly three generated files. At that stage, 19 frontend tests passed; QA-2 subsequently added lint and browser checks (see latest results below).
 - Firefox loaded the static release at port 8001 and displayed the standalone connection status. Full browser workflow and Network-panel inspection are awaiting user manual acceptance.
 - The guard is a narrow packaging check, not a comprehensive secret/PHI scanner. Existing demo fixtures are synthetic; review future data changes before publication.
 
@@ -167,3 +167,21 @@ Reference: [Vercel’s official GitHub Actions guide](https://vercel.com/kb/guid
 - Local results: 26 frontend tests passed; public build and three-file static package verified; actionlint passed with shellcheck disabled; Gitleaks 8.30.1 found no leaks in 10 existing commits or the generated package. No hosted deployment result is claimed.
 - Remaining: configure dedicated project/environment and branch protections, securely provision/rotate secrets, verify pinned CLI against Vercel, activate only when ready, inspect hosted CI artifacts/logs, test public signed-out workflow and rollback. README contains setup and local manual testing instructions. DEP-POC-1 remains incomplete until live acceptance passes.
 - Owner requested committing/pushing this prepared work while postponing deployment. Previous pre-commit testing instruction is superseded for this configuration commit; public manual acceptance is still pending.
+
+
+### QA-2 — lint and automated browser regression tests
+
+**Status:** Implemented; local checks passed; awaiting manual review. Deployment remains deferred. Owner authorized documentation update, commit, and push; manual acceptance and hosted Actions results are not claimed.
+
+- Added `frontend/biome.json`, `playwright.config.ts`, and `e2e/demo.spec.ts`; pinned development-only Biome 2.5.15 and Playwright 1.64.0 in the lockfile. Biome avoids the available typescript-eslint parser’s unsupported TypeScript 7 peer range. No production dependency added.
+- Added explicit button types, a checked application root, a semantic scrollable table section, and stable event keys. Preserved existing demo behavior. Inline lint exceptions explain hash-navigation, intentional retry dependencies, action groups, and keyboard scrolling. CSS-only exceptions retain existing descending specificity and reduced-motion `!important` rules; other recommended checks remain enabled.
+- Browser tests build the public-demo artifact, start their own loopback preview on port 4175, refuse to reuse another server, and require no backend. Every test rejects API/external/non-GET requests and uncaught browser exceptions. Confirmation verifies keyboard focus and requires explicit acceptance before the appointment changes.
+- CI now runs lint, unit tests, Chromium installation, and browser tests before packaging. The browser command builds/verifies the demo itself. The deployment gate remains disabled by default. Test output/traces are ignored by Git.
+- **Validation:** lint passed (19 source/config/test files); 26 unit/artifact tests passed; 9 Chromium tests passed after code fixes; standard TypeScript/Vite build and public-demo build passed; actionlint passed with shellcheck unavailable; `git diff --check` passed. No hosted Actions result claimed.
+- **Limits:** desktop Chromium only, synthetic browser-local workflow only. Full responsive/accessibility audits and Firefox/WebKit automation remain outside QA-2. Trace files contain only this synthetic test scenario and are retained locally only on failure.
+
+Reproduce from `frontend/`: `npm ci`, `npx playwright install chromium`, `npm run lint`, `npm test`, `npm run test:e2e`. The final command builds the public demo automatically. On Linux, install browser OS dependencies with `npx playwright install --with-deps chromium`.
+
+Manual review: open http://127.0.0.1:8001/#/demo using the existing local static server; choose Provider, cancel/send offer, switch to Patient, preview/go back, then explicitly confirm. Verify Provider shows Elena at 2:00 PM and waitlist 2. Reset, test decline/help, and check direct `#/login` and browser back/forward. If the server has stopped, run `python3 -m http.server 8001 --bind 127.0.0.1 --directory frontend/dist` from the project root.
+
+Next non-deployment task after review: **UX-1 (P1)** responsive widths and zoom validation. Keep P1 tasks incremental; do not reactivate deferred production authentication or deployment.

@@ -132,12 +132,13 @@ The UI takes visual inspiration from this [Pinterest dashboard reference](https:
 - Production build: strict TypeScript and Vite passed.
 - Backend tests: **1 passed**; an upstream Starlette/HTTPX deprecation warning remains.
 - FastAPI served the production HTML, JavaScript, CSS, and health endpoint successfully.
-- Demo tests: `cd frontend && npm test` — **19 passed** covering public navigation resolution, workflow transitions, the credential-free health request, and public artifact rejection cases.
+- Demo tests: `cd frontend && npm test` — **26 passed** covering public navigation resolution, workflow transitions, the credential-free health request, and public artifact rejection cases.
+- QA-2: `npm run lint` — zero warnings; `npm run test:e2e` — **9 Chromium tests passed**.
 - Desktop Firefox: checked credential-free entry, Provider cancellation/offer, Patient acceptance, appointment update, and return to the entry page without losing access.
 - Static-only Firefox: direct Patient access works with the health API unavailable.
-- Mobile/tablet, full accessibility, Docker, and automated browser tests remain unverified. No lint script is configured.
+- Mobile/tablet, full accessibility, Docker, and automated Firefox/WebKit tests remain unverified. Biome lint and desktop Chromium browser tests are now configured.
 
-These checks validate the UI preview and health endpoint, not a complete booking workflow. Detailed results and limitations are in [PENDING_TASKS.md](PENDING_TASKS.md).
+These checks validate the synthetic browser workflow and health endpoint, not persistent production booking. Detailed results and limitations are in [PENDING_TASKS.md](PENDING_TASKS.md).
 
 ## Planning documents
 
@@ -155,7 +156,7 @@ Run `cd frontend && npm run build:demo` and publish only `frontend/dist/` at the
 
 ### Deployment readiness — October 9, 2026
 
-The next P0 is public static hosting (DEP-POC-1). All 19 tests and the public-demo build/artifact check passed again. Vercel with GitHub Actions is selected; no public deployment URL has been verified. Deployment configuration is prepared, with publishing disabled until explicitly enabled. A host serving under a subdirectory also requires adapting and testing the current root-relative asset checks.
+The next P0 is public static hosting (DEP-POC-1). All 26 unit/artifact tests, 9 Chromium browser tests, lint, and the public-demo build/artifact check passed locally. Vercel with GitHub Actions is selected; no public deployment URL has been verified. Deployment configuration is prepared, with publishing disabled until explicitly enabled. A host serving under a subdirectory also requires adapting and testing the current root-relative asset checks.
 
 
 The [DEP-POC-1 implementation task](PENDING_TASKS.md#dep-poc-1--configure-github-actions-deployment-to-vercel) covers the workflow, test/build gates, static-only publishing, and manual acceptance. Store `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` in GitHub deployment-environment secrets; never commit their values or expose them through frontend variables, logs, or artifacts. Secret scanning, ignore rules, and credential rotation are part of the planned acceptance criteria. The workflow is now implemented; no secrets or Vercel deployment have been created.
@@ -170,3 +171,20 @@ To activate later, create a dedicated Vercel static demo project and the GitHub 
 For local packaging: `cd frontend && npm test && npm run build:demo && npm run package:vercel`. The package is ignored at `frontend/.vercel-stage`; packaging intentionally refuses an existing destination. For a repeat run use a fresh destination: `npm run package:vercel -- /tmp/queue-review-UNIQUE`. Verify with `node scripts/package-vercel.mjs --verify /tmp/queue-review-UNIQUE`. Preview `frontend/dist/` using the existing local static server, then follow the [manual checklist](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1).
 
 Local validation: 26 tests passed, public build/package verified, actionlint passed (shellcheck unavailable), and Gitleaks found no leaks in the 10 existing commits or static package. These checks do not prove every possible secret is absent. Hosted Actions, CLI deployment, environment protections, signed-out HTTPS access, and rollback remain unverified. For failures, keep publishing disabled and fix the failing check; after a live deployment exists, use Vercel's rollback to the last verified release and rehearse the workflow. Rotate a compromised token immediately and replace the environment secret; removing it from Git alone is insufficient.
+
+
+### QA-2: repeatable lint and browser checks
+
+From `frontend/`, run:
+
+```bash
+npm ci
+npx playwright install chromium
+npm run lint
+npm test
+npm run test:e2e
+```
+
+Validated locally: lint passes with zero warnings, 26 unit/artifact tests pass, and 9 Chromium tests pass. The browser suite rebuilds the public demo and starts an isolated loopback server at port 4175 without a backend. It covers direct public routes, role/entry navigation, back/forward, provider sections and filters, acceptance confirmation/focus, help/decline, and reset/reload; API/external requests and uncaught browser errors fail tests. CI runs these checks before packaging; publishing remains gated off. Browser traces/screenshots on failure are ignored by Git.
+
+Biome uses recommended rules with documented exceptions for intentional navigation/focus and the existing CSS cascade. TypeScript compilation remains a separate check. Desktop Chromium coverage does not replace mobile, screen-reader, or cross-browser review. See [QA-2 results and manual steps](PENDING_TASKS.md#qa-2--lint-and-automated-browser-regression-tests).

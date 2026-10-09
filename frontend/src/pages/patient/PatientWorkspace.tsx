@@ -93,7 +93,11 @@ export default function PatientWorkspace({
                 Provider, confirm the fictional cancellation, and send the demo
                 offer.
               </p>
-              <button className="primary-button" onClick={onProvider}>
+              <button
+                type="button"
+                className="primary-button"
+                onClick={onProvider}
+              >
                 Open Demo Provider <Icon name="arrow" />
               </button>
             </section>
@@ -121,6 +125,7 @@ export default function PatientWorkspace({
               {hasOffer && !confirming && (
                 <div className="offer-actions">
                   <button
+                    type="button"
                     ref={acceptButton}
                     className="primary-button"
                     onClick={() => setConfirming(true)}
@@ -128,6 +133,7 @@ export default function PatientWorkspace({
                     Preview acceptance <Icon name="arrow" />
                   </button>
                   <button
+                    type="button"
                     className="secondary-button"
                     onClick={() =>
                       onAction({ type: "respond", response: "declined" })
@@ -136,6 +142,7 @@ export default function PatientWorkspace({
                     Keep my current visit
                   </button>
                   <button
+                    type="button"
                     className="text-button"
                     onClick={() =>
                       onAction({ type: "respond", response: "help" })
@@ -146,6 +153,7 @@ export default function PatientWorkspace({
                 </div>
               )}
               {hasOffer && confirming && (
+                // biome-ignore lint/a11y/useSemanticElements: Focusable confirmation group contains actions, not form inputs.
                 <div
                   className="confirmation"
                   ref={confirmation}
@@ -160,6 +168,7 @@ export default function PatientWorkspace({
                   </p>
                   <div className="offer-actions">
                     <button
+                      type="button"
                       className="primary-button"
                       onClick={() => {
                         onAction({ type: "respond", response: "accepted" });
@@ -169,6 +178,7 @@ export default function PatientWorkspace({
                       Confirm preview
                     </button>
                     <button
+                      type="button"
                       className="secondary-button"
                       onClick={() => setConfirming(false)}
                     >
@@ -187,6 +197,7 @@ export default function PatientWorkspace({
               </div>
               {response && (
                 <button
+                  type="button"
                   className="text-button"
                   onClick={() => {
                     onAction({ type: "reset" });

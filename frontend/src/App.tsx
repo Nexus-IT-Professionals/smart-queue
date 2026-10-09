@@ -55,6 +55,7 @@ export default function App() {
     }
     previousPage.current = { workspace, view };
   }, [workspace, view]);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: healthAttempt intentionally triggers a user-requested retry.
   useEffect(() => {
     if (import.meta.env.MODE === "public-demo") return;
     const controller = new AbortController();
@@ -76,6 +77,7 @@ export default function App() {
   }, [healthAttempt]);
   return (
     <div className="app-shell">
+      {/* biome-ignore lint/a11y/useValidAnchor: Focus-only skip navigation preserves the hash router. */}
       <a
         className="skip-link"
         href="#main-content"
@@ -87,6 +89,7 @@ export default function App() {
         Skip to main content
       </a>
       <header className="topbar">
+        {/* biome-ignore lint/a11y/useValidAnchor: This link navigates to a public hash route and resets the selected view. */}
         <a
           href="#/demo"
           className="brand"
@@ -109,24 +112,28 @@ export default function App() {
             <small>Fictional medical office</small>
           </span>
         </div>
+        {/* biome-ignore lint/a11y/useSemanticElements: Role selector is a navigation group, not a group of form fields. */}
         <div
           className="workspace-switch"
           role="group"
           aria-label="Demo workspace"
         >
           <button
+            type="button"
             aria-pressed={workspace === "demo"}
             onClick={() => navigate("demo")}
           >
             Demo access
           </button>
           <button
+            type="button"
             aria-pressed={workspace === "staff"}
             onClick={() => navigate("staff")}
           >
             Provider view
           </button>
           <button
+            type="button"
             aria-pressed={workspace === "patient"}
             onClick={() => navigate("patient")}
           >
@@ -144,6 +151,7 @@ export default function App() {
             {workspace === "staff" ? (
               navigation.map((item) => (
                 <button
+                  type="button"
                   key={item.id}
                   className="nav-item"
                   aria-current={view === item.id ? "page" : undefined}
@@ -188,6 +196,7 @@ export default function App() {
           {import.meta.env.MODE !== "public-demo" &&
             apiStatus === "offline" && (
               <button
+                type="button"
                 className="text-button retry"
                 onClick={() => {
                   setApiStatus("checking");
@@ -219,6 +228,7 @@ export default function App() {
               {demoIdentities[workspace].label}
             </span>
             <button
+              type="button"
               className="text-button"
               onClick={() => dispatch({ type: "reset" })}
             >

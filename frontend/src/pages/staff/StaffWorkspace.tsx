@@ -70,7 +70,11 @@ function WaitlistPanel({
         ))}
       </div>
       {!full && (
-        <button className="panel-link" onClick={() => onNavigate("waitlist")}>
+        <button
+          type="button"
+          className="panel-link"
+          onClick={() => onNavigate("waitlist")}
+        >
           View waitlist <Icon name="arrow" />
         </button>
       )}
@@ -201,6 +205,7 @@ export default function StaffWorkspace({
         <div className="demo-scenario-actions">
           {demo.phase === "scheduled" && (
             <button
+              type="button"
               className="primary-button"
               onClick={() => onAction({ type: "cancel" })}
             >
@@ -209,6 +214,7 @@ export default function StaffWorkspace({
           )}
           {demo.phase === "open" && (
             <button
+              type="button"
               className="primary-button"
               onClick={() => onAction({ type: "offer" })}
             >
@@ -216,12 +222,17 @@ export default function StaffWorkspace({
             </button>
           )}
           {(demo.phase === "offered" || demo.phase === "help") && (
-            <button className="primary-button" onClick={onPatient}>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={onPatient}
+            >
               Open Demo Patient <Icon name="arrow" />
             </button>
           )}
           {(demo.phase === "accepted" || demo.phase === "declined") && (
             <button
+              type="button"
               className="secondary-button"
               onClick={() => onNavigate("activity")}
             >
@@ -311,6 +322,7 @@ export default function StaffWorkspace({
                         : "Use the scenario controls to open a slot and offer an earlier visit."}
                 </p>
                 <button
+                  type="button"
                   className="light-button"
                   onClick={() => onNavigate("waitlist")}
                 >
@@ -364,10 +376,10 @@ export default function StaffWorkspace({
                 </label>
               </div>
               {filtered.length ? (
-                <div
+                <section
                   className="table-scroll"
-                  role="region"
                   aria-label="Daily appointments"
+                  // biome-ignore lint/a11y/noNoninteractiveTabindex: Scrollable region needs keyboard scrolling.
                   tabIndex={0}
                 >
                   <table>
@@ -431,7 +443,7 @@ export default function StaffWorkspace({
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </section>
               ) : (
                 <EmptyState
                   title={
@@ -446,6 +458,7 @@ export default function StaffWorkspace({
                       : "Sample appointments are available on October 8, 2026."}
                   </p>
                   <button
+                    type="button"
                     className="text-button"
                     onClick={() => {
                       setQuery("");
@@ -508,7 +521,7 @@ export default function StaffWorkspace({
           {demo.events.length ? (
             <ol className="timeline">
               {demo.events.map((event, index) => (
-                <li key={`${index}-${event}`}>
+                <li key={event}>
                   <span className="timeline-icon">
                     <Icon name="check" />
                   </span>
