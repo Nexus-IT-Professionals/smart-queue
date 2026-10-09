@@ -27,7 +27,7 @@
 **Supported on the Puerto Rico side; partially on the vendor side.**
 - Infomedika's Evolution EHR is certified **without any API criterion** ((g)(7), (g)(9), (g)(10) absent), runs on on-premise SQL Server, and "Interfaces fee for optional modules and/or integrations may apply" (certification disclosure, read on the page).
 - Sabiamed's ClinNext 10 meets (g)(10) through Firely Server, with third-party licence fees "based on number of beds for hospitals or number of facilities for ambulatory clinics"; **no API documentation, developer portal or base URL exists on sabiamed.com** (read on the page).
-- Assertus (EHRez, Medicus, ProClaim) publishes nothing reachable (site renders "Loading..."); the 2019 certification release mentions no API (read on the page).
+- Assertus (EHRez, Medicus, ProClaim): no public API documentation found; the 2019 certification release mentions no API (read on the page).
 - NeoDeck's NeoMed has a **public SMART on FHIR R4 API**, documented, OAuth2, but **GET only**, clinical resources only, **no Appointment, Schedule or Slot**, and "Only the Vendor admins of the EHR have access to add the client app" (read on the page).
 - Sharper statement (inferred): the only public integration surface any Puerto Rico EHR offers is the federally required patient-access API, which is read-only clinical data by design; a refill tool needs to read the schedule and write an appointment, which no Puerto Rico EHR exposes publicly. The US vendors' "contact us / HL7 / FHIR / CSV" paths all presuppose the EHR exposing such an interface. Detail per system: [[pr-office-systems]].
 - Still unknown: whether any US vendor has ever connected a Puerto Rico-domestic EHR; physician-office EHR market share 2024 to 2026 (not found).
