@@ -169,9 +169,11 @@ export default function App() {
           </span>
         </a>
         <div className="office-label">
-          <Icon name="heart" />
-          <span>
-            {OFFICE}
+          <span className="office-icon">
+            <Icon name="heart" />
+          </span>
+          <span className="office-text">
+            <strong>{OFFICE}</strong>
             <small>{t("Fictional medical office")}</small>
           </span>
         </div>
