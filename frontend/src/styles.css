@@ -1699,3 +1699,9 @@ dd {
     max-width: 100%;
   }
 }
+
+/* Selected/unselected colors must not cross through low-contrast blends. */
+.workspace-switch button,
+.language-switch button {
+  transition: none;
+}

@@ -81,3 +81,10 @@ English/Español controls are available on entry, Patient, and Provider pages. C
 Only the `smart-queue-language` preference (`en` or `es`) is saved in localStorage. Blocked storage does not prevent access or language switching. Reset retains the language; refreshing clears the demo scenario but restores the saved language. This does not persist bookings or patient information.
 
 Latest checks: 29 unit/artifact tests and 19 Chromium browser tests pass, along with lint and both builds. Rehearse the full scenario in Spanish, switch languages during confirmation, check decline/help and an empty schedule, then reload. Human Spanish copy review and full assistive-technology testing remain pending.
+
+
+## Accessibility review (UX-3)
+
+The full suite now passes 25 Chromium tests and 29 unit/artifact tests. Six browser tests cover bilingual keyboard navigation/focus, live-region semantics, focus contrast, and axe scans. Role/language buttons no longer fade through low-contrast intermediate colors.
+
+For manual acceptance, use keyboard-only navigation and VoiceOver/NVDA in both languages. Verify the skip link, headings/landmarks, button states and field labels; listen to cancellation/offer/help/decline/acceptance/reset announcements; check that confirmation instructions are read and focus remains reachable after back/forward or reset. Automated tests do not verify actual speech or establish complete accessibility compliance. See the detailed UX-3 checklist in `PENDING_TASKS.md`.

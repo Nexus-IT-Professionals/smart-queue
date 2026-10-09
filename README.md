@@ -204,3 +204,10 @@ Use the header language buttons on any demo page. Navigation, instructions, stat
 English is the default. Only the language preference is saved locally; blocked browser storage still allows switching. Reset preserves the language, while reload resets the synthetic scenario and restores the saved language. No account, patient data storage, or new runtime dependency is involved.
 
 Validation: **29 unit/artifact tests, 19 browser tests, lint, and both builds passed**. Spanish workflow tests cover 320/768/1440px, active-filter/confirmation switching, persistence, empty/decline/help states, and storage failure. For manual review, refresh http://127.0.0.1:8001/#/demo, choose Español, and switch languages midway through an offer before confirming. See [UX-2 results](PENDING_TASKS.md#ux-2--english-spanish-ui-and-date-formatting). The owner authorized committing and pushing UX-2; human language/accessibility review remains pending.
+
+
+### UX-3: accessibility checks
+
+Fixed low-contrast intermediate colors when changing role/language selection by removing those color transitions. Added six accessibility browser tests: bilingual keyboard-only flow, focus after state changes, skip navigation, semantic/live-region checks, and focus-ring contrast. Axe scans 14 demo states per language with WCAG 2/2.1 A/AA rules; no detected violations remain in those scans.
+
+Latest local results: **29 unit/artifact tests, 25 browser tests, lint, and both builds passed**. This is not a claim of full WCAG compliance. Actual VoiceOver/NVDA speech, pronunciation, and announcement quality remain manual acceptance steps. Use the [UX-3 checklist](PENDING_TASKS.md#ux-3--accessibility-review-and-regression-coverage) on the local demo in English and Spanish. The owner authorized commit/push; manual screen-reader acceptance remains pending.

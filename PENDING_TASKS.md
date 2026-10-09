@@ -53,7 +53,7 @@ Original UI inspiration: the [Pinterest dashboard](https://ru.pinterest.com/pin/
 |---|---|---|---|
 | UX-1 | P1 | Implemented · Locally verified; awaiting manual review | Fixed 320px Provider page overflow with a shrinkable mobile grid and two-column navigation at ≤375px. Workflow and all provider sections pass at 320/375/768/1024/1440px; keyboard table scrolling verified. Native Firefox 200% zoom workflow passed. See validation update below. |
 | UX-2 | P1 | Implemented · Locally verified; awaiting manual review | Shared English/Español selector translates entry, both roles, filters, empty/health states, confirmation, response and activity copy. Puerto Rico dates/times use Intl. Language changes preserve scenario/filter/confirmation state; preference survives reload when storage is available. 29 unit/artifact and 19 browser tests pass; see update below. |
-| UX-3 | P1 | Open · Recommendation | Complete keyboard/screen-reader/contrast review. Verify focus after reset, cancellation, offer, role changes, and back/forward; no lost focus or ambiguous state announcements. |
+| UX-3 | P1 | Fix and automated review complete · Manual screen-reader acceptance pending | Removed low-contrast selector transitions. Bilingual keyboard/focus tests, live-region/landmark checks, focus-ring contrast, and axe scans across 14 states per language pass. Actual VoiceOver/NVDA speech and announcement quality still need manual review; see checklist below. |
 
 ### Frontend
 
@@ -209,3 +209,21 @@ Manual acceptance: refresh http://127.0.0.1:8001/#/demo; inspect 320px and 375px
 - Limits: human Spanish editorial review and full bilingual screen-reader/contrast audit remain recommended under UX-3. Hosted CI results for UX-2 are not yet verified. UX-1 was committed/pushed as `d157b78`; the owner authorized committing/pushing UX-2. Human editorial/accessibility review remains pending.
 
 Manual acceptance: refresh http://127.0.0.1:8001/#/demo and choose Español. Enter Proveedor → confirm cancellation → send offer → Paciente → review acceptance. Switch to English and back before confirming: the offer and confirmation must remain intact. Confirm, inspect the translated activity/list, and reset. Try a status filter before switching language, an empty date, decline/help, and reload. Only the language preference should survive reload. Next task: UX-3 after review.
+
+
+### UX-3 — accessibility review and regression coverage
+
+- **Verified issue fixed:** role selection animated both foreground and background through low-contrast intermediate colors (axe measured ratios as low as 1.09:1 during a switch). Role/language selector colors now change immediately, preserving their existing end-state palette and preventing that blend. Other interactions and demo logic are unchanged.
+- Added development-only `@axe-core/playwright` and `e2e/accessibility.spec.ts`. Six new tests cover English/Spanish keyboard-only journeys; skip link and main focus; cancellation/offer focus; confirmation/cancel/accept focus; help/decline/reset (including reset during confirmation); back/forward; document language, heading/landmark structure and live-region content; and visible focus-ring contrast ≥3:1 against light/dark shell surfaces.
+- Axe WCAG 2 A/AA and 2.1 A/AA rule scans pass across 14 states per language: entry, Provider overview/sections, cancellation, Patient offer/help/confirmation/acceptance/reset/decline, and empty schedule. Rules were not disabled to obtain a pass. This checks detectable semantics and contrast, not all WCAG requirements or screen-reader speech output.
+- **Validation:** lint passed with zero warnings; 29 unit/artifact tests and 25 Chromium browser tests passed; standard and public-demo builds plus artifact verification passed; `git diff --check` passed. Existing CI includes the new browser tests. No runtime dependency or deployment added. The owner authorized commit/push; actual screen-reader acceptance remains pending.
+- **Remaining manual acceptance:** actual VoiceOver/NVDA reading order, language pronunciation and live announcements in both languages; verify announcements are clear and not duplicated. Automated DOM/focus checks cannot establish this. User/device validation remains necessary before declaring UX-3 fully accepted.
+
+Manual checklist at http://127.0.0.1:8001/#/demo:
+
+1. Reload, press Tab to reveal the skip link, then Enter. Continue using Tab/Shift+Tab and Enter/Space; every control should have a visible focus indicator.
+2. In each language, enter Provider, cancel, send an offer, enter Patient, preview, go back, confirm, and reset. Repeat help/decline and reset during confirmation. Focus must land on the new status/confirmation/result or the no-offer section, never disappear into removed controls.
+3. With VoiceOver or NVDA, verify landmark/heading navigation, role and language button states, field labels, and complete confirmation instructions. Listen for meaningful cancellation, offer, response, and reset announcements without confusing duplicates. Check browser back/forward.
+4. Repeat at 200% zoom and a narrow viewport. Report any missed/duplicate announcement or inaccessible control with the language and action that triggered it.
+
+Reproduce automation: `cd frontend && npm run lint && npm test && npm run test:e2e`. Next non-deployment task after manual accessibility acceptance: **QA-3 (P1)** judge-device rehearsal.
