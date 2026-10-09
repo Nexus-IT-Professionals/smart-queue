@@ -4,7 +4,7 @@ Help Puerto Rico medical offices fill cancelled appointments by offering availab
 
 ## Project status
 
-This project is in its initial planning stage for the Caribbean AI 2026 Hackathon. This README describes the proposed MVP; application code and setup instructions will follow.
+This project is in its planning stage for the Caribbean AI 2026 Hackathon. The MVP below is proposed; no application code or run instructions are in this repository yet. The current work includes a technical proposal, hackathon checklist, and background research.
 
 ## The problem
 
@@ -45,6 +45,10 @@ A fictional office cancels a 2 p.m. appointment. A waitlisted patient receives a
 
 Multi-office routing, real messaging, EHR integrations, predictive no-show scoring, clinical prioritization, and payments are outside the initial MVP.
 
-## Source
+## Planning documents
 
-Adapted from the planning README at `/Users/tarisadmin/Projects/CaribbeanAI2026_Hackathon/README.md`. The original contains additional research references, proposed stack options, and open questions.
+- [Technical proposal](docs/TECHNICAL_PROPOSAL.md): proposed scope, architecture, interfaces, and implementation plan. Its stack and workflow decisions have not been implemented.
+- [Hackathon rules and checklist](docs/HACKATHON_RULES.md): recorded rules and open submission tasks; recheck the official rules before submitting.
+- Background research: [waitlist backfill](docs/wiki/waitlist-backfill.md), [Puerto Rico no-show data](docs/wiki/pr-no-show-data.md), and [competitors](docs/wiki/idea-3-competitors.md). These notes distinguish measured results from estimates and vendor claims.
+
+This README was adapted from the planning README at `/Users/tarisadmin/Projects/CaribbeanAI2026_Hackathon/README.md`.
