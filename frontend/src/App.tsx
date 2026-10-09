@@ -56,6 +56,7 @@ export default function App() {
     previousPage.current = { workspace, view };
   }, [workspace, view]);
   useEffect(() => {
+    if (import.meta.env.MODE === "public-demo") return;
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 5000);
     let active = true;
@@ -173,24 +174,29 @@ export default function App() {
             <span className="demo-tag">DEMO / POC MODE</span>
           </div>
           <div className="connection" role="status">
-            <span className={`status-dot ${apiStatus}`} />
-            {apiStatus === "ok"
-              ? "Health API connected"
-              : apiStatus === "checking"
-                ? "Checking health API…"
-                : "Health API unavailable"}
+            <span
+              className={`status-dot ${import.meta.env.MODE === "public-demo" ? "ok" : apiStatus}`}
+            />
+            {import.meta.env.MODE === "public-demo"
+              ? "Standalone demo · No API connection"
+              : apiStatus === "ok"
+                ? "Health API connected"
+                : apiStatus === "checking"
+                  ? "Checking health API…"
+                  : "Health API unavailable"}
           </div>
-          {apiStatus === "offline" && (
-            <button
-              className="text-button retry"
-              onClick={() => {
-                setApiStatus("checking");
-                setHealthAttempt((n) => n + 1);
-              }}
-            >
-              Retry connection
-            </button>
-          )}
+          {import.meta.env.MODE !== "public-demo" &&
+            apiStatus === "offline" && (
+              <button
+                className="text-button retry"
+                onClick={() => {
+                  setApiStatus("checking");
+                  setHealthAttempt((n) => n + 1);
+                }}
+              >
+                Retry connection
+              </button>
+            )}
           <p className="sidebar-foot">
             Made for Puerto Rico <span aria-hidden="true">↗</span>
           </p>

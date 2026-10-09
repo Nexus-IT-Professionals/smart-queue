@@ -10,7 +10,7 @@ Updated October 8, 2026. The current decision is a **public, credential-free hac
 - Fixed fictional identities are Dr. Alex Rivera and Elena Morales. Role selection is navigation, not a token or backend permission.
 - The complete **synthetic single-offer scenario** runs in browser memory: provider cancellation → offer → explicit patient acceptance → changed appointment, waitlist, schedule, and activity. Decline/help/reset are supported. Invalid/repeated actions are ignored.
 - Role changes and entry-page visits preserve state; reload/reset clears it. Separate judges/tabs do not share state. No live booking, message, real patient data, or database mutation is involved.
-- `/api/health` remains the only implemented API. It is queried without cookies and does not gate navigation. No production security check was disabled or universal-login endpoint added.
+- `/api/health` remains the only implemented API. The standard build queries it without cookies; the public-demo build makes no API request. Neither gates navigation. No production security check was disabled or universal-login endpoint added.
 - Public hosting is **not yet verified/configured**. GitHub Pages lookup returned HTTP 404; this could mean no site or insufficient access. A hosting destination is needed before sharing a public judge URL.
 
 ## Completed improvements
@@ -33,7 +33,7 @@ Original UI inspiration: the [Pinterest dashboard](https://ru.pinterest.com/pin/
 | Check | Result / limit |
 |---|---|
 | `cd frontend && npm run build` | Passed: strict TypeScript and Vite production build. |
-| `cd frontend && npm test` | **6 passed**: public route resolution; cancellation/offer/acceptance; invalid/duplicate actions; decline/help; reset and independent judge state; health request omits credentials and propagates cancellation. Uses Node's built-in runner/type stripping, tested on Node 25. |
+| `cd frontend && npm test` | **19 passed** (6 workflow/API tests and 13 release guard tests): public route resolution; cancellation/offer/acceptance; invalid/duplicate actions; decline/help; reset and independent judge state; health request omits credentials and propagates cancellation. Uses Node's built-in runner/type stripping, tested on Node 25. |
 | `cd backend && ../.venv/bin/python -m pytest -q` | **1 passed** on Python 3.12; existing Starlette/HTTPX deprecation warning remains. |
 | Firefox, no credentials | Entry → Provider cancellation → offer → Patient confirmation → October 8 appointment → Provider schedule with Elena, two waitlist entries, and three activity events. Entry remains accessible after completion; direct `#/login` works. Confirmation/result focus verified. |
 | Existing UI regression checks | Prior pass covered record-ID search, status filter, empty state, and reset. This pass retains those components; broader automated browser regression coverage is still pending. |
@@ -84,7 +84,7 @@ No new backend or authentication service is required for the current browser-onl
 
 | ID | Priority | Status / basis | Task and acceptance criteria |
 |---|---|---|---|
-| SEC-POC-1 | P0 | Release check · Recommendation | Verify the public artifact contains only synthetic UI assets. Publish only the built frontend; no `.env`, databases, accounts, or backend/model tunnel. Network inspection shows no booking/account mutations. |
+| SEC-POC-1 | P0 | Implemented · Awaiting manual acceptance | `npm run build:demo` emits only checked HTML/JS/CSS, removes the health request, and adds CSP blocking API connections. Guard rejects unexpected files, symlinks, maps, API paths, and selected secret signatures. 13 guard tests pass; Firefox entry smoke check passes. Complete the manual checklist in `docs/DEMO_ACCESS.md`; publication remains DEP-POC-1. |
 
 ### Deployment and submission
 
@@ -120,3 +120,10 @@ No new backend or authentication service is required for the current browser-onl
 1. Confirm a hosting destination and publish the static POC; verify signed-out access.
 2. Complete responsive/accessibility and API-offline checks; rehearse the judge workflow.
 3. Finalize submission materials. Revisit production accounts only after the POC scope changes.
+
+### SEC-POC-1 validation update
+
+- Modified `frontend/src/App.tsx`, `frontend/vite.config.ts`, and package scripts; added `frontend/scripts/verify-demo.mjs` and `frontend/tests/release.test.mjs`. No dependencies or backend permissions changed.
+- Standard build and public-demo build passed; release verification accepted exactly three generated files. All 19 frontend tests passed. No lint command is configured.
+- Firefox loaded the static release at port 8001 and displayed the standalone connection status. Full browser workflow and Network-panel inspection are awaiting user manual acceptance.
+- The guard is a narrow packaging check, not a comprehensive secret/PHI scanner. Existing demo fixtures are synthetic; review future data changes before publication.

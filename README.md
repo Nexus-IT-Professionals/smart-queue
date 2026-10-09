@@ -132,7 +132,7 @@ The UI takes visual inspiration from this [Pinterest dashboard reference](https:
 - Production build: strict TypeScript and Vite passed.
 - Backend tests: **1 passed**; an upstream Starlette/HTTPX deprecation warning remains.
 - FastAPI served the production HTML, JavaScript, CSS, and health endpoint successfully.
-- Demo tests: `cd frontend && npm test` — **6 passed** covering public navigation resolution, workflow transitions, and the credential-free health request.
+- Demo tests: `cd frontend && npm test` — **19 passed** covering public navigation resolution, workflow transitions, the credential-free health request, and public artifact rejection cases.
 - Desktop Firefox: checked credential-free entry, Provider cancellation/offer, Patient acceptance, appointment update, and return to the entry page without losing access.
 - Static-only Firefox: direct Patient access works with the health API unavailable.
 - Mobile/tablet, full accessibility, Docker, and automated browser tests remain unverified. No lint script is configured.
@@ -146,3 +146,9 @@ These checks validate the UI preview and health endpoint, not a complete booking
 - Background research: [waitlist backfill](docs/wiki/waitlist-backfill.md), [Puerto Rico no-show data](docs/wiki/pr-no-show-data.md), and [competitors](docs/wiki/idea-3-competitors.md). These notes distinguish measured results from estimates and vendor claims.
 
 This README was adapted from the team's pre-event planning documents (research and planning only; no application code was written before the official build period).
+
+## Public hackathon build
+
+Run `cd frontend && npm run build:demo` and publish only `frontend/dist/` at the host's site root. This release makes no API requests, displays “Standalone demo · No API connection,” and includes a restrictive browser connection policy. The build verifies the output contains only expected UI assets; it rejects unexpected files, symlinks, source maps, API paths, and selected secret signatures. This guard does not replace review of synthetic data or detect every possible secret.
+
+`npm test` runs 19 tests; `npm run verify:demo` rechecks the artifact. Standard `npm run build` retains the development health check and overwrites the output, so use `build:demo` for publication. See [manual release acceptance](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1). Hosting selection and public deployment remain pending.
