@@ -77,6 +77,25 @@ test("entry from either role and browser back/forward remain public", async ({
     "Explore care without the wait.",
   );
 });
+// Switching pages from the top bar must not scroll the header out of view.
+test("top bar and sidebar navigation keep the page at the top", async ({
+  page,
+}) => {
+  await page.goto("/#/demo");
+  for (const name of ["Provider view", "Patient view", "Demo access"]) {
+    await page.getByRole("button", { name, exact: true }).click();
+    await expect(page.getByRole("main")).toBeFocused();
+    expect(await page.evaluate(() => window.scrollY), name).toBe(0);
+    await expect(page.locator(".topbar")).toBeInViewport();
+  }
+  await page
+    .getByRole("button", { name: "Provider view", exact: true })
+    .click();
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.getByRole("button", { name: "Schedule", exact: true }).click();
+  await expect(page.getByRole("main")).toBeFocused();
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+});
 test("all provider sections, search, empty state and filters", async ({
   page,
 }) => {

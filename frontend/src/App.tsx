@@ -52,8 +52,10 @@ export default function App() {
       previousPage.current.workspace !== workspace ||
       previousPage.current.view !== view
     ) {
-      main.current?.focus();
-      main.current?.scrollIntoView({ block: "start" });
+      // Return to the page top so the top bar stays visible; scrolling <main>
+      // into view would push the header off-screen.
+      main.current?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
     previousPage.current = { workspace, view };
   }, [workspace, view]);
