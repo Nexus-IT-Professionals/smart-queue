@@ -6,6 +6,8 @@ WORKDIR /web
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
+# scripts/copy-presentation.mjs ships ../presentation (allowlisted files only) into dist.
+COPY presentation/ /presentation/
 RUN npm run build
 
 FROM python:3.12.15-slim

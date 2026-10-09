@@ -5,6 +5,8 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { packageVercel, verifyVercel } from '../scripts/package-vercel.mjs';
 import { symlinkSkipReason } from './symlink-support.mjs';
+import { presentationFiles, writePresentation } from './presentation-fixture.mjs';
+const shipped = 3 + presentationFiles.length;
 async function fixture(t) {
   const root = await mkdtemp(join(tmpdir(), 'queue-package-'));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -15,12 +17,13 @@ async function fixture(t) {
   await writeFile(join(source, 'index.html'), `<meta http-equiv="Content-Security-Policy" content="${policy}"><script src="/assets/index-demo.js"></script><link href="/assets/index-demo.css">`);
   await writeFile(join(source, 'assets/index-demo.js'), 'console.log("demo")');
   await writeFile(join(source, 'assets/index-demo.css'), 'body{color:navy}');
+  await writePresentation(source);
   return {source, stage};
 }
 test('packages static output, independently verifies it, refuses overwrites', async t => {
   const {source, stage} = await fixture(t);
-  assert.equal((await packageVercel(source, stage)).length, 3);
-  assert.equal((await verifyVercel(stage)).length, 3);
+  assert.equal((await packageVercel(source, stage)).length, shipped);
+  assert.equal((await verifyVercel(stage)).length, shipped);
   await assert.rejects(packageVercel(source, stage), /EEXIST/);
 });
 test('refuses unsafe source before packaging', async t => {
@@ -28,7 +31,12 @@ test('refuses unsafe source before packaging', async t => {
   await writeFile(join(source, '.env.production'), 'synthetic test');
   await assert.rejects(packageVercel(source, stage), /Unexpected artifact/);
 });
-for (const path of ['.env', '.vercel/project.json', '.vercel/output/functions', '.vercel/output/static/patients.db']) {
+test('packages the presentation and favicon with the app', async t => {
+  const {source, stage} = await fixture(t);
+  const files = await packageVercel(source, stage);
+  for (const file of presentationFiles) assert.ok(files.includes(file), file);
+});
+for (const path of ['.env', '.vercel/project.json', '.vercel/output/functions', '.vercel/output/static/patients.db', '.vercel/output/static/presentation/PRESENTATION_PLAN.md', '.vercel/output/static/presentation/assets/screenshots/notes.txt', '.vercel/output/static/favicon.ico']) {
   test(`rejects extra upload content: ${path}`, async t => {
     const {source, stage} = await fixture(t);
     await packageVercel(source, stage);

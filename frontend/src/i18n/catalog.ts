@@ -225,6 +225,8 @@ export const spanish: Record<string, string> = {
   "Main navigation": "Navegación principal",
   "My care": "Mi atención",
   "Welcome to the demo": "Bienvenido a la demo",
+  "Press for presentation": "Oprima para ver la presentación",
+  "Opens in a new window": "Se abre en una ventana nueva",
   "A safe space to explore": "Un espacio seguro para explorar",
   "Fictional people. Simulated offers. No real patient information.":
     "Personas ficticias. Ofertas simuladas. Sin datos de pacientes reales.",

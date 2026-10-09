@@ -1652,6 +1652,23 @@ dd {
   }
 }
 
+/* "Press for presentation": its own row below the navigation at every width. */
+.presentation-link {
+  margin-top: 7px;
+  color: #315ab0;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px dashed #b9c8e6;
+}
+.presentation-link:hover {
+  text-decoration: underline;
+}
+@media (max-width: 900px) {
+  .presentation-link {
+    margin-top: 6px;
+  }
+}
+
 /* Language controls remain available in both roles without resetting the demo. */
 .app-shell {
   grid-template-rows: auto 1fr;

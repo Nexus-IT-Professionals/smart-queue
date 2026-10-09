@@ -1,5 +1,11 @@
 import { useLanguage } from "./i18n/LanguageProvider";
-import { useEffect, useReducer, useRef, useState } from "react";
+import {
+  type MouseEvent,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { getHealth } from "./api/client";
 import { Icon, type IconName } from "./components/ui";
 import {
@@ -24,6 +30,42 @@ const navigation: { id: StaffView; label: string; icon: IconName }[] = [
   { id: "waitlist", label: "Waitlist", icon: "users" },
   { id: "activity", label: "Activity log", icon: "activity" },
 ];
+// Relative to the app's path (the #/ route is not part of it), so it resolves
+// to <site>/presentation/index.html wherever the build is hosted.
+const PRESENTATION_URL = "presentation/index.html";
+// Desktop: a named, centered popup on the screen showing the demo, reused on
+// repeat clicks. Touch or narrow screens keep the anchor's plain new tab, as
+// does a blocked popup. The demo tab itself never navigates.
+function openPresentation(event: MouseEvent<HTMLAnchorElement>) {
+  if (
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey ||
+    window.matchMedia("(pointer: coarse), (max-width: 768px)").matches
+  )
+    return;
+  const { availWidth, availHeight } = window.screen;
+  const width = Math.round(Math.min(1280, availWidth * 0.9));
+  const height = Math.round(Math.min(800, availHeight * 0.9));
+  // Centered on the demo window (screenX/Y are multi-monitor desktop
+  // coordinates), so it opens on the monitor the demo is on.
+  const left = Math.round(
+    window.screenX + (window.outerWidth - width) / 2,
+  );
+  const top = Math.round(
+    window.screenY + (window.outerHeight - height) / 2,
+  );
+  const popup = window.open(
+    event.currentTarget.href,
+    "smart-queue-presentation",
+    `popup,width=${width},height=${height},left=${left},top=${top}`,
+  );
+  if (!popup) return; // Blocked: the default new-tab navigation still runs.
+  event.preventDefault();
+  popup.focus();
+}
 export default function App() {
   const { t, dateText, language, setLanguage } = useLanguage();
   // A public role selector, not a login/session or a backend permission.
@@ -209,6 +251,17 @@ export default function App() {
               </div>
             )}
           </nav>
+          <a
+            className="nav-item presentation-link"
+            href={PRESENTATION_URL}
+            target="_blank"
+            rel="noopener"
+            aria-description={t("Opens in a new window")}
+            onClick={openPresentation}
+          >
+            <Icon name="presentation" />
+            {t("Press for presentation")}
+          </a>
         </div>
         <div className="sidebar-bottom">
           <div className="demo-card">

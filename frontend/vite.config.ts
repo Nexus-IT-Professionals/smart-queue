@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { presentationDevMiddleware } from "./scripts/copy-presentation.mjs";
 
 // In dev, the FastAPI backend runs on :8000. In the packaged image the API
 // serves the built assets itself, so /api is same-origin and no proxy is needed.
@@ -21,6 +22,14 @@ export default defineConfig(({ mode }) => ({
             injectTo: "head-prepend" as const,
           },
         ];
+      },
+    },
+    {
+      // Builds copy the presentation via `npm run copy:presentation`; preview
+      // serves that dist/ copy. Dev serves the allowlisted source files.
+      name: "presentation-dev",
+      configureServer(server) {
+        server.middlewares.use("/presentation", presentationDevMiddleware());
       },
     },
   ],

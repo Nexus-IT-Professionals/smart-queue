@@ -8,10 +8,11 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run copy:presentation",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
-    "build:demo": "tsc -b && vite build --mode public-demo && npm run verify:demo",
+    "build:demo": "tsc -b && vite build --mode public-demo && npm run copy:presentation && npm run verify:demo",
+    "copy:presentation": "node scripts/copy-presentation.mjs dist",
     "verify:demo": "node scripts/verify-demo.mjs dist",
     "package:vercel": "node scripts/package-vercel.mjs",
     "lint": "biome lint . --error-on-warnings",
