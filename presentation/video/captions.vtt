@@ -1,0 +1,49 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:07.000
+Smart Queue turns a canceled appointment into an earlier visit. Here is the two-minute demo.
+
+2
+00:00:07.000 --> 00:00:17.000
+María Rodríguez needs to cancel her two o'clock visit. Ana, the office assistant, confirms the cancellation in the provider workspace.
+
+3
+00:00:17.000 --> 00:00:28.000
+The appointment is now available. Smart Queue checks the waiting list for compatible patients, using provider, visit type, and availability.
+
+4
+00:00:28.000 --> 00:00:40.000
+Ana can confirm a scheduling priority for José. Urgent priority helps organize the queue, but this is not automated medical triage. Compatibility still comes first.
+
+5
+00:00:40.000 --> 00:00:50.000
+José is eligible for the afternoon opening. Ana reviews the candidate and sends the simulated offer. His original appointment stays in place until he accepts.
+
+6
+00:00:50.000 --> 00:01:00.000
+In the patient view, José sees the earlier appointment. He can accept, decline, or request help. No account or password is needed for this demo.
+
+7
+00:01:00.000 --> 00:01:12.000
+José previews the change from October twenty-second to October eighth, then confirms. That is fourteen days earlier. The schedule and waiting list update together.
+
+8
+00:01:12.000 --> 00:01:21.000
+Back in the provider schedule, José now occupies the released slot. Staff and Dr. Rivera see the same updated appointment.
+
+9
+00:01:21.000 --> 00:01:34.000
+A separate monthly scenario shows utilization. Day, week, and month views calculate totals from synthetic appointments. Staff can configure hours, visit duration, and capacity.
+
+10
+00:01:34.000 --> 00:01:46.000
+Select a day and cancel a scheduled visit with staff confirmation. Occupied seats decrease, availability increases, and the cancellation count updates immediately.
+
+11
+00:01:46.000 --> 00:01:54.000
+Ana confirms the waiting-list assignment. Occupancy recovers, and the fill rate updates.
+
+12
+00:01:54.000 --> 00:02:00.000
+Fictional patients. Browser-only simulation. Smart Queue. Less waiting. Better care.
