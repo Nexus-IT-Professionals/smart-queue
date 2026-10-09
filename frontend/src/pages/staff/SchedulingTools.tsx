@@ -122,7 +122,7 @@ export function CandidateReview({
   candidateId: string;
   onSelect: (id: string) => void;
 }) {
-  const { t } = useLanguage();
+  const { t, dateText } = useLanguage();
   const candidates = eligibleCandidates(demo);
   return (
     <div className="candidate-review">
@@ -142,7 +142,8 @@ export function CandidateReview({
             >
               {candidates.map((p) => (
                 <option value={p.id} key={p.id}>
-                  {p.name} · {p.priority} · {p.since}
+                  {p.name} · {p.priority} · {t("waiting since")}{" "}
+                  {dateText(p.since, { month: "short", day: "numeric" })}
                 </option>
               ))}
             </select>

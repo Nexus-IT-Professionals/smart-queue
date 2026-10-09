@@ -132,9 +132,9 @@ for (const language of languages) {
           .locator(".metric-card")
           .filter({ hasText: t(label) })
           .locator(".metric-value");
-      await expect(metric("Appointment slots")).toHaveText("09");
-      await expect(metric("Completed visits")).toHaveText("03");
-      await expect(metric("Open slots")).toHaveText("00");
+      await expect(metric("Appointment slots")).toHaveText("9");
+      await expect(metric("Completed visits")).toHaveText("3");
+      await expect(metric("Open slots")).toHaveText("0");
       await expect(page.locator(".schedule-panel .panel-heading")).toContainText(
         `9 ${t("slots")}`,
       );
@@ -144,7 +144,7 @@ for (const language of languages) {
       await page
         .getByRole("button", { name: t("Confirm demo cancellation") })
         .click();
-      await expect(metric("Open slots")).toHaveText("01");
+      await expect(metric("Open slots")).toHaveText("1");
     });
 
     test("4: Ana Martínez is shown beside Dr. Carlos Rivera and acts on cancellation and offer", async ({
@@ -206,7 +206,7 @@ for (const language of languages) {
           .locator(".metric-card")
           .filter({ hasText: t("Patients waiting") })
           .locator(".metric-value"),
-      ).toHaveText("04");
+      ).toHaveText("4");
       await nav.getByRole("button", { name: new RegExp(`^${t("Waitlist")}`) }).click();
       await expect(page.locator(".waitlist-list").locator("..")).toContainText(
         `4 ${t("patients")}`,

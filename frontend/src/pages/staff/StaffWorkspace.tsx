@@ -340,7 +340,7 @@ export default function StaffWorkspace({
                   </span>
                 </div>
                 <strong className="metric-value">
-                  {metric.value.toString().padStart(2, "0")}
+                  {metric.value}
                 </strong>
                 <p>{t(metric.detail)}</p>
               </section>

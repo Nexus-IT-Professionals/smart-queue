@@ -1,4 +1,5 @@
 export const spanish: Record<string, string> = {
+  "waiting since": "en espera desde el",
   "Today at Isla Care":
     "Hoy en Isla Care",
   "Fill cancelled appointments with patients who want an earlier visit.":

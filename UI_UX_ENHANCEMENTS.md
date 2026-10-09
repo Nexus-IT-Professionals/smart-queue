@@ -292,9 +292,49 @@ The existing tests assert many current strings. For example, "Preview acceptance
 
 ---
 
+## Typography system
+
+Added 2026-10-09 after the Tier 1 work. Font sizes had grown screen by screen. Phones used *smaller* text than desktop, and a fifth of the interface was below 12 px.
+
+| Measured on rendered screens | Before | After |
+|---|---|---|
+| Distinct font sizes (desktop / mobile) | 17 / 17 | 8 / 7, plus the logo |
+| Text elements under 12 px (desktop / mobile) | 401 / 440 | 0 / 0 (only the logo tagline, 10 px on desktop and hidden on phones) |
+| Smallest text (desktop / mobile) | 8 px / 6 px | 12 px / 12 px |
+| Font weights | 8 (350–750) | 4 (400, 500, 600, 700), plus the logo |
+| axe WCAG A/AA violations | 0 | 0 |
+
+**The scale** is defined as tokens in `frontend/src/styles.css` (`:root`). It is set in rem, so text follows the browser's font-size setting.
+
+| Token | Size | Use |
+|---|---|---|
+| `--text-xs` | 12 px | Captions, badges, table headers, uppercase eyebrows |
+| `--text-sm` | 13 px | Secondary text, form labels, table cells, nav on small screens |
+| `--text-base` | 14 px | Body, buttons, names and times in tables |
+| `--text-md` | 16 px | Lead text under the page title, card titles, the demo guide sentence, form fields on phones |
+| `--text-lg` | 18 px | Panel titles (h2) |
+| `--text-xl` | 22 px | Card headlines ("You're booked for…") |
+| `--text-2xl` | 28 px | Figures (counters, calendar tile) |
+| `--text-3xl` | 36 px | Page title (scales down to 28 px on phones) |
+
+**Rules:**
+- Nothing below 12 px. Uppercase labels are 12 px, weight 600, with 0.06–0.08em letter spacing.
+- Phones do not shrink body text; only the page title scales down. Form fields are 16 px on phones, so iOS does not zoom the page when one is tapped.
+- The page title is always larger than any figure. Before, the counters and the H1 were both 35 px.
+- Line heights: 1.2 for headings, 1.35 for UI labels, 1.5 for paragraphs.
+- Figures use tabular numbers, so times and counts line up and don't jitter when they change.
+
+**Format fixes made at the same time:**
+- Counters read "9", not "09", and the calendar tile reads "8", not "08".
+- The offer recipient list says "José Pérez · P3 · waiting since Oct 4" instead of an ISO date.
+- On the entry page, each step's name sits on its own line above its sentence.
+- On phones, the navigation is a 2×2 grid. The duplicate date field and the second line of the demo notice are hidden, so the demo guide's button stays on the first screen.
+
+---
+
 ## Not verified / needs input
 
-- **"Skip to main content" overlay:** in two scripted captures (Patient view after "Preview acceptance" and after confirming), the skip link was visible over the sidebar's "My care" item. A clean re-run showed focus correctly on the confirmation panel. It may only appear after switching language. Check by hand once.
+- **"Skip to main content" overlay:** resolved, not a bug. Full-page screenshots draw fixed-position elements relative to the scroll position. In the real viewport the link stays hidden above the top of the screen (measured at −59 px) while focus is on the confirmation panel.
 - **Refill in capacity metrics:** I did not check whether completing the guided flow increases the Capacity "Successfully reassigned" metric (see D1).
 - **Real devices:** I did not test real touch devices, screen readers or projector color rendering. The repo's own `SCREEN_READER_CHECK.md` already tracks screen-reader testing.
 - **Header avatar:** I couldn't tell whether the "SQ" avatar in the header does anything. If it's decorative, consider removing it.

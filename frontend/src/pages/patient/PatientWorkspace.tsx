@@ -92,7 +92,7 @@ export default function PatientWorkspace({
                     month: "short",
                   }).toLocaleUpperCase()}
                 </span>
-                <strong>{demo.phase === "accepted" ? "08" : "22"}</strong>
+                <strong>{demo.phase === "accepted" ? "8" : "22"}</strong>
               </div>
               <div>
                 <h3>
