@@ -8,7 +8,20 @@ Built for the Caribbean AI 2026 Hackathon. The POC is open to judges without acc
 
 The synthetic, single-browser workflow now supports cancellation → offer → explicit acceptance → updated appointment, waitlist, and activity. State lives in memory and resets on refresh. No real appointment, message, or backend write occurs. `/api/health` remains the only implemented API. Production authentication, authorization, registration, and account management are **Post-POC enhancements**, not demo prerequisites.
 
-See [Demo access](docs/DEMO_ACCESS.md) for direct entry links and boundaries, and [PENDING_TASKS.md](PENDING_TASKS.md) for validation and the roadmap. Public hosting still needs a destination; localhost is not a public judge URL.
+See [Demo access](docs/DEMO_ACCESS.md) for direct entry links and boundaries, and [PENDING_TASKS.md](PENDING_TASKS.md) for validation and the roadmap. The demo is public; see [How the demo is hosted](#how-the-demo-is-hosted) below.
+
+## How the demo is hosted
+
+The public demo at **https://smart-queue-demo.vercel.app** is the React app in this repository, built as static files and served by Vercel. Anyone can open it, with no account or password.
+
+- **Nothing leaves your browser.** No server, database or API sits behind the demo. The data is fictional, lives in memory and resets on reload. The page's security policy blocks every network request.
+- **Every release is tested before it goes live.** Each push to `main` runs in GitHub Actions: a secret scan of the full history, lint, unit tests, browser tests, and a check that the package holds only the expected files (no source maps, no configuration). It is published only if all of them pass.
+
+  ```
+  push to main → secret scan → lint → unit tests → browser tests → package check → Vercel
+  ```
+
+- **What is not deployed.** The FastAPI backend in `backend/` and the local AI model in `docker-compose.yml` are groundwork for future features (see [Proposed AI role](#proposed-ai-role) and [Next steps](#next-steps)). The public demo does not use them.
 
 ## Judge presentation
 
