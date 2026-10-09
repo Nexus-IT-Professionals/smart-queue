@@ -1,59 +1,19 @@
-# Secrets and local configuration
+# Secrets
 .env
-.env.*
-!.env.example
-*.pem
-*.key
 
-# Local data (SQLite) — synthetic demo data is seeded, never committed
+# Local data
 *.db
 *.sqlite
-*.sqlite3
-*.db-journal
-*.db-wal
-*.db-shm
-data/
-
-# Model weights and caches (Ollama / local models)
-*.gguf
-*.safetensors
-models/
-.ollama/
 
 # Python
 __pycache__/
-*.py[cod]
 .venv/
-venv/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-*.egg-info/
-.coverage
-htmlcov/
 
-# Node / web build
+# Node
 node_modules/
 dist/
-build/
-.vite/
-*.tsbuildinfo
-npm-debug.log*
-yarn-error.log*
 
-# Logs and temp
-*.log
-logs/
-tmp/
-*.tmp
-
-# Editors and OS
+# OS / editors
+.DS_Store
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
-
-# Personal tooling (machine-specific)
-.obsidian/
-CLAUDE.local.md
-.claude/settings.local.json
