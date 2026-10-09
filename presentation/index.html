@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Smart Queue: a fictional healthcare story and verified browser-only POC, in 160 seconds.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'">
+<title>Smart Queue — Less Waiting. Better Care.</title>
+<link rel="stylesheet" href="styles.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+<main id="theater" aria-label="Smart Queue presentation">
+<div id="frame"><div id="stage">
+<section class="slide cover" data-slide="1" aria-labelledby="title-1">
+  <div class="eyebrow">CARIBBEAN AI SUMMIT 2026 · HEALTHCARE POC</div>
+  <div class="cover-copy"><div class="wordmark">smart<span>queue</span><b>+</b></div>
+  <h1 id="title-1">One opening.<br><em>A better next step.</em></h1>
+  <p class="lead">Connecting a cancellation<br>to someone waiting for care.</p>
+  <p class="small">A fictional story. A working, synthetic demo.</p></div>
+  <div class="cast-cover"><img src="assets/characters/cast.png" alt="Original illustrations of María in coral, Ana in teal, José in mustard, and Dr. Carlos Rivera in a white coat."><div class="cast-labels"><span>María<small>Patient</small></span><span>Ana<small>Assistant</small></span><span>José<small>Waiting</small></span><span>Dr. Rivera<small>Provider</small></span></div></div>
+</section>
+<section class="slide dark" data-slide="2" aria-labelledby="title-2" hidden>
+  <div class="eyebrow">THE PROBLEM · WHY IT MATTERS</div>
+  <h2 id="title-2">An empty appointment.<br><em>A patient still waiting.</em></h2>
+  <div class="problem-line"><div><strong>Availability</strong><p>A cancellation opens a slot.</p></div><span class="disconnect" aria-hidden="true">···</span><div><strong>Access</strong><p>Someone needs that time.</p></div></div>
+  <p class="bottom-statement">The missing connection costs attention, time, and opportunity.</p>
+  <div class="why-now"><b>WHY NOW</b> Better access starts with the capacity already on the schedule.</div>
+</section>
+<section class="slide character-slide" data-slide="3" aria-labelledby="title-3" hidden>
+  <div class="eyebrow">01 / MARÍA RODRÍGUEZ · PATIENT</div>
+  <div class="character maria" role="img" aria-label="María Rodríguez, wearing a coral cardigan and holding her phone."></div>
+  <div class="story-copy"><h2 id="title-3">Life changes.<br>The appointment can’t wait.</h2><blockquote>“Something came up.<br>I need to cancel.”</blockquote><p>Her next step should be clear.<br>The office needs to know in time.</p><div class="caption">Fictional scenario · Patient self-cancellation is not in this POC.</div></div>
+</section>
+<section class="slide character-slide" data-slide="4" aria-labelledby="title-4" hidden>
+  <div class="eyebrow">02 / ANA MARTÍNEZ · MEDICAL OFFICE ASSISTANT</div>
+  <div class="character ana" role="img" aria-label="Ana Martínez, in a teal blouse, holding her clipboard."></div>
+  <div class="story-copy"><h2 id="title-4">One cancellation.<br>Several loose ends.</h2><blockquote>“Who can take this slot?<br>Who has replied?”</blockquote><div class="inline-steps"><span>Update</span><span>Call</span><span>Coordinate</span></div><p>Disconnected steps leave Ana<br>holding the whole workflow together.</p></div>
+</section>
+<section class="slide character-slide" data-slide="5" aria-labelledby="title-5" hidden>
+  <div class="eyebrow">03 / JOSÉ PÉREZ · WAITING-LIST PATIENT</div>
+  <div class="character jose" role="img" aria-label="José Pérez, wearing glasses and a mustard sweater, holding his phone."></div>
+  <div class="story-copy"><h2 id="title-5">The right opening.<br>Without the connection.</h2><blockquote>“I could come earlier…<br>if I knew.”</blockquote><p>An available appointment only helps<br>when it reaches someone who can use it.</p></div>
+</section>
+<section class="slide dark" data-slide="6" aria-labelledby="title-6" hidden>
+  <div class="eyebrow">WHY SMART QUEUE</div><h2 id="title-6">Connect the handoffs.<br><em>Keep people in control.</em></h2>
+  <ol class="workflow"><li><b>01</b><strong>Confirm</strong><span>Staff releases the slot.</span></li><li><b>02</b><strong>Offer</strong><span>A waiting patient responds.</span></li><li><b>03</b><strong>Update</strong><span>The schedule reflects acceptance.</span></li></ol>
+  <p class="bottom-statement">One coordinated flow for patients, assistants, and providers.</p>
+  <p class="caption">Working browser simulation · English / Español · No account required</p>
+</section>
+<section class="slide evidence" data-slide="7" aria-labelledby="title-7" hidden>
+  <div class="eyebrow">THE WORKING POC · 1 / CANCELLATION → OPEN SLOT</div>
+  <h2 id="title-7">Ana confirms. The slot opens.</h2><p class="lead">María’s request becomes a clear next action for staff.</p>
+  <div class="capture-stack"><figure><figcaption>1. Staff confirms the cancellation</figcaption><img src="assets/screenshots/cancellation.png" alt="Actual POC panel with Confirm demo cancellation button."></figure><figure><figcaption>2. The demo offers the opening to its fixed waiting patient</figcaption><img src="assets/screenshots/open-slot.png" alt="Actual POC panel with Send demo offer to Elena button."></figure></div>
+  <p class="evidence-note">Real POC captures · Synthetic fixtures use Adrián / Elena, not the story names. No patient self-cancel screen.</p>
+</section>
+<section class="slide evidence" data-slide="8" aria-labelledby="title-8" hidden>
+  <div class="eyebrow">THE WORKING POC · 2 / OFFER → PATIENT CHOICE</div>
+  <h2 id="title-8">An offer. A choice. A confirmation.</h2>
+  <div class="accept-layout"><div><p class="lead">Ana coordinates.<br>José stays in control.</p><ol class="plain-list"><li>Staff sends a demo offer.</li><li>Patient previews the move.</li><li>Acceptance updates the queue.</li></ol><p class="small">Decline and help paths also work.<br>No message leaves the browser.</p></div><figure><img src="assets/screenshots/patient-confirmation.png" alt="Actual patient confirmation panel: October 8, 2 PM, Confirm preview and Go back. The panel states that this is simulated."><figcaption>Actual patient view · Elena is the synthetic fixture.</figcaption></figure></div>
+</section>
+<section class="slide evidence provider" data-slide="9" aria-labelledby="title-9" hidden>
+  <div class="eyebrow">04 / DR. CARLOS RIVERA · HEALTHCARE PROVIDER</div>
+  <h2 id="title-9">A schedule everyone can follow.</h2>
+  <div class="provider-top"><div class="character carlos" role="img" aria-label="Dr. Carlos Rivera, in a white coat with a stethoscope."></div><blockquote>“I can see who’s coming<br>and what changed.”<small>Dr. Rivera · fictional outcome</small></blockquote><div class="outcome"><strong>Updated together</strong><span>Appointment</span><span>Waitlist</span><span>Activity history</span></div></div>
+  <figure class="schedule-capture"><img src="assets/screenshots/updated-schedule.png" alt="Actual updated schedule filtered to SQ-006, now showing Elena Morales at 2 PM, Scheduled."><figcaption>Real POC after acceptance · Filtered to SQ-006 · App provider fixture: Dr. Alex Rivera</figcaption></figure>
+</section>
+<section class="slide impact" data-slide="10" aria-labelledby="title-10" hidden>
+  <div class="eyebrow">THE IMPACT · DESIGNED BENEFITS, NOT MEASURED RESULTS</div>
+  <h2 id="title-10">Less chasing.<br><em>More clarity.</em></h2>
+  <table><thead><tr><th>For</th><th>Before</th><th>With Smart Queue</th></tr></thead><tbody><tr><th>Patients</th><td>Uncertainty</td><td>A clear offer and choice</td></tr><tr><th>Assistants</th><td>Disconnected follow-up</td><td>One visible workflow</td></tr><tr><th>Providers</th><td>Schedule ambiguity</td><td>An updated appointment list</td></tr></tbody></table>
+  <p class="caption">The POC demonstrates coordination. Time saved and access outcomes still need a real-world pilot.</p>
+</section>
+<section class="slide dark ai" data-slide="11" aria-labelledby="title-11" hidden>
+  <div class="eyebrow">WHY AI? · ONLY WHERE IT EARNS ITS PLACE</div>
+  <h2 id="title-11">Rules coordinate.<br><em>AI could clarify.</em></h2>
+  <div class="ai-columns"><div><span class="status">WORKING TODAY</span><h3>Explicit choices.</h3><p>Cancel → offer → confirm → update.<br>Deterministic browser simulation.</p></div><div><span class="status future">FUTURE · NOT IMPLEMENTED</span><h3>Understand replies.</h3><p>Potential EN/ES intent assistance<br>for ambiguous patient messages.</p></div></div>
+  <p class="bottom-statement">No AI runs in this POC. Future AI would never book or rank patients.</p>
+</section>
+<section class="slide closing" data-slide="12" aria-labelledby="title-12" hidden>
+  <div class="eyebrow">SMART QUEUE · A CLEARER PATH TO CARE</div>
+  <div class="closing-copy"><h2 id="title-12">Smart Queue —<br><em>Less Waiting.<br>Better Care.</em></h2><p class="lead">Explore the synthetic workflow.<br>Help us validate it with care teams.</p><p class="small">Next: a measured pilot, secure persistence,<br>and optional language assistance. No AI runs today.</p></div>
+  <div class="closing-art"><img src="assets/characters/cast.png" alt="María, Ana, José, and Dr. Carlos Rivera together."></div>
+</section>
+<div class="slide-footer" aria-hidden="true"><span>SMART QUEUE <i>/</i> DEMO · SYNTHETIC DATA</span><span id="canvas-count">01 / 12</span></div>
+</div></div>
+<nav class="controls" aria-label="Presentation controls">
+<button id="previous" aria-label="Previous slide" title="Previous · Left arrow">←</button>
+<span id="counter" aria-live="polite" aria-atomic="true">1 / 12</span>
+<button id="next" aria-label="Next slide" title="Next · Right arrow">→</button>
+<label class="mode-label">Deck <select id="mode"><option value="story">Story · 12 slides</option><option value="submission">Submission · 5 slides</option></select></label>
+<button id="notes-toggle" aria-expanded="false" aria-controls="notes">Notes <kbd>N</kbd></button>
+<button id="timer-toggle" aria-label="Start timer">▶ <time id="timer">0:00</time></button>
+<button id="timer-reset" aria-label="Reset timer" title="Reset timer · R">↺</button>
+<span id="estimate">Talk 2:40</span>
+<button id="fullscreen" title="Fullscreen · F">Fullscreen <kbd>F</kbd></button>
+</nav>
+<aside id="notes" aria-label="Speaker notes" hidden><button id="close-notes" aria-label="Close speaker notes">×</button><h2 id="note-title"></h2><p id="note-script"></p><p id="note-cue"></p><small>Notes are visible to the audience on this screen. Press N to hide.</small></aside>
+<p id="status" class="sr-only" role="status"></p>
+<noscript><p>This presentation needs JavaScript for navigation. All content remains in this local file; enable JavaScript to present.</p></noscript>
+</main>
+</body>
+</html>

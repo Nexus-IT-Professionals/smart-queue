@@ -10,6 +10,10 @@ The synthetic, single-browser workflow now supports cancellation → offer → e
 
 See [Demo access](docs/DEMO_ACCESS.md) for direct entry links and boundaries, and [PENDING_TASKS.md](PENDING_TASKS.md) for validation and the roadmap. Public hosting still needs a destination; localhost is not a public judge URL.
 
+## Judge presentation
+
+Open [presentation/index.html](presentation/index.html) offline for the 12-slide character story (2:40 estimated narration), or choose its five-slide submission mode (1:50). Includes original artwork, real synthetic POC screenshots, speaker notes, keyboard controls, fullscreen, and an optional timer. [Presentation instructions](presentation/README.md) cover rehearsal and the event’s five-slide / two-minute submission limits. AI is clearly labeled as future work.
+
 ## The problem
 
 Cancellations leave gaps in office schedules while patients call repeatedly to find earlier appointments. Reception staff need a simple way to match available slots with patients on a waitlist.

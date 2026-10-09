@@ -93,7 +93,7 @@ No new backend or authentication service is required for the current browser-onl
 | DEP-POC-1 | P0 | Prepared · Deployment paused | Configure GitHub Actions deployment to Vercel using the task below. Tests and artifact verification gate deployment; credentials remain in GitHub environment secrets. Judges can open root, `#/login`, Patient, and Provider over HTTPS without access gates and complete the synthetic workflow. |
 | DEP-1 | P2 | Optional · Unverified | If using Docker for the local presentation, smoke-test the existing Compose setup. UI/API load; backend/model stay within their intended network boundary. Static demo needs neither Docker nor Ollama. |
 | DEP-2 | P1 | Open · Verified gap | Record the tested Node/runtime versions and a repeatable build. Existing frontend lockfile stays authoritative. Pin backend/container versions if that optional path is used. |
-| DEP-3 | P1 | Open · Verified submission gap | Complete team attribution, public demo/repository links, feature-status list, and ≤2-minute video. Recheck event requirements; distinguish local simulation from persistent backend capability. |
+| DEP-3 | P1 | Partial · Presentation implemented; submission still pending | Offline 12-slide story (2:40) and five-slide mode (1:50), scripts, real POC captures, and verified feature mapping are in `presentation/`. Complete team attribution, public demo/repository links, recorded ≤2-minute video, and timed projector rehearsal. Live Devpost rules/criteria rechecked October 9; optional submitted deck is limited to five slides. |
 
 ## Post-POC / Production Enhancements
 
