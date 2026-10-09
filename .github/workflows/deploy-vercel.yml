@@ -93,3 +93,38 @@ jobs:
             exit 1
           fi
           printf 'Commit: `%s`\n\nDeployment: %s\n' "$GITHUB_SHA" "$url" >> "$GITHUB_STEP_SUMMARY"
+  # Judge-device rehearsal against the public alias (no secrets, no environment).
+  post-deploy-smoke:
+    needs: deploy
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.VERCEL_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 25.9.0
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run build:demo
+        working-directory: frontend
+      - name: Wait for the public alias to serve this commit
+        working-directory: frontend
+        shell: bash
+        run: |
+          asset=$(grep -o '/assets/[^"]*\.js' dist/index.html)
+          for attempt in $(seq 1 30); do
+            # Fetch, then match: piping curl into grep -q can SIGPIPE curl under pipefail.
+            if body=$(curl --fail --silent --show-error https://smart-queue-demo.vercel.app/) && grep -qF "$asset" <<<"$body"; then exit 0; fi
+            sleep 10
+          done
+          echo "::error::Public alias did not serve $asset within 5 minutes"
+          exit 1
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: npm run rehearse
+        working-directory: frontend
+        env:
+          REHEARSAL_URL: https://smart-queue-demo.vercel.app

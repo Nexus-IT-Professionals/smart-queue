@@ -16,7 +16,8 @@
     "verify:demo": "node scripts/verify-demo.mjs dist",
     "package:vercel": "node scripts/package-vercel.mjs",
     "lint": "biome lint . --error-on-warnings",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "rehearse": "playwright test -c playwright.rehearsal.config.ts"
   },
   "dependencies": {
     "react": "^19.3.0",
