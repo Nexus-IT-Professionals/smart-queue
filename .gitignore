@@ -1,5 +1,12 @@
 # Secrets
-.env
+.env*
+!.env.example
+.vercel/
+.vercel-stage/
+*.pem
+*.key
+*.p12
+*.pfx
 
 # Local data
 *.db

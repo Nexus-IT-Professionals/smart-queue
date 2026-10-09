@@ -90,7 +90,7 @@ No new backend or authentication service is required for the current browser-onl
 
 | ID | Priority | Status / basis | Task and acceptance criteria |
 |---|---|---|---|
-| DEP-POC-1 | P0 | Open · Vercel selected; configuration pending | Configure GitHub Actions deployment to Vercel using the task below. Tests and artifact verification gate deployment; credentials remain in GitHub environment secrets. Judges can open root, `#/login`, Patient, and Provider over HTTPS without access gates and complete the synthetic workflow. |
+| DEP-POC-1 | P0 | Prepared · Deployment paused | Configure GitHub Actions deployment to Vercel using the task below. Tests and artifact verification gate deployment; credentials remain in GitHub environment secrets. Judges can open root, `#/login`, Patient, and Provider over HTTPS without access gates and complete the synthetic workflow. |
 | DEP-1 | P2 | Optional · Unverified | If using Docker for the local presentation, smoke-test the existing Compose setup. UI/API load; backend/model stay within their intended network boundary. Static demo needs neither Docker nor Ollama. |
 | DEP-2 | P1 | Open · Verified gap | Record the tested Node/runtime versions and a repeatable build. Existing frontend lockfile stays authoritative. Pin backend/container versions if that optional path is used. |
 | DEP-3 | P1 | Open · Verified submission gap | Complete team attribution, public demo/repository links, feature-status list, and ≤2-minute video. Recheck event requirements; distinguish local simulation from persistent backend capability. |
@@ -137,7 +137,7 @@ No new backend or authentication service is required for the current browser-onl
 
 ### DEP-POC-1 — Configure GitHub Actions deployment to Vercel
 
-**Priority:** P0 · **Status:** Open / planned · **Scope:** synthetic static POC only. Host selected October 9, 2026. No workflow, Vercel project, or secrets have been configured by this documentation task.
+**Priority:** P0 · **Status:** Configuration prepared / deployment paused · **Scope:** synthetic static POC only. Host selected October 9, 2026. The workflow is prepared; Vercel project setup and secrets remain pending.
 
 Implementation checklist:
 
@@ -158,3 +158,12 @@ Acceptance criteria:
 5. README and this roadmap record actual workflow results and a manual test checklist. Provide the deployment for user testing before the implementation commit/push; do not mark this task complete based only on configuration files.
 
 Reference: [Vercel’s official GitHub Actions guide](https://vercel.com/kb/guide/how-can-i-use-github-actions-with-vercel) describes the CI identifiers/token and prebuilt deployment mechanism. Validate current CLI behavior during implementation.
+
+
+### DEP-POC-1 implementation update — deployment deferred by owner
+
+- Added pinned `.github/workflows/deploy-vercel.yml`, `vercel.json`, strict static packaging/verification, seven package tests, and ignore rules for local environment/link/key files. No credentials were added. Existing `.env.example` remains the only tracked environment example.
+- Deployment requires `VERCEL_DEPLOY_ENABLED=true`, trusted `main`, successful validation, and secrets in `vercel-production`. The gate defaults off so this push validates without publishing. Credentials are scoped to the deployment step; dependency installation and PR validation receive none.
+- Local results: 26 frontend tests passed; public build and three-file static package verified; actionlint passed with shellcheck disabled; Gitleaks 8.30.1 found no leaks in 10 existing commits or the generated package. No hosted deployment result is claimed.
+- Remaining: configure dedicated project/environment and branch protections, securely provision/rotate secrets, verify pinned CLI against Vercel, activate only when ready, inspect hosted CI artifacts/logs, test public signed-out workflow and rollback. README contains setup and local manual testing instructions. DEP-POC-1 remains incomplete until live acceptance passes.
+- Owner requested committing/pushing this prepared work while postponing deployment. Previous pre-commit testing instruction is superseded for this configuration commit; public manual acceptance is still pending.

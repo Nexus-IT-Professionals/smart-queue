@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "build:demo": "tsc -b && vite build --mode public-demo && npm run verify:demo",
-    "verify:demo": "node scripts/verify-demo.mjs dist"
+    "verify:demo": "node scripts/verify-demo.mjs dist",
+    "package:vercel": "node scripts/package-vercel.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",
