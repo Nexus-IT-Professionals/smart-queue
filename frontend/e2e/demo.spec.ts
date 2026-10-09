@@ -45,6 +45,8 @@ for (const [path, title] of [
   ["/#/provider", "A clearer day. Better access."],
   ["/#/staff", "A clearer day. Better access."],
   ["/#/patient", "Your care, a little closer."],
+  ["/#/nope", "Explore care without the wait."],
+  ["/#/../patient", "Explore care without the wait."],
 ]) {
   test(`direct anonymous access: ${path}`, async ({ page }) => {
     await page.goto(path);
@@ -171,4 +173,73 @@ test("help permits a later response; decline preserves appointment; reload clear
   await expect(
     page.getByRole("heading", { name: "No earlier offer yet" }),
   ).toBeVisible();
+});
+test("double activation of confirm applies the acceptance only once", async ({
+  page,
+}) => {
+  await offer(page);
+  await page
+    .getByRole("button", { name: "Preview acceptance", exact: true })
+    .click();
+  // Two clicks in one task, before React re-renders: the worst-case double-click.
+  await page
+    .getByRole("button", { name: "Confirm preview", exact: true })
+    .evaluate((button: HTMLElement) => {
+      button.click();
+      button.click();
+    });
+  await expect(
+    page.getByRole("heading", { name: "Thursday, October 8", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Provider view", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Waitlist 2" })).toBeVisible();
+  await page.getByRole("button", { name: "Activity log" }).click();
+  await expect(page.locator(".timeline li")).toHaveCount(3);
+});
+test("reload while an offer is pending returns to the initial scenario", async ({
+  page,
+}) => {
+  await offer(page);
+  await expect(
+    page.getByRole("button", { name: "Preview acceptance", exact: true }),
+  ).toBeVisible();
+  await page.reload();
+  await expect(page).toHaveURL(/#\/patient$/);
+  await expect(
+    page.getByRole("heading", { name: "No earlier offer yet" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Provider view", exact: true }).click();
+  await expect(
+    page.getByRole("row").filter({ hasText: "SQ-006" }),
+  ).toContainText("Adrián López");
+  await expect(
+    page.getByRole("button", { name: "Confirm demo cancellation", exact: true }),
+  ).toBeVisible();
+});
+test("back/forward after completing the scenario keeps the accepted state", async ({
+  page,
+}) => {
+  await offer(page);
+  await page
+    .getByRole("button", { name: "Preview acceptance", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Confirm preview", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Provider view", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Waitlist 2" })).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL(/#\/patient$/);
+  await expect(
+    page.getByRole("heading", { name: "Thursday, October 8", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Preview acceptance", exact: true }),
+  ).toHaveCount(0);
+  await page.goForward();
+  await expect(page).toHaveURL(/#\/provider$/);
+  await expect(
+    page.getByRole("row").filter({ hasText: "SQ-006" }),
+  ).toContainText("Elena Morales");
+  await expect(page.getByRole("button", { name: "Waitlist 2" })).toBeVisible();
 });

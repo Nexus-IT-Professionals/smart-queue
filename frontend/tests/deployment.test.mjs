@@ -4,6 +4,7 @@ import { mkdtemp, mkdir, writeFile, rm, symlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { packageVercel, verifyVercel } from '../scripts/package-vercel.mjs';
+import { symlinkSkipReason } from './symlink-support.mjs';
 async function fixture(t) {
   const root = await mkdtemp(join(tmpdir(), 'queue-package-'));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -36,6 +37,8 @@ for (const path of ['.env', '.vercel/project.json', '.vercel/output/functions', 
   });
 }
 test('rejects altered and symlinked output configuration', async t => {
+  const skip = await symlinkSkipReason();
+  if (skip) return t.skip(skip);
   const {source, stage} = await fixture(t);
   await packageVercel(source, stage);
   const config = join(stage, '.vercel/output/config.json');

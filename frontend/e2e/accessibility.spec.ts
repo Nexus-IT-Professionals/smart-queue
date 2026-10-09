@@ -5,6 +5,8 @@ for (const language of ["en", "es"]) {
   test(`accessible semantics and contrast across demo states (${language})`, async ({
     page,
   }) => {
+    // 14 full axe scans in one test can exceed 30s under parallel workers on real Edge.
+    test.slow();
     await page.goto("/#/demo");
     if (language === "es")
       await page.getByRole("button", { name: "Español", exact: true }).click();

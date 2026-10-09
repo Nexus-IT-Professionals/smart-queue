@@ -4,6 +4,7 @@ import { mkdtemp, mkdir, writeFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { verifyDemo } from "../scripts/verify-demo.mjs";
+import { symlinkSkipReason } from "./symlink-support.mjs";
 const policy =
   "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'";
 const html = `<html><head><meta http-equiv="Content-Security-Policy" content="${policy}"><script type="module" src="/assets/index-abc123.js"></script><link rel="stylesheet" href="/assets/index-abc123.css"></head></html>`;
@@ -43,6 +44,8 @@ for (const name of [
   });
 }
 test("rejects symlinks even with an allowed asset filename", async (t) => {
+  const skip = await symlinkSkipReason();
+  if (skip) return t.skip(skip);
   const dir = await fixture(t);
   await symlink(join(dir, "index.html"), join(dir, "assets/linked-abc123.js"));
   await assert.rejects(verifyDemo(dir), /Symlink forbidden/);
