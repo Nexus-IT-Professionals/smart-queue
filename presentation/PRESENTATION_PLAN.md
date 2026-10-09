@@ -52,7 +52,7 @@ The optional submission deck has a five-slide maximum. The demo-video alternativ
 | Backend largely scaffolded | `backend/app/main.py`, routers/services; README and technical proposal | Health is implemented; production booking APIs are not connected. |
 | Intended operational benefit | Narrative hypothesis derived from the workflow | No measured time savings, clinical efficacy, no-show reduction, or production-readiness claim. |
 
-The fictional story cast is **María Rodríguez / Ana Martínez / José Pérez / Dr. Carlos Rivera**. The original images remain identical throughout. Screenshots intentionally retain actual application fixtures **Adrián López / Elena Morales / Dr. Alex Rivera**. On-slide captions and narration explain the difference. Ana uses the existing Provider workspace. Dr. Rivera's dialogue illustrates an intended operational outcome, not a simulated clinical consultation.
+The fictional story cast is **María Rodríguez / Ana Martínez / José Pérez / Dr. Carlos Rivera**. The original images remain identical throughout. The application's synthetic fixtures use the same names, so the real screenshots show José Pérez, María Rodríguez's cancelled slot and Dr. Carlos Rivera's schedule. Ana uses the existing Provider workspace. Dr. Rivera's dialogue illustrates an intended operational outcome, not a simulated clinical consultation.
 
 ## Visual direction and asset provenance
 
@@ -71,4 +71,4 @@ The fictional story cast is **María Rodríguez / Ana Martínez / José Pérez /
 
 See README for repeatable commands. Passed on October 9, 2026: JavaScript syntax check; targeted Biome lint; automated Chromium offline verification of all 12 slides and five-slide mode, local asset decoding, keyboard navigation, notes, timer start/pause/reset, fullscreen, no external requests or uncaught errors, canvas bounds, and 1280×720 / 1024×768 / 390×844 fitting. All 12 rendered slides were visually reviewed; provider spacing was adjusted and real captures regenerated at 2× pixel density. No app build was needed because application code and dependencies are unchanged. No app runtime dependency or business-logic change is required for this artifact.
 
-Remaining human acceptance: timed spoken rehearsal, projector readability, native-browser fullscreen on the presentation device, and story/fixture-name clarity. Remaining submission work: team attribution, verified public links, accepted upload format, recorded ≤2-minute video, and final organizer-rule check. Do not mark deployment or the submission task complete just because these slides exist.
+Remaining human acceptance: timed spoken rehearsal, projector readability, and native-browser fullscreen on the presentation device. Remaining submission work: team attribution, verified public links, accepted upload format, recorded ≤2-minute video, and final organizer-rule check. Do not mark deployment or the submission task complete just because these slides exist.

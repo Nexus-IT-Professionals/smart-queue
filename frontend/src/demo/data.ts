@@ -40,7 +40,7 @@ export const appointments: Appointment[] = [
     office: "ISLA",
     provider: "DR-01",
     duration: 30,
-    name: "María Rodríguez",
+    name: "Adrián López",
     time: "8:30 AM",
     type: "Follow-up",
     status: "Scheduled",
@@ -136,23 +136,24 @@ export const appointments: Appointment[] = [
 ];
 export const waitlist: WaitingPatient[] = [
   {
-    // Top of the list, but available only in the morning: the 2:00 PM demo
-    // opening is still offered to Elena Morales (WL-001).
+    // Demo patient and default offer recipient. Same P3 level as Elena Morales
+    // and Camila Soto, but the oldest request (October 4), so the deterministic
+    // tie-break (priority rank, then request date, then ID) ranks him first.
     id: "WL-004",
     priority: "P3",
-    condition: "Synthetic routine follow-up; morning visit requested",
+    condition: "Synthetic routine follow-up; afternoon visit requested",
     from: DEMO_DATE,
     through: "2026-10-21",
-    start: 480,
-    end: 600,
+    start: 780,
+    end: 960,
     office: "ISLA",
     provider: "DR-01",
     visitType: "Consultation",
     duration: 30,
     bookingDate: "2026-10-22",
-    bookingTime: "9:00 AM",
+    bookingTime: "2:00 PM",
     name: "José Pérez",
-    availability: "Mornings · 8–10 AM",
+    availability: "Afternoons · 1–4 PM",
     since: "2026-10-04",
     reason: "Earlier appointment",
     language: "Spanish",
@@ -170,7 +171,9 @@ export const waitlist: WaitingPatient[] = [
     visitType: "Consultation",
     duration: 30,
     bookingDate: "2026-10-22",
-    bookingTime: "2:00 PM",
+    // Also afternoon-compatible, but her request (October 5) is newer than
+    // José Pérez's, so she is the second eligible candidate.
+    bookingTime: "3:30 PM",
     name: "Elena Morales",
     availability: "Afternoons · 1–4 PM",
     since: "2026-10-05",
@@ -235,11 +238,11 @@ export function demoWorkspaceFromHash(hash: string): DemoWorkspace {
 }
 export const demoIdentities = {
   staff: {
-    name: "Dr. Alex Rivera",
+    name: "Dr. Carlos Rivera",
     label: "Demo Provider · fictional identity",
   },
   patient: {
-    name: "Elena Morales",
+    name: "José Pérez",
     label: "Demo Patient · fictional identity",
   },
 };
@@ -289,7 +292,7 @@ export function initialDemoState(): DemoState {
 export function selectedPatient(state: DemoState) {
   return (
     state.patients.find((p) => p.id === state.candidateId) ??
-    state.patients.find((p) => p.id === "WL-001") ??
+    state.patients.find((p) => p.id === "WL-004") ??
     state.patients[0]
   );
 }
@@ -443,7 +446,7 @@ export function demoAppointments(state: DemoState): Appointment[] {
           ...appointment,
           name:
             state.phase === "scheduled"
-              ? "Adrián López"
+              ? "María Rodríguez"
               : state.phase === "accepted"
                 ? patient.name
                 : "Available appointment",
@@ -501,7 +504,7 @@ export function cancellationHistory(state: DemoState): Appointment[] {
         {
           ...(appointments.find((a) => a.id === "SQ-006") as Appointment),
           id: "CANCELED-SQ-006",
-          name: "Adrián López",
+          name: "María Rodríguez",
           status: "Canceled",
         },
       ];

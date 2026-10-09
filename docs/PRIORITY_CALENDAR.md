@@ -45,9 +45,9 @@ This protects against duplicate transitions in one browser, not concurrent produ
 
 ## Manual demo scenarios
 
-1. **Normal:** reset → Provider → confirm cancellation. José and Nicolás are morning-only, so they are excluded even if staff raises their priority. Elena and Camila are P3; Elena's October 5 request precedes Camila's October 7 request. Send Elena’s offer and accept in Patient view.
+1. **Normal:** reset → Provider → confirm cancellation. Nicolás is morning-only, so he is excluded even if staff raises his priority. José, Elena and Camila are P3; José's October 4 request precedes Elena's October 5 and Camila's October 7 requests. Send José’s offer and accept in Patient view.
 2. **Urgent scheduling:** reset → Waitlist → change Camila to P1 → check the staff-review box → save. Cancel the sample slot. Camila is first among eligible candidates; confirm her offer. Patient view must show Camila. Preview/confirm, return to Schedule, and find her P1 badge at October 8, 2 PM. October 22 now has an open 3 PM slot and no Camila booking.
-3. **Disable safely:** set Camila to P1, open configuration, disable P1, retain enabled P3 as default, save. Camila becomes P3; Elena wins the older-request tie. Try duplicate order numbers or disabling the default: saving must fail without changing active settings.
+3. **Disable safely:** set Camila to P1, open configuration, disable P1, retain enabled P3 as default, save. Camila becomes P3; José wins the older-request tie. Try duplicate order numbers or disabling the default: saving must fail without changing active settings.
 4. **Calendar:** navigate Month October → November → October. Pick October 8 and October 22, switch Week and Day. Completed and historical canceled records remain distinguishable; empty days do not imply availability.
 5. **Consent/reset:** send an offer, preview then Go back; the original booking must remain. Try decline/help, role navigation, English/Español, and reload. Reload intentionally restores initial priorities, bookings and configuration.
 

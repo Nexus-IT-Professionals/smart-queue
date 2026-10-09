@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { spanish } from "../src/i18n/catalog";
 
-// Julio's 2026-10-09 UI changes: instructions first, footer copy, María's
+// Julio's 2026-10-09 UI changes: instructions first, footer copy, Adrián's
 // 8:30 AM slot, Ana Martínez (assistant), José Pérez atop the waitlist,
 // Patient card left / Provider card right, Provider always opens on Overview.
 type Language = "en" | "es";
@@ -106,7 +106,7 @@ for (const language of languages) {
       );
     });
 
-    test("3: María Rodríguez holds the first 8:30 AM slot and counts include her", async ({
+    test("3: Adrián López holds the first 8:30 AM slot; María Rodríguez holds 2:00 PM; counts include both", async ({
       page,
     }) => {
       const t = await open(page, "/#/provider", language);
@@ -117,8 +117,14 @@ for (const language of languages) {
         language === "es" ? "8:30 a. m." : "8:30 AM",
       );
       await expect(first.locator(".time-cell")).toContainText("30 min");
-      await expect(first).toContainText("María Rodríguez");
+      await expect(first).toContainText("Adrián López");
       await expect(first).toContainText("SQ-009");
+      await expect(
+        page.getByRole("row").filter({ hasText: "SQ-006" }),
+      ).toContainText("María Rodríguez");
+      await expect(
+        page.getByRole("row").filter({ hasText: "María Rodríguez" }),
+      ).toHaveCount(1);
       await expect(first.locator("td").nth(2)).toHaveText(t("Follow-up"));
       await expect(first.locator("td").nth(3)).toHaveText(t("Scheduled"));
       const metric = (label: string) =>
@@ -151,14 +157,14 @@ for (const language of languages) {
       await expect(metric("Open slots")).toHaveText("01");
     });
 
-    test("4: Ana Martínez is shown beside Dr. Alex Rivera and acts on cancellation and offer", async ({
+    test("4: Ana Martínez is shown beside Dr. Carlos Rivera and acts on cancellation and offer", async ({
       page,
     }) => {
       const t = await open(page, "/#/provider", language);
       const people = page.locator(".demo-identity-people > span");
       expect(await people.allInnerTexts().then((all) => all.map(plain))).toEqual(
         [
-          `Dr. Alex Rivera · ${t("Demo Provider · fictional identity")}`,
+          `Dr. Carlos Rivera · ${t("Demo Provider · fictional identity")}`,
           `Ana Martínez · ${
             language === "es"
               ? "Asistente de oficina médica · identidad ficticia"
@@ -170,7 +176,7 @@ for (const language of languages) {
         .getByRole("button", { name: t("Confirm demo cancellation") })
         .click();
       await page
-        .getByRole("button", { name: t("Send demo offer to Elena") })
+        .getByRole("button", { name: t("Send demo offer to José") })
         .click();
       await page
         .getByRole("navigation")
@@ -180,24 +186,24 @@ for (const language of languages) {
         language === "es"
           ? [
               "Ana Martínez, asistente de oficina médica, confirmó la cancelación de ejemplo: 8 de octubre, 2:00 p. m.",
-              "Ana Martínez, asistente de oficina médica, envió una oferta simulada a Elena Morales.",
+              "Ana Martínez, asistente de oficina médica, envió una oferta simulada a José Pérez.",
             ]
           : [
               "Ana Martínez, Medical Office Assistant, confirmed the sample cancellation: October 8, 2:00 PM.",
-              "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Elena Morales.",
+              "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to José Pérez.",
             ],
       );
-      // No new role or login: the Patient view shows only Elena.
+      // No new role or login: the Patient view shows only José.
       await page.getByRole("button", { name: t("Patient view") }).click();
       await expect(page.locator(".demo-identity")).toContainText(
-        "Elena Morales",
+        "José Pérez",
       );
       await expect(page.locator(".demo-identity")).not.toContainText(
         "Ana Martínez",
       );
     });
 
-    test("5: José Pérez tops the waitlist; the offer still goes to Elena and removes only her", async ({
+    test("5: José Pérez tops the waitlist, receives the offer and is the only one removed; Elena keeps waiting", async ({
       page,
     }) => {
       const t = await open(page, "/#/provider", language);
@@ -222,13 +228,13 @@ for (const language of languages) {
         "Camila Soto",
       ]);
       const jose = page.locator(".waitlist-person").first();
-      await expect(jose).toContainText(t("Mornings · 8–10 AM"));
+      await expect(jose).toContainText(t("Afternoons · 1–4 PM"));
       await expect(jose.locator(".badge")).toHaveText("ES");
       await page
         .getByRole("button", { name: t("Confirm demo cancellation") })
         .click();
       await page
-        .getByRole("button", { name: t("Send demo offer to Elena"), exact: true })
+        .getByRole("button", { name: t("Send demo offer to José"), exact: true })
         .click();
       await page.getByRole("button", { name: t("Patient view") }).click();
       await page.getByRole("button", { name: t("Preview acceptance") }).click();
@@ -238,13 +244,13 @@ for (const language of languages) {
       await page.getByRole("button", { name: t("Provider view") }).click();
       await expect(
         page.getByRole("row").filter({ hasText: "SQ-006" }),
-      ).toContainText("Elena Morales");
+      ).toContainText("José Pérez");
       await expect(
         nav.getByRole("button", { name: `${t("Waitlist")} 3` }),
       ).toBeVisible();
       await nav.getByRole("button", { name: new RegExp(`^${t("Waitlist")}`) }).click();
       expect(await texts(page, ".waitlist-person strong")).toEqual([
-        "José Pérez",
+        "Elena Morales",
         "Nicolás Díaz",
         "Camila Soto",
       ]);

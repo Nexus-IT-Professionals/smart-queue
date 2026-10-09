@@ -30,7 +30,7 @@ Cancelled appointments leave empty slots in Puerto Rico medical offices while wa
 ## How to review
 
 1. Open the live demo and choose **Continue as Demo Provider**.
-2. Confirm the sample October 8, 2:00 PM cancellation and send the offer to Elena.
+2. Confirm the sample October 8, 2:00 PM cancellation and send the offer to José.
 3. Switch to **Demo Patient**, preview the acceptance, and confirm it.
 4. Back in Provider, check the schedule, waitlist and Activity log; then try **Capacity & statistics** and the Day/Week/Month calendar.
 5. Use **Reset demo scenario** (or reload) to start over and try decline or help.

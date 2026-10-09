@@ -45,7 +45,7 @@ In another terminal, from the repository root:
 node presentation/tests/capture.mjs
 ```
 
-The capture script uses a fresh session, synthetic fixtures, 1440×1000 viewport, 2× pixel density, and actual panel screenshots. It leaves application source and fixture identities unchanged. The schedule screenshot intentionally filters to SQ-006. Only the four panels displayed in the presentation are captured, directly to WebP at their original dimensions.
+The capture script uses a fresh session, synthetic fixtures, 1440×1000 viewport, 2× pixel density, and actual panel screenshots. It leaves application source unchanged; the app fixtures use the story names (José Pérez, María Rodríguez, Dr. Carlos Rivera). The schedule screenshot intentionally filters to SQ-006. Only the four panels displayed in the presentation are captured, directly to WebP at native 2× panel size; if the app UI changes a panel's height, update that image's `width`/`height` attributes in `index.html`.
 
 ## Before presenting
 
@@ -58,7 +58,7 @@ No deployment or submission was performed. Team attribution, public links, the r
 
 ## Web image optimization
 
-The presentation loads five local WebP images totaling approximately **298 KB**. Dimensions are unchanged. The illustration uses lossy quality 88; screenshots use quality 96 for readable text. Superseded PNGs and the unused activity image are not shipped. No CDN or runtime dependency is needed.
+The presentation loads five local WebP images totaling approximately **291 KB**. The October 9 recapture kept the screenshot widths; the patient confirmation (900 px) and schedule (612 px, now with the priority badge) are taller, and `index.html` declares those dimensions. The illustration uses lossy quality 88; screenshots use quality 96 for readable text. Superseded PNGs and the unused activity image are not shipped. No CDN or runtime dependency is needed.
 
 `tests/capture.mjs` encodes fresh screenshots directly to WebP using the existing Playwright Chromium installation; intermediate PNG buffers remain in memory. Keep an external original when editing the character illustration to avoid recompressing the delivery image. HTML dimensions and responsive CSS preserve aspect ratios.
 

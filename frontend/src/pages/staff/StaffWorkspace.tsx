@@ -291,8 +291,8 @@ export default function StaffWorkspace({
               onClick={() => onAction({ type: "offer", candidateId })}
             >
               {" "}
-              {candidateId === "WL-001"
-                ? t("Send demo offer to Elena")
+              {candidateId === "WL-004"
+                ? t("Send demo offer to José")
                 : t("Confirm offer to selected patient")}{" "}
             </button>
           )}

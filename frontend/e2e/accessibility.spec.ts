@@ -131,7 +131,7 @@ test("focus is retained after help, decline and resets during confirmation", asy
   await page
     .getByRole("button", { name: "Confirm demo cancellation", exact: true })
     .click();
-  await page.getByRole("button", { name: "Send demo offer to Elena" }).click();
+  await page.getByRole("button", { name: "Send demo offer to José" }).click();
   await page.getByRole("button", { name: "Open Demo Patient" }).click();
   await page.getByRole("button", { name: "I need help", exact: true }).click();
   await expect(page.locator(".response-notice")).toBeFocused();
@@ -145,7 +145,7 @@ test("focus is retained after help, decline and resets during confirmation", asy
   await page
     .getByRole("button", { name: "Confirm demo cancellation", exact: true })
     .click();
-  await page.getByRole("button", { name: "Send demo offer to Elena" }).click();
+  await page.getByRole("button", { name: "Send demo offer to José" }).click();
   await page.getByRole("button", { name: "Open Demo Patient" }).click();
   await page
     .getByRole("button", { name: "Preview acceptance", exact: true })

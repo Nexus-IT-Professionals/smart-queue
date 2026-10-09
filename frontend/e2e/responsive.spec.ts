@@ -141,8 +141,8 @@ for (const { name, width, height, scale } of cases) {
         await shot("provider");
         await checkpoint("Confirm demo cancellation");
         await button("Confirm demo cancellation").click();
-        await checkpoint("Send demo offer to Elena");
-        await button("Send demo offer to Elena").click();
+        await checkpoint("Send demo offer to José");
+        await button("Send demo offer to José").click();
         await checkpoint();
         await button("Patient view").click();
         await checkpoint("Preview acceptance");

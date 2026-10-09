@@ -41,7 +41,7 @@
 		{
 			seconds: 17,
 			script:
-				"Here are real application captures. Staff confirms the cancellation, then offers the released slot to the fixed demo patient. The app uses different synthetic names, including Elena. María and José are our story characters. No real message is sent.",
+				"Here are real application captures. Staff confirms the cancellation, then offers María's released slot to José, the waiting patient. The app uses the same fictional names as our story, with synthetic data. No real message is sent.",
 			cue: "Read the two large step labels, not the screenshot paragraphs.",
 		},
 		{
@@ -91,7 +91,7 @@
 		8: {
 			seconds: 30,
 			script:
-				"In the working POC, staff confirms a cancellation and sends a simulated offer. The waiting patient previews the earlier appointment and explicitly confirms. Decline and help also work. This real screenshot uses Elena, the app’s synthetic fixture, rather than José. No account, message delivery, or real booking is involved. English and Spanish interfaces are available.",
+				"In the working POC, staff confirms a cancellation and sends a simulated offer. The waiting patient previews the earlier appointment and explicitly confirms. Decline and help also work. This real screenshot shows José’s confirmation step. No account, message delivery, or real booking is involved. English and Spanish interfaces are available.",
 			cue: "Point to the actual confirmation control.",
 		},
 		9: {

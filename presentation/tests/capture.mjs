@@ -37,7 +37,7 @@ await page
 	.click();
 await capture(page.locator(".demo-scenario"), "open-slot");
 await page
-	.getByRole("button", { name: "Send demo offer to Elena", exact: true })
+	.getByRole("button", { name: "Send demo offer to José", exact: true })
 	.click();
 await page.getByRole("button", { name: "Patient view", exact: true }).click();
 await page

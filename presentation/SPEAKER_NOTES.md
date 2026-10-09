@@ -40,7 +40,7 @@ Smart Queue connects three handoffs: staff confirms, the patient chooses, and th
 
 ## 7. Staff confirms cancellation — 17s
 
-Here are real application captures. Staff confirms the cancellation, then offers the released slot to the fixed demo patient. The app uses different synthetic names, including Elena. María and José are our story characters. No real message is sent.
+Here are real application captures. Staff confirms the cancellation, then offers María's released slot to José, the waiting patient. The app uses the same fictional names as our story, with synthetic data. No real message is sent.
 
 *Cue: Read the two large step labels, not the screenshot paragraphs. End by 1:29.*
 
@@ -92,7 +92,7 @@ A cancellation can leave unused capacity while another patient waits. Manual cal
 
 ### 3. Patient choice and confirmation — 30s
 
-In the working POC, staff confirms a cancellation and sends a simulated offer. The waiting patient previews the earlier appointment and explicitly confirms. Decline and help also work. This real screenshot uses Elena, the app’s synthetic fixture, rather than José. No account, message delivery, or real booking is involved. English and Spanish interfaces are available.
+In the working POC, staff confirms a cancellation and sends a simulated offer. The waiting patient previews the earlier appointment and explicitly confirms. Decline and help also work. This real screenshot shows José’s confirmation step. No account, message delivery, or real booking is involved. English and Spanish interfaces are available.
 
 *Cue: Point to the actual confirmation control.*
 
@@ -110,7 +110,7 @@ No AI runs in the POC. Optional English and Spanish reply assistance is future w
 
 ## Delivery reminders
 
-- The four story characters are fictional. Real captures retain the existing app fixtures: Adrián López, Elena Morales, and Dr. Alex Rivera.
+- The four story characters are fictional. The app's synthetic data uses the same names, so real captures show María Rodríguez's cancelled slot, José Pérez, and Dr. Carlos Rivera's schedule.
 - Staff confirms cancellation; there is no patient self-cancellation UI. Ana uses the Provider workspace, not a separate assistant application.
 - No AI, live messaging, persistent booking, or multi-user synchronization is implemented. Benefits are hypotheses to validate.
 - Speaker notes appear on the presenting screen. Hide them with **N** before showing slides to judges.

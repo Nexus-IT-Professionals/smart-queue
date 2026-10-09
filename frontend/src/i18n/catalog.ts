@@ -87,6 +87,8 @@ export const spanish: Record<string, string> = {
 
   "Synthetic routine follow-up; morning visit requested":
     "Seguimiento de rutina ficticio; solicita visita por la mañana",
+  "Synthetic routine follow-up; afternoon visit requested":
+    "Seguimiento de rutina ficticio; solicita visita por la tarde",
   "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Camila Soto.":
     "Ana Martínez, asistente de oficina médica, envió una oferta simulada a Camila Soto.",
   "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Nicolás Díaz.":
@@ -250,12 +252,12 @@ export const spanish: Record<string, string> = {
   "No account, password, or personal information needed. Choose a fictional identity to begin.":
     "No necesita cuenta, contraseña ni información personal. Elija una identidad ficticia para comenzar.",
   "Provider workspace": "Espacio del proveedor",
-  "Continue as Dr. Alex Rivera to explore the schedule, confirm a sample cancellation, and offer the opening to a waiting patient.":
-    "Continúe como el Dr. Alex Rivera para explorar la agenda, confirmar una cancelación de ejemplo y ofrecer el espacio a un paciente en espera.",
+  "Continue as Dr. Carlos Rivera to explore the schedule, confirm a sample cancellation, and offer the opening to a waiting patient.":
+    "Continúe como el Dr. Carlos Rivera para explorar la agenda, confirmar una cancelación de ejemplo y ofrecer el espacio a un paciente en espera.",
   "Continue as Demo Provider": "Continuar como proveedor demo",
   "Patient workspace": "Espacio del paciente",
-  "Continue as Elena Morales to view a sample appointment and accept, decline, or ask for help with an earlier visit.":
-    "Continúe como Elena Morales para ver una cita de ejemplo y aceptar, rechazar o pedir ayuda con una cita más cercana.",
+  "Continue as José Pérez to view a sample appointment and accept, decline, or ask for help with an earlier visit.":
+    "Continúe como José Pérez para ver una cita de ejemplo y aceptar, rechazar o pedir ayuda con una cita más cercana.",
   "Continue as Demo Patient": "Continuar como paciente demo",
   "A complete demo in one browser": "Una demo completa en un navegador",
   "Choose Provider and confirm the sample 2:00 PM cancellation.":
@@ -268,9 +270,9 @@ export const spanish: Record<string, string> = {
     "Cambie de rol desde el encabezado en cualquier momento. Reiniciar o recargar restablece el escenario. Es una simulación local, no una cita ni un mensaje real. El espacio del proveedor incluye herramientas de agenda; no hay una interfaz de administración separada.",
   "ISLA CARE / PATIENT WORKSPACE": "ISLA CARE / ESPACIO DEL PACIENTE",
   "Your care, a little closer.": "Su atención, un poco más cerca.",
-  "Welcome, Elena. An earlier appointment could fit your day.":
-    "Bienvenida, Elena. Una cita más cercana podría ajustarse a su día.",
-  "Fictional patient": "Paciente ficticia",
+  "Welcome, José. An earlier appointment could fit your day.":
+    "Bienvenido, José. Una cita más cercana podría ajustarse a su día.",
+  "Fictional patient": "Paciente ficticio",
   "YOUR CURRENT APPOINTMENT": "SU CITA ACTUAL",
   "A spot on your calendar": "Un espacio en su calendario",
   "Isla Care · San Juan · Consultation": "Isla Care · San Juan · Consulta",
@@ -362,18 +364,18 @@ export const spanish: Record<string, string> = {
   "Try the appointment queue": "Pruebe la cola de citas",
   "Step 1: Confirm the fictional patient's cancellation for October 8 at 2:00 PM.":
     "Paso 1: Confirme la cancelación del paciente ficticio para el 8 de octubre a las 2:00 p. m.",
-  "Step 2: The slot is open. Offer it to Elena Morales, who is available in the afternoon.":
-    "Paso 2: El espacio está disponible. Ofrézcalo a Elena Morales, que tiene disponibilidad por la tarde.",
+  "Step 2: The slot is open. Offer it to José Pérez, who is available in the afternoon.":
+    "Paso 2: El espacio está disponible. Ofrézcalo a José Pérez, que tiene disponibilidad por la tarde.",
   "Step 3: Switch to Patient to respond to the simulated offer.":
     "Paso 3: Cambie a Paciente para responder a la oferta simulada.",
-  "Complete: Elena now has the October 8 demo appointment. The schedule, waitlist, and activity are updated.":
-    "Completado: Elena ahora tiene la cita de demo del 8 de octubre. La agenda, la lista de espera y la actividad están actualizadas.",
+  "Complete: José now has the October 8 demo appointment. The schedule, waitlist, and activity are updated.":
+    "Completado: José ahora tiene la cita de demo del 8 de octubre. La agenda, la lista de espera y la actividad están actualizadas.",
   "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay.":
     "Oferta rechazada. El espacio sigue disponible y se conserva la cita original. Reinicie para repetir.",
-  "Elena requested help. Return to Patient to accept or decline; no message leaves this browser.":
-    "Elena pidió ayuda. Vuelva a Paciente para aceptar o rechazar; ningún mensaje sale de este navegador.",
+  "José requested help. Return to Patient to accept or decline; no message leaves this browser.":
+    "José pidió ayuda. Vuelva a Paciente para aceptar o rechazar; ningún mensaje sale de este navegador.",
   "Confirm demo cancellation": "Confirmar cancelación demo",
-  "Send demo offer to Elena": "Enviar oferta demo a Elena",
+  "Send demo offer to José": "Enviar oferta demo a José",
   "Open Demo Patient": "Abrir paciente demo",
   "Review activity": "Revisar actividad",
   "A snapshot of your day": "Un vistazo a su día",
@@ -430,8 +432,8 @@ export const spanish: Record<string, string> = {
     "Las citas más cercanas siempre son una oferta. La cita existente se mantiene hasta confirmar su reemplazo.",
   "A smaller wait starts with a good match.":
     "Una espera más corta comienza con una buena coincidencia.",
-  "This demo uses fictional availability. Use the scenario controls above to offer the opening to Elena; live matching remains unimplemented.":
-    "Esta demo usa disponibilidad ficticia. Use los controles para ofrecer el espacio a Elena; la asignación real aún no está implementada.",
+  "This demo uses fictional availability. Use the scenario controls above to offer the opening to José; live matching remains unimplemented.":
+    "Esta demo usa disponibilidad ficticia. Use los controles para ofrecer el espacio a José; la asignación real aún no está implementada.",
   "Preview activity": "Actividad de demostración",
   "Illustrative events, not a persisted audit log":
     "Eventos ilustrativos, no un registro de auditoría persistente",
@@ -453,11 +455,11 @@ export const spanish: Record<string, string> = {
   "Ana Martínez, Medical Office Assistant, sent a simulated in-app offer to Elena Morales.":
     "Ana Martínez, asistente de oficina médica, envió una oferta simulada a Elena Morales.",
   "Patient accepted: demo booking moved from October 22 to October 8, 2:00 PM; waitlist entry removed.":
-    "La paciente aceptó: cita demo adelantada del 22 al 8 de octubre, 2:00 p. m.; retirada de la lista de espera.",
+    "El paciente aceptó: cita demo adelantada del 22 al 8 de octubre, 2:00 p. m.; retirada de la lista de espera.",
   "Patient declined: October 22 demo booking preserved; October 8 slot remains open.":
-    "La paciente rechazó: se conserva la cita del 22 de octubre; el espacio del 8 sigue disponible.",
+    "El paciente rechazó: se conserva la cita del 22 de octubre; el espacio del 8 sigue disponible.",
   "Patient requested help in this browser; the offer remains available.":
-    "La paciente pidió ayuda en este navegador; la oferta sigue disponible.",
+    "El paciente pidió ayuda en este navegador; la oferta sigue disponible.",
   "Demo appointment moved to October 8 at 2:00 PM. Provider schedule and waitlist updated in this browser only; no real booking was made.":
     "Cita demo adelantada al 8 de octubre a las 2:00 p. m. Agenda y lista de espera actualizadas solo en este navegador; no se hizo una reserva real.",
   "Decline preview recorded. Your existing appointment is unchanged.":

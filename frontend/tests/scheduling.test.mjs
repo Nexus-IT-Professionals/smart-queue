@@ -29,7 +29,7 @@ test("compatible candidates exclude higher-priority morning patient; confirmed u
   assert.equal(demoWaitlist(state)[0].id, "WL-002");
   assert.deepEqual(
     eligibleCandidates(state).map((p) => p.id),
-    ["WL-001", "WL-003"],
+    ["WL-004", "WL-001", "WL-003"],
   );
   assert.equal(
     demoReducer(state, {

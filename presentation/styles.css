@@ -422,7 +422,12 @@ blockquote small {
 	margin-top: 10px;
 }
 .schedule-capture img {
-	width: 100%;
+	/* Height cap keeps the caption clear of the footer since the schedule row gained a priority badge. */
+	display: block;
+	width: auto;
+	height: auto;
+	max-width: 100%;
+	max-height: 341px;
 	border: 1px solid #ccd7df;
 	border-radius: 15px;
 }

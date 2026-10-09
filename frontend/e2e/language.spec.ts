@@ -30,7 +30,7 @@ for (const width of [320, 768, 1440]) {
       .getByRole("button", { name: "Confirmar cancelación demo", exact: true })
       .click();
     await page
-      .getByRole("button", { name: "Enviar oferta demo a Elena" })
+      .getByRole("button", { name: "Enviar oferta demo a José" })
       .click();
     await page.screenshot({
       path: test.info().outputPath(`spanish-provider-${width}.png`),
@@ -61,7 +61,7 @@ for (const width of [320, 768, 1440]) {
     ).toBeVisible();
     await page.getByRole("button", { name: "Vista del proveedor" }).click();
     await page.getByRole("button", { name: "Revisar actividad" }).click();
-    await expect(page.locator(".timeline")).toContainText("La paciente aceptó");
+    await expect(page.locator(".timeline")).toContainText("El paciente aceptó");
     await page.getByRole("button", { name: /^Lista de espera/ }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "La próxima oportunidad de atención",
@@ -113,7 +113,7 @@ test("Spanish empty states and decline preserve the original appointment", async
     .getByRole("button", { name: "Confirmar cancelación demo", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Enviar oferta demo a Elena" })
+    .getByRole("button", { name: "Enviar oferta demo a José" })
     .click();
   await page.getByRole("button", { name: "Vista del paciente" }).click();
   await page.getByRole("button", { name: "Mantener mi cita actual" }).click();

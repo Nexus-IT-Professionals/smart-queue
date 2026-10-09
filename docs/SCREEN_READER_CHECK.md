@@ -43,10 +43,9 @@ paraphrased; wording order varies by reader. Spanish text is in brackets.
 5. **Provider.** Activate "Provider view" [Vista del proveedor]. Focus moves to main.
    Sidebar "Overview" announces "current page".
 6. **Cancellation.** Activate "Confirm demo cancellation" [Confirmar cancelación demo].
-   Hear: "Step 2: The slot is open. Offer it to Elena Morales, who is available in the
-   afternoon." [Paso 2: El espacio está disponible. Ofrézcalo a Elena Morales, que tiene
-   disponibilidad por la tarde.]
-7. **Offer.** Activate "Send demo offer to Elena" [Enviar oferta demo a Elena]. Hear:
+   Hear: "Review eligible candidates below, then confirm the selected demo offer."
+   [Revise los candidatos elegibles abajo y confirme la oferta demo seleccionada.]
+7. **Offer.** Activate "Send demo offer to José" [Enviar oferta demo a José]. Hear:
    "Step 3: Switch to Patient to respond to the simulated offer." [Paso 3: Cambie a
    Paciente para responder a la oferta simulada.]
 8. **Patient.** Activate "Open Demo Patient" [Abrir paciente demo]. Focus moves to main.
