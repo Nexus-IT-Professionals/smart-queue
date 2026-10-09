@@ -6,7 +6,7 @@
 
 ---
 
-> Recheck the live Devpost page before submitting. Start and deadline times were "to be announced" when this copy was made.
+> Recheck the live Devpost page before submitting. Start and deadline times were "to be announced" when this copy was made; the times announced since are recorded in R4 of the checklist (organizer email of 2026-10-07).
 
 ## Official rules (verbatim, 2026-10-07)
 
@@ -70,7 +70,7 @@ Status values: `open`, `done`, `n/a` (reason required). Owner = team member resp
 | R1 | Every team member holds a valid conference ticket | Participation | | open |
 | R2 | Every team member is registered for the hackathon on Devpost | Participation | | open |
 | R3 | Team has 2–4 members (or a solo entry) and the roster is recorded in `participants/` | Team | | open |
-| R4 | Official start time, submission deadline and timezone recorded here | Build | | open |
+| R4 | Official start time, submission deadline and timezone recorded here | Build | | done (2026-10-08): kickoff Thursday 2026-10-08, 6:00pm AST at Centro Unido de Detallistas (wrap-up 10:00pm, remote work afterwards); Friday 2026-10-09 teams work at their own pace, Room 207 is the hackathon lounge during conference hours, mentorship from 6:00pm in Room 209A; **final submissions due Saturday 2026-10-10 at 12:00pm AST** on Devpost. Presentation and awards time not announced (the summit page placed finalist demos 3:30–4:15pm). Source: Devpost organizer email "Hackathon Starts Tomorrow", 2026-10-07 9:09pm AST |
 | R5 | Problem is a healthcare challenge relevant to Puerto Rico | Build | | done: missed and cancelled appointments in PR medical offices (see `wiki/idea-3-pitch-evidence.md`) |
 
 ### During the build

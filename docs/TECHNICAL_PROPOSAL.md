@@ -1,8 +1,8 @@
 # Smart Appointment Queue — Technical Proposal
 
 **Summary:** Proposed 48-hour build of a single-office scheduling and waitlist demo, with patient confirmation and optional AI reply assistance. Nothing in this proposal is implemented or benchmarked.
-**Sources:** [README](README.md), [BOOTSTRAP](BOOTSTRAP.md), [design guideline](ProposedDesign.md), [original Idea 3](caribbean-ai-summit-hackathon-health-ideas.md#idea-3-smart-appointment-queue-for-medical-offices). Official technology references are linked below and were checked October 7, 2026.
-**Last updated:** 2026-10-07
+**Sources:** [README](README.md), [BOOTSTRAP](BOOTSTRAP.md), [design guideline](ProposedDesign.md), [original Idea 3](caribbean-ai-summit-hackathon-health-ideas.md#idea-3-smart-appointment-queue-for-medical-offices). Official technology references are linked below and were checked October 7, 2026. Added 2026-10-08: the insurer row in §2, the channel boundary and schedule-access notes in §6, and the Puerto Rico statute flag in §7.
+**Last updated:** 2026-10-08
 
 ## 1. Objective and scope
 
@@ -22,6 +22,7 @@ Demonstrate a confirmed cancellation becoming one accepted replacement, while st
 | Memo uses first-response allocation and early no-show release; README uses sequential offers and confirmed cancellations | Recommend README behavior; never release a visit because check-in is missing before its time |
 | Guideline suggests a weekly timetable and sample hours | Start with a date-filtered daily list; operating hours and slot duration remain fixture assumptions |
 | MMM/Triple-S and an obscured third plan appear in the sketch | Use fictional insurer labels; no commercial integration or coverage claim |
+| Guideline keeps the schedule and waitlist per office **and insurer** (§§3–4), and §6 filters candidates by insurer grouping; Puerto Rico's Patient Bill of Rights (Ley 194-2000) bars discrimination by "origen o fuente de pago" (added 2026-10-08) | Keep insurer as a display label and a statistics dimension; **exclude it from who gets offered a freed slot** until a lawyer reads the statute against the design. See §7 |
 
 Sources: ProposedDesign.md §§1–8; BOOTSTRAP.md “Assumptions”; original Idea 3. The team must approve these reductions; silence is not approval.
 
@@ -129,6 +130,10 @@ Acceptance checks session ownership, pending state, expiry and slot availability
 
 **Notifications:** persist an in-app notification with the offer; “shown in demo inbox” is not “SMS delivered.” Outbound email/phone adapters, consent wording and provider credentials remain deferred. Insurer names are catalog labels, not API endpoints. No clinical records or external datasets are needed.
 
+**Channel boundary for the planned real messaging (added 2026-10-08):** WhatsApp cannot carry appointment details. Meta's terms for the WhatsApp Business Platform (section 4.2, updated 2026-09-23) state that Meta is not a business associate under HIPAA, and its Business Messaging Policy bars health-related information where regulation requires heightened controls (both read in full, 2026-10-06). The defensible channels are SMS and automated voice through a provider that signs a business associate agreement (Twilio lists SMS and voice as HIPAA-eligible; WhatsApp is not on its list). An earlier-slot offer is not on the federal list of consent-exempt healthcare messages (47 CFR 64.1200), so real messaging rests on explicit opt-in, which the use case supplies: the patient is the one asking to be told. The operator of a production version is a business associate of every office (signed agreement with each office and each sub-provider, a documented risk analysis, breach notice to the office and, in Puerto Rico, to DACO within 10 days under Ley 111-2005). Do not present WhatsApp as a planned channel; present SMS and voice.
+
+**Schedule access in Puerto Rico (added 2026-10-08):** the schedules of independent offices sit in a handful of local record systems (NeoMed, EHRez, Infomedika, Sabiamed per the 2024 health-information-exchange RFP; EHRez's group acquired Assertus in July 2025), none of which publishes an integration programme (negative finding). Federal interoperability rules oblige certified record systems to expose clinical data, not appointments, and not writes. A production version therefore depends on each vendor's programme, office by office; the MVP's staff-confirmed cancellation is not a shortcut but the realistic entry point for small offices. Detail: `wiki/idea-3-competitors.md`.
+
 **Proposed metric definitions:** within a selected office/date cohort, patient/provider cancellation counts divided by original scheduled appointments, with actor recorded once and zero denominator shown as N/A. Show current waitlist size separately from daily additions. “Served” means staff-marked completed visit, never merely accepted offer. Confirm these denominators and the sketch’s ambiguous labels with the team.
 
 ## 7. AI, access and privacy boundaries
@@ -140,6 +145,8 @@ One short model call returns only accept/decline/help/unclear intent. Validate t
 API checks office membership for staff and patient ownership for every object; enforce these on writes as well as reads. Staff sees only its office. Record actor, time, action and record IDs in audit events; avoid raw reply/contact text in logs. This is application auditing, not tamper-proof storage.
 
 Use fictional records/contact values only, visible synthetic labels and a repeatable reset. Keep secrets outside Git and browser bundles; expose only the app on loopback, not SQLite or model endpoints. Local execution does not establish healthcare compliance. Real data requires a separate review of consent, retention, access, vendor agreements and security; none is approved here.
+
+**Puerto Rico statute flag (added 2026-10-08):** the Patient Bill of Rights, Ley 194-2000, names "origen o fuente de pago" among the prohibited grounds of discrimination, and its confidentiality article asks for written patient authorization in wording tighter than HIPAA (statute read 2026-10-06; how it applies to this design is a lawyer's question). The whiteboard groups the schedule and the waitlist by insurer, and §6 proposes filtering candidates by insurer grouping. Grouping for display and for statistics is one thing; selecting or ranking **who is offered a freed slot** by insurer could read as discrimination by payment source. Until that is settled, the candidate selection uses office, requested time and appointment compatibility only, and the insurer field is a label. The same statute is a reason not to order the queue by "first to respond", which favours the connected patient: see the equity finding in `wiki/waitlist-backfill.md`.
 
 ## 8. Ordered build plan and risks
 

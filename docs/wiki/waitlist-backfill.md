@@ -1,9 +1,9 @@
 
 # Waitlist Backfill
 
-**Summary**: Filling cancelled or no-show slots from a waitlist instead of leaving them idle or overbooking. The tactics come mostly from one vendor source; the regulatory push comes from PR's PS 1263. Since 2026-10-07, peer-reviewed UCSF and Mayo results show patients seen 14–22 days sooner, with 11–25% of offers accepted and an equity gap in who accepts. **Update (2026-10-07):** PS 1263 is no regulatory push; the Senate Health Committee filed an Informe Negativo on 2026-08-17 and it is not law. Backfill is also a crowded US product category; see [[idea-3-competitors]].
-**Sources**: `raw/Hackathon URLs.txt` — https://medlaunch.health/blogs/practice-growth/strategies-for-handling-patient-cancellations/ ; https://pmc.ncbi.nlm.nih.gov/articles/PMC7280239/ ; https://senado.pr.gov/senado-propone-medida-para-garantizar-tiempos-de-espera-razonables-en-citas-mdicas ; `raw/no-show-research-urls-2026-10-07.txt`; `raw/idea-3-gap-research-urls-2026-10-07.txt` (added 2026-10-07, second ingest)
-**Last updated**: 2026-10-07
+**Summary**: Filling cancelled or no-show slots from a waitlist instead of leaving them idle or overbooking. The tactics come mostly from one vendor source; the regulatory push comes from PR's PS 1263. Since 2026-10-07, peer-reviewed UCSF and Mayo results show patients seen 14–22 days sooner, with 11–25% of offers accepted and an equity gap in who accepts. **Update (2026-10-07):** PS 1263 is no regulatory push; the Senate Health Committee filed an Informe Negativo on 2026-08-17 and it is not law. Backfill is also a crowded US product category; see [[idea-3-competitors]]. **Update (2026-10-08):** acceptance depends on how far out the offered slot is (3.7% same day, 12–13% beyond a week at Sutter), the like-for-like gain is "about two weeks sooner" (medians 14 and 15), and Mayo's 24.6% needs re-reading against its own offer counts.
+**Sources**: PMC7315363 (Sutter), PMC13395261 (multisite survey) and PMC10988365 (UCSF), opened 2026-10-06; `raw/Hackathon URLs.txt` — https://medlaunch.health/blogs/practice-growth/strategies-for-handling-patient-cancellations/ ; https://pmc.ncbi.nlm.nih.gov/articles/PMC7280239/ ; https://senado.pr.gov/senado-propone-medida-para-garantizar-tiempos-de-espera-razonables-en-citas-mdicas ; `raw/no-show-research-urls-2026-10-07.txt`; `raw/idea-3-gap-research-urls-2026-10-07.txt` (added 2026-10-07, second ingest)
+**Last updated**: 2026-10-08
 
 ---
 
@@ -21,6 +21,13 @@
 - **Mayo Clinic automated waitlist** (2023): 1,019,698 offers for 229,998 waitlisted appointments (164,248 patients); 24.6% of offers accepted; appointments moved up a mean of 22.6 days (median 15); 65.2% of responses came within 1 hour (source: no-show-research-urls-2026-10-07.txt → Mayo waitlist) (peer-reviewed, Health Services Insights 2025).
 - **Vendor figures**: Luma Health claims a 48% waitlist fill rate and 45 same-day cancellations filled a month (source: no-show-research-urls-2026-10-07.txt → Luma Health) (vendor). Emitrr claims 30–50% fill for same-day cancellations vs 60–80% with at least 24 hours' notice (source: no-show-research-urls-2026-10-07.txt → Emitrr) (vendor, unverified).
 
+### More measured results (added 2026-10-08)
+
+- **Acceptance by lead time (Sutter Health):** 3.7% of offers accepted for same-day slots, 8.2% next day, 12–13% beyond a week (source: PMC7315363) (peer-reviewed, read 2026-10-06). **Implication for the offer rules:** a slot freed with a week's notice is worth several same-day ones; the demo should show an offer with lead time, not only the same-afternoon case, and the expiry window should be shorter for same-day slots.
+- **Across the independent evaluations opened** (UCSF, Sutter, Mayo and a multisite survey, all large US health systems): 25 to 39% of offered slots were refilled and 3 to 14% of offers accepted, with patients seen two to five weeks sooner. None covers a small office or a dental office, and none compares against a receptionist working a phone list (sources: PMC10988365, PMC7315363, PMC11938453, PMC13395261) (peer-reviewed; the band is derived from the four).
+- **Mayo's "24.6% of offers accepted" does not fit its own counts (hypothesis, check the paper):** 1,019,698 offers for 229,998 waitlisted appointments means 24.6% of offers would be about 251,000 acceptances, more than the appointments on the list. 24.6% reads as the share of **waitlisted appointments moved up** (about 56,600), which puts acceptance per offer near 5.5% and inside the band above. Until the paper is re-read, quote Mayo as "about a quarter of waitlisted appointments moved up, a median of 15 days sooner".
+- **Lead time raises cancellations**, which is why a queue has something to refill: lead time was a significant predictor in 41 of 49 studies (source: no-show-research-urls-2026-10-07.txt → Dantas Health Policy 2018) (peer-reviewed).
+
 ### Equity finding
 
 - UCSF found lower acceptance among patients 65+, non-White and non-English-speaking (source: no-show-research-urls-2026-10-07.txt → UCSF Fast Pass) (peer-reviewed).
@@ -32,6 +39,7 @@
 - MedLaunch's 70–80% "fill rate" is contradicted by peer-reviewed acceptance rates of 11% (UCSF) and 24.6% (Mayo).
 - **These are different metrics.** The peer-reviewed numbers are the share of **offers accepted**; one slot can get many offers, so the share of **slots filled** can be higher (UCSF: 5,399 completed visits from 21,978 open slots is about 25% of slots, derived here, not stated by the study). The vendor gives no method for its figure.
 - For the pitch, use the peer-reviewed numbers and "patients seen 14–22 days sooner", not 70–80%. See [[idea-3-pitch-evidence]].
+- **Update (2026-10-08):** "14–22" pairs UCSF's **median** (14) with Mayo's **mean** (22.6). Like for like, the medians are 14 and 15. Say **"about two weeks sooner (median)"**; keep 22.6 only if it is labelled as Mayo's mean.
 
 ## Backfill vs overbooking
 
