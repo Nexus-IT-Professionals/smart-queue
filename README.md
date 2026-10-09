@@ -151,4 +151,11 @@ This README was adapted from the team's pre-event planning documents (research a
 
 Run `cd frontend && npm run build:demo` and publish only `frontend/dist/` at the host's site root. This release makes no API requests, displays “Standalone demo · No API connection,” and includes a restrictive browser connection policy. The build verifies the output contains only expected UI assets; it rejects unexpected files, symlinks, source maps, API paths, and selected secret signatures. This guard does not replace review of synthetic data or detect every possible secret.
 
-`npm test` runs 19 tests; `npm run verify:demo` rechecks the artifact. Standard `npm run build` retains the development health check and overwrites the output, so use `build:demo` for publication. See [manual release acceptance](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1). Hosting selection and public deployment remain pending.
+`npm test` runs 19 tests; `npm run verify:demo` rechecks the artifact. Standard `npm run build` retains the development health check and overwrites the output, so use `build:demo` for publication. See [manual release acceptance](docs/DEMO_ACCESS.md#public-artifact-guard-and-manual-acceptance-sec-poc-1). Vercel with GitHub Actions is selected; configuration and public deployment remain pending.
+
+### Deployment readiness — October 9, 2026
+
+The next P0 is public static hosting (DEP-POC-1). All 19 tests and the public-demo build/artifact check passed again. Vercel with GitHub Actions is selected; no public deployment URL has been verified. Deployment configuration will be prepared for manual review before commit or push. A host serving under a subdirectory also requires adapting and testing the current root-relative asset checks.
+
+
+The [DEP-POC-1 implementation task](PENDING_TASKS.md#dep-poc-1--configure-github-actions-deployment-to-vercel) covers the workflow, test/build gates, static-only publishing, and manual acceptance. Store `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` in GitHub deployment-environment secrets; never commit their values or expose them through frontend variables, logs, or artifacts. Secret scanning, ignore rules, and credential rotation are part of the planned acceptance criteria. This update records the task only; no CI workflow, secrets, or Vercel deployment have been created.

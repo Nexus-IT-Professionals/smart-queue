@@ -1,6 +1,6 @@
 # Smart Queue — POC completion roadmap
 
-Updated October 8, 2026. The current decision is a **public, credential-free hackathon POC**, using synthetic data only. Production accounts are not a prerequisite. [Demo access](docs/DEMO_ACCESS.md) supersedes earlier account/session requirements in the technical proposal.
+Updated October 9, 2026. The current decision is a **public, credential-free hackathon POC**, using synthetic data only. Production accounts are not a prerequisite. [Demo access](docs/DEMO_ACCESS.md) supersedes earlier account/session requirements in the technical proposal.
 
 ## Verified implementation and access review
 
@@ -11,7 +11,7 @@ Updated October 8, 2026. The current decision is a **public, credential-free hac
 - The complete **synthetic single-offer scenario** runs in browser memory: provider cancellation → offer → explicit patient acceptance → changed appointment, waitlist, schedule, and activity. Decline/help/reset are supported. Invalid/repeated actions are ignored.
 - Role changes and entry-page visits preserve state; reload/reset clears it. Separate judges/tabs do not share state. No live booking, message, real patient data, or database mutation is involved.
 - `/api/health` remains the only implemented API. The standard build queries it without cookies; the public-demo build makes no API request. Neither gates navigation. No production security check was disabled or universal-login endpoint added.
-- Public hosting is **not yet verified/configured**. GitHub Pages lookup returned HTTP 404; this could mean no site or insufficient access. A hosting destination is needed before sharing a public judge URL.
+- Public hosting is **not yet configured/verified**. Vercel with GitHub Actions is the selected deployment approach; project setup, CI secrets, and a verified judge URL remain pending.
 
 ## Completed improvements
 
@@ -90,7 +90,7 @@ No new backend or authentication service is required for the current browser-onl
 
 | ID | Priority | Status / basis | Task and acceptance criteria |
 |---|---|---|---|
-| DEP-POC-1 | P0 | Blocked · Hosting destination missing | Choose a public static host and deploy `frontend/dist/`. Judges can open root, `#/login`, Patient, and Provider in a signed-out browser without platform access gates; HTTPS assets load and the simulated workflow works. |
+| DEP-POC-1 | P0 | Open · Vercel selected; configuration pending | Configure GitHub Actions deployment to Vercel using the task below. Tests and artifact verification gate deployment; credentials remain in GitHub environment secrets. Judges can open root, `#/login`, Patient, and Provider over HTTPS without access gates and complete the synthetic workflow. |
 | DEP-1 | P2 | Optional · Unverified | If using Docker for the local presentation, smoke-test the existing Compose setup. UI/API load; backend/model stay within their intended network boundary. Static demo needs neither Docker nor Ollama. |
 | DEP-2 | P1 | Open · Verified gap | Record the tested Node/runtime versions and a repeatable build. Existing frontend lockfile stays authoritative. Pin backend/container versions if that optional path is used. |
 | DEP-3 | P1 | Open · Verified submission gap | Complete team attribution, public demo/repository links, feature-status list, and ≤2-minute video. Recheck event requirements; distinguish local simulation from persistent backend capability. |
@@ -117,7 +117,7 @@ No new backend or authentication service is required for the current browser-onl
 
 ## Next actions
 
-1. Confirm a hosting destination and publish the static POC; verify signed-out access.
+1. Implement DEP-POC-1: configure GitHub Actions and Vercel, securely provision CI secrets, then verify signed-out access.
 2. Complete responsive/accessibility and API-offline checks; rehearse the judge workflow.
 3. Finalize submission materials. Revisit production accounts only after the POC scope changes.
 
@@ -127,3 +127,34 @@ No new backend or authentication service is required for the current browser-onl
 - Standard build and public-demo build passed; release verification accepted exactly three generated files. All 19 frontend tests passed. No lint command is configured.
 - Firefox loaded the static release at port 8001 and displayed the standalone connection status. Full browser workflow and Network-panel inspection are awaiting user manual acceptance.
 - The guard is a narrow packaging check, not a comprehensive secret/PHI scanner. Existing demo fixtures are synthetic; review future data changes before publication.
+
+### DEP-POC-1 readiness review — October 9, 2026
+
+- Next POC P0 remains public static deployment. No host configuration exists in this checkout; the owner has now selected Vercel with GitHub Actions.
+- Re-ran `npm test`: 19 passed. `npm run build:demo` passed TypeScript, bundling, and verification of three UI assets.
+- No deployment or public HTTPS/signed-out check has occurred. The current verifier requires root-relative assets; a subpath host needs a tested asset-path adjustment.
+- Prepare deployment configuration and manual testing instructions in the implementation task below. This documentation commit does not implement or publish a deployment.
+
+### DEP-POC-1 — Configure GitHub Actions deployment to Vercel
+
+**Priority:** P0 · **Status:** Open / planned · **Scope:** synthetic static POC only. Host selected October 9, 2026. No workflow, Vercel project, or secrets have been configured by this documentation task.
+
+Implementation checklist:
+
+- Create/select a dedicated Vercel demo project and record its owner and public URL without credentials. Serve at the site root. Disable duplicate Vercel Git auto-deployments if Actions owns deployment; verify the public production URL has no platform login gate.
+- Add `.github/workflows/deploy-vercel.yml`: pinned action commit SHAs and tested Node/Vercel CLI versions, `npm ci`, `npm test`, and `npm run build:demo`. Deploy only the verified static assets using Vercel prebuilt output; validate the final upload staging directory as well as `frontend/dist/`. Never upload the checkout, backend, databases, source maps, or environment files.
+- Use credential-free PR validation, including fork PRs. Deploy only trusted `main` code through a production GitHub environment, with branch restrictions and a manual `workflow_dispatch` option. Never execute untrusted PR code with deployment secrets or use `pull_request_target` to deploy it. Use minimal workflow permissions (`contents: read` unless a documented step needs more), concurrency protection, and a job timeout. Scope deployment credentials to the deployment step/job, not tests or dependency installation.
+- Create GitHub **environment secrets** under repository Settings → Environments → the deployment environment: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID`. The workflow must reference the same environment and use secret references only. Obtain the identifiers from Vercel project settings or local link metadata; they are identifiers, not authentication tokens, but keep their actual values out of tracked configuration. Create a dedicated token with the narrowest available scope and expiration, document its owner/rotation schedule without its value, and provision through the settings UI or secure secret-input tooling. Never paste secret values into issues, chat, shell history, YAML, or documentation.
+- Expand ignore rules for `.vercel/`, `.env*` (allow only deliberately sanitized example files), and local credential/key files. Confirm these paths are not already tracked; ignore rules do not remove historical leaks. Do not put credentials in `VITE_*` variables: frontend build variables are public. The synthetic app needs no runtime secrets or real patient information.
+- Do not echo secrets, enable shell tracing around them, cache pulled environment files, or upload credential-bearing logs/artifacts. GitHub masking is an extra safeguard, not the sole control. Use a reviewed secret scanner on tracked files/history and inspect the final bundle and CI artifacts, reporting only redacted findings. If exposure is found, revoke/rotate first and coordinate history cleanup; do not claim deletion alone repairs a compromised credential.
+- Document setup using secret **names only**, failed-deployment recovery, rollback to a known-good static release, and token rotation. Keep production account/backend resources outside this demo deployment.
+
+Acceptance criteria:
+
+1. A missing required secret fails clearly without printing values; failed tests, artifact verification, or secret scans prevent deployment. Untrusted PR runs cannot access deployment credentials.
+2. A trusted manual/main deployment succeeds through Actions and records the commit and HTTPS URL. No duplicate deployment pipeline runs. Only approved static output reaches Vercel.
+3. Signed-out root, `#/login`, `#/provider`, and `#/patient` load without credentials. Cancellation → offer → acceptance updates the appointment and waitlist; reset works. Browser Network shows no API calls or real-data requests.
+4. Tracked changes, scan results, logs, and uploaded output contain no detected credentials or sensitive patient data; limitations of scanning are documented. Environment secrets and token rotation are verified without disclosing their values.
+5. README and this roadmap record actual workflow results and a manual test checklist. Provide the deployment for user testing before the implementation commit/push; do not mark this task complete based only on configuration files.
+
+Reference: [Vercel’s official GitHub Actions guide](https://vercel.com/kb/guide/how-can-i-use-github-actions-with-vercel) describes the CI identifiers/token and prebuilt deployment mechanism. Validate current CLI behavior during implementation.
