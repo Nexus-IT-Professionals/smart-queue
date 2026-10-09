@@ -113,5 +113,5 @@ No AI runs in the POC. Optional English and Spanish reply assistance is future w
 - The four story characters are fictional. The app's synthetic data uses the same names, so real captures show María Rodríguez's cancelled slot, José Pérez, and Dr. Carlos Rivera's schedule.
 - Staff confirms cancellation; there is no patient self-cancellation UI. Ana uses the Provider workspace, not a separate assistant application.
 - No AI, live messaging, persistent booking, or multi-user synchronization is implemented. Benefits are hypotheses to validate.
-- Speaker notes appear on the presenting screen. Hide them with **N** before showing slides to judges.
-- Timing is manual; the timer never auto-advances. Rehearse on the actual projector/device.
+- The deck has no on-screen notes panel; read these notes from a separate device or printout.
+- Timing is manual and slides never auto-advance; use an external timer. Rehearse on the actual projector/device.
