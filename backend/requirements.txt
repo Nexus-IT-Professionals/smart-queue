@@ -1,0 +1,6 @@
+# Pin after hardware smoke test (TECHNICAL_PROPOSAL §3)
+fastapi
+uvicorn[standard]
+pydantic
+httpx
+pytest

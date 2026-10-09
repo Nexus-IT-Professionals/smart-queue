@@ -1,0 +1,23 @@
+# App + private Ollama (TECHNICAL_PROPOSAL §3). Only the app is exposed, on loopback.
+services:
+  app:
+    build: .
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - sqlite_data:/data
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama
+    # No ports: reachable only on the compose network as http://ollama:11434.
+    volumes:
+      - ollama_models:/root/.ollama
+
+volumes:
+  sqlite_data:
+  ollama_models:

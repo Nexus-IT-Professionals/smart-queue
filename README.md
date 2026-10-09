@@ -4,7 +4,7 @@ Help Puerto Rico medical offices fill cancelled appointments by offering availab
 
 ## Project status
 
-This project is in its planning stage for the Caribbean AI 2026 Hackathon. The MVP below is proposed; no application code or run instructions are in this repository yet. The current work includes a technical proposal, hackathon checklist, and background research.
+Built for the Caribbean AI 2026 Hackathon. The project skeleton was created on 2026-10-08, during the official build period: a FastAPI backend and a React frontend that run together and show placeholder Staff and Patient workspaces. Scheduling, waitlist, offers and AI reply handling are not implemented yet. The MVP below is still proposed; the stack follows the [technical proposal](docs/TECHNICAL_PROPOSAL.md) §3.
 
 ## The problem
 
@@ -48,12 +48,55 @@ A fictional office cancels a 2 p.m. appointment. A waitlisted patient receives a
 ## Next steps
 
 1. Agree on offer order, expiry, and availability rules.
-2. Choose the application stack and AI model.
+2. Confirm the proposed stack and AI model on the demo laptop (skeleton in place; model not yet tested).
 3. Build the schedule, waitlist, and cancellation-to-booking flow.
 4. Add reply interpretation, manual review, and the activity log.
 5. Verify expiry, duplicate acceptance, ambiguous replies, and AI failure behavior.
 
 Multi-office routing, real messaging, EHR integrations, predictive no-show scoring, clinical prioritization, and payments are outside the initial MVP.
+
+## Project structure
+
+```
+backend/            FastAPI app (Python)
+  app/main.py       app entry; routers under /api; serves the built frontend
+  app/config.py     settings from environment variables (see .env.example)
+  app/db.py         SQLite connection; app/schema.sql holds the proposed tables
+  app/routers/      auth, patients, appointments, waitlist, cancellations, offers, stats (stubs)
+  app/services/     scheduling, offers, ai_reply, audit, metrics (stubs)
+  seed/seed.py      synthetic demo data (stub)
+  tests/            pytest suite
+frontend/           React + TypeScript + Vite; one app with Staff and Patient workspaces
+data/               local SQLite file (ignored by Git)
+Dockerfile          builds the frontend, then serves it from the Python image
+docker-compose.yml  app + local Ollama; only the app is published, on 127.0.0.1:8000
+```
+
+## Run locally
+
+Requires Python 3.12+ and Node 22+.
+
+```bash
+# Frontend build
+cd frontend
+npm install
+npm run build
+
+# Backend (serves the built frontend)
+cd ../backend
+pip install -r requirements.txt
+STATIC_DIR=../frontend/dist DATABASE_PATH=../data/smart_queue.db uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Open http://127.0.0.1:8000. `GET /api/health` should return `{"status":"ok"}`. For frontend work, run `npm run dev` in `frontend/`; it proxies `/api` to port 8000. Run tests with `pytest` from `backend/`.
+
+With Docker: `docker compose up --build` (Compose 2.24+). It also starts Ollama; pull the model once with `docker compose exec ollama ollama pull qwen2.5:1.5b`. The Docker path has not been tested yet.
+
+All data is synthetic. Do not enter real patient information.
+
+## Pre-existing components
+
+Built with open-source components, credited as the hackathon rules require: [FastAPI](https://fastapi.tiangolo.com/) (MIT), [Uvicorn](https://www.uvicorn.org/) (BSD-3), [Pydantic](https://docs.pydantic.dev/) (MIT), [HTTPX](https://www.python-httpx.org/) (BSD-3), [pytest](https://pytest.org/) (MIT), [SQLite](https://www.sqlite.org/) (public domain), [React](https://react.dev/) (MIT), [Vite](https://vite.dev/) (MIT), [TypeScript](https://www.typescriptlang.org/) (Apache-2.0), [Ollama](https://ollama.com/) (MIT), and the [Qwen2.5 1.5B](https://ollama.com/library/qwen2.5:1.5b) model (Apache-2.0). No templates or reused application code.
 
 ## Planning documents
 
