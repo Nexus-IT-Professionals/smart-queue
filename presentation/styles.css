@@ -434,6 +434,66 @@ blockquote small {
 .schedule-capture figcaption {
 	margin-top: 13px;
 }
+/* Slide 7: María's cancellation beside the AI assistant's reasoning, same height. */
+.capture-pair {
+	margin-top: 30px;
+	display: flex;
+	gap: 40px;
+	align-items: flex-start;
+}
+.evidence .capture-pair img {
+	display: block;
+	height: 430px;
+	width: auto;
+	border-radius: 14px;
+	border: 1px solid #cad5df;
+	margin-top: 12px;
+}
+.capture-pair figcaption {
+	font-size: 24px;
+	font-weight: 650;
+	color: var(--teal);
+}
+/* Slide 8: the offer capture is taller than the old confirmation panel. */
+.tall-capture {
+	margin-top: 36px;
+	grid-template-columns: 500px 1fr;
+}
+.tall-capture img {
+	width: auto;
+	max-width: 100%;
+	max-height: 540px;
+}
+.tall-capture .lead {
+	margin-top: 0;
+	color: var(--teal);
+	font-weight: 650;
+}
+.tall-capture .plain-list {
+	margin: 18px 0 26px;
+}
+/* Slide 9: Ana's notification, then the updated schedule row. */
+.notified h2 {
+	font-size: 58px;
+}
+.notice-capture {
+	margin-top: 30px;
+}
+.notice-capture img,
+.notified .schedule-capture img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border: 1px solid #ccd7df;
+	border-radius: 15px;
+}
+.notice-capture figcaption {
+	margin-top: 10px;
+}
+.notified .schedule-capture {
+	margin-top: 22px;
+	width: 900px;
+}
 .impact h2 {
 	margin-bottom: 45px;
 }

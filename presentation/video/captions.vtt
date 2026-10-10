@@ -2,47 +2,47 @@ WEBVTT
 
 1
 00:00:00.000 --> 00:00:07.000
-Smart Queue turns a canceled appointment into an earlier visit. Here is the two-minute demo.
+Smart Queue's AI assistant turns a cancellation into an earlier visit. Here is the two-minute demo.
 
 2
 00:00:07.000 --> 00:00:17.000
-María Rodríguez needs to cancel her two o'clock visit. Ana, the office assistant, confirms the cancellation in the provider workspace.
+Ana Martínez runs Dr. Rivera's schedule. Today, every cancellation means calls and follow-up by hand. Here, an assistant takes that over.
 
 3
 00:00:17.000 --> 00:00:28.000
-The appointment is now available. Smart Queue checks the waiting list for compatible patients, using provider, visit type, and availability.
+María Rodríguez can't make her two o'clock visit. In her patient view, she cancels and confirms. Nothing real is cancelled.
 
 4
 00:00:28.000 --> 00:00:40.000
-Ana can confirm a scheduling priority for José. Urgent priority helps organize the queue, but this is not automated medical triage. Compatibility still comes first.
+The AI assistant, simulated and rule-based, detects the opening and scans four waiting patients. Nicolás is only free in the mornings, so he is excluded.
 
 5
-00:00:40.000 --> 00:00:50.000
-José is eligible for the afternoon opening. Ana reviews the candidate and sends the simulated offer. His original appointment stays in place until he accepts.
+00:00:40.000 --> 00:00:51.000
+José, Elena and Camila share priority three. José's request is the oldest, from October fourth, so he is selected. Elena is next.
 
 6
-00:00:50.000 --> 00:01:00.000
-In the patient view, José sees the earlier appointment. He can accept, decline, or request help. No account or password is needed for this demo.
+00:00:51.000 --> 00:01:01.000
+The assistant sends José an offer: October eighth at two, fourteen days earlier. His current visit stays until he accepts.
 
 7
-00:01:00.000 --> 00:01:12.000
-José previews the change from October twenty-second to October eighth, then confirms. That is fourteen days earlier. The schedule and waiting list update together.
+00:01:01.000 --> 00:01:12.000
+José reviews the change and confirms it himself. Patients keep the decision. No account or real message is involved.
 
 8
-00:01:12.000 --> 00:01:21.000
-Back in the provider schedule, José now occupies the released slot. Staff and Dr. Rivera see the same updated appointment.
+00:01:12.000 --> 00:01:23.000
+The assistant moves José to October eighth, releases his October twenty-second visit, and updates the waitlist from four to three.
 
 9
-00:01:21.000 --> 00:01:34.000
-A separate monthly scenario shows utilization. Day, week, and month views calculate totals from synthetic appointments. Staff can configure hours, visit duration, and capacity.
+00:01:23.000 --> 00:01:34.000
+Ana gets a notification with a summary of every change. No calls and no approval needed. That is the end of the story.
 
 10
 00:01:34.000 --> 00:01:46.000
-Select a day and cancel a scheduled visit with staff confirmation. Occupied seats decrease, availability increases, and the cancellation count updates immediately.
+A separate monthly scenario shows capacity. Day, week, and month views calculate totals from synthetic appointments.
 
 11
 00:01:46.000 --> 00:01:54.000
-Ana confirms the waiting-list assignment. Occupancy recovers, and the fill rate updates.
+Today the assistant is simulated and rule-based; no AI model runs. A model-backed assistant is future work.
 
 12
 00:01:54.000 --> 00:02:00.000

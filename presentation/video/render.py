@@ -24,7 +24,7 @@ output = ROOT / 'smart-queue-demo-2min.mp4'
 subprocess.run([FFMPEG, '-hide_banner', '-loglevel', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(WORK / 'parts.txt'), '-vf', 'fps=30,setpts=N/(30*TB),tpad=stop_mode=clone:stop_duration=1', '-c:v', 'libx264', '-preset', 'fast', '-crf', '19', '-threads', '4', '-af', 'loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asetpts=N/SR/TB,atrim=duration=120', '-c:a', 'aac', '-ar', '48000', '-b:a', '160k', '-t', '120', '-movflags', '+faststart', str(output)], check=True)
 start = 0
 vtt = ['WEBVTT', '']
-notes = ['# Smart Queue — two-minute screen demo', '', 'English narration · exactly 2:00 · fictional data and real local UI interactions.', '', 'The separate monthly dataset is explicitly identified. No production bookings, messaging, or AI triage are claimed.', '']
+notes = ['# Smart Queue — two-minute screen demo', '', 'English narration · exactly 2:00 · fictional data and real local UI interactions.', '', 'The AI assistant shown is simulated and rule-based: no AI model, no network. The separate monthly dataset is explicitly identified. No production bookings or messaging are claimed.', '']
 def clock(t):
     return f'{t // 3600:02}:{(t // 60) % 60:02}:{t % 60:02}.000'
 for i, scene in enumerate(scenes):

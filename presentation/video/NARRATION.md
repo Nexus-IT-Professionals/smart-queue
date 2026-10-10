@@ -2,51 +2,51 @@
 
 English narration · exactly 2:00 · fictional data and real local UI interactions.
 
-The separate monthly dataset is explicitly identified. No production bookings, messaging, or AI triage are claimed.
+The AI assistant shown is simulated and rule-based: no AI model, no network. The separate monthly dataset is explicitly identified. No production bookings or messaging are claimed.
 
 ## 0:00–0:07 · Smart Queue · Two-minute demo
 
-Smart Queue turns a canceled appointment into an earlier visit. Here is the two-minute demo.
+Smart Queue's AI assistant turns a cancellation into an earlier visit. Here is the two-minute demo.
 
-## 0:07–0:17 · 01 · María needs to cancel
+## 0:07–0:17 · 01 · Today, Ana does it by hand
 
-María Rodríguez needs to cancel her two o'clock visit. Ana, the office assistant, confirms the cancellation in the provider workspace.
+Ana Martínez runs Dr. Rivera's schedule. Today, every cancellation means calls and follow-up by hand. Here, an assistant takes that over.
 
-## 0:17–0:28 · 02 · An opening becomes an opportunity
+## 0:17–0:28 · 02 · María cancels in her own view
 
-The appointment is now available. Smart Queue checks the waiting list for compatible patients, using provider, visit type, and availability.
+María Rodríguez can't make her two o'clock visit. In her patient view, she cancels and confirms. Nothing real is cancelled.
 
-## 0:28–0:40 · 03 · Staff confirms priority
+## 0:28–0:40 · 03 · The AI assistant (simulated) detects and scans
 
-Ana can confirm a scheduling priority for José. Urgent priority helps organize the queue, but this is not automated medical triage. Compatibility still comes first.
+The AI assistant, simulated and rule-based, detects the opening and scans four waiting patients. Nicolás is only free in the mornings, so he is excluded.
 
-## 0:40–0:50 · 04 · Ana offers the opening to José
+## 0:40–0:51 · 04 · Its reasoning, step by step
 
-José is eligible for the afternoon opening. Ana reviews the candidate and sends the simulated offer. His original appointment stays in place until he accepts.
+José, Elena and Camila share priority three. José's request is the oldest, from October fourth, so he is selected. Elena is next.
 
-## 0:50–1:00 · 05 · The patient stays in control
+## 0:51–1:01 · 05 · A simulated offer to José
 
-In the patient view, José sees the earlier appointment. He can accept, decline, or request help. No account or password is needed for this demo.
+The assistant sends José an offer: October eighth at two, fourteen days earlier. His current visit stays until he accepts.
 
-## 1:00–1:12 · 06 · Explicit acceptance moves the appointment
+## 1:01–1:12 · 06 · José explicitly accepts
 
-José previews the change from October twenty-second to October eighth, then confirms. That is fourteen days earlier. The schedule and waiting list update together.
+José reviews the change and confirms it himself. Patients keep the decision. No account or real message is involved.
 
-## 1:12–1:21 · 07 · Dr. Rivera sees the updated schedule
+## 1:12–1:23 · 07 · The assistant updates the schedule
 
-Back in the provider schedule, José now occupies the released slot. Staff and Dr. Rivera see the same updated appointment.
+The assistant moves José to October eighth, releases his October twenty-second visit, and updates the waitlist from four to three.
 
-## 1:21–1:34 · 08 · Separate monthly demo: capacity and statistics
+## 1:23–1:34 · 08 · Ana is notified
 
-A separate monthly scenario shows utilization. Day, week, and month views calculate totals from synthetic appointments. Staff can configure hours, visit duration, and capacity.
+Ana gets a notification with a summary of every change. No calls and no approval needed. That is the end of the story.
 
-## 1:34–1:46 · 09 · Cancellation updates availability
+## 1:34–1:46 · 09 · Separate monthly demo: capacity and statistics
 
-Select a day and cancel a scheduled visit with staff confirmation. Occupied seats decrease, availability increases, and the cancellation count updates immediately.
+A separate monthly scenario shows capacity. Day, week, and month views calculate totals from synthetic appointments.
 
-## 1:46–1:54 · 10 · Refill the slot; measure the result
+## 1:46–1:54 · 10 · Honest about AI
 
-Ana confirms the waiting-list assignment. Occupancy recovers, and the fill rate updates.
+Today the assistant is simulated and rule-based; no AI model runs. A model-backed assistant is future work.
 
 ## 1:54–2:00 · Smart Queue — Less Waiting. Better Care.
 

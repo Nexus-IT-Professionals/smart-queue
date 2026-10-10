@@ -72,3 +72,36 @@ The fictional story cast is **María Rodríguez / Ana Martínez / José Pérez /
 See README for repeatable commands. Passed on October 9, 2026: JavaScript syntax check; targeted Biome lint; automated Chromium offline verification of all 12 slides and five-slide mode, local asset decoding, keyboard navigation, notes, timer start/pause/reset, fullscreen, no external requests or uncaught errors, canvas bounds, and 1280×720 / 1024×768 / 390×844 fitting. All 12 rendered slides were visually reviewed; provider spacing was adjusted and real captures regenerated at 2× pixel density. No app build was needed because application code and dependencies are unchanged. No app runtime dependency or business-logic change is required for this artifact. Update (October 9, 2026): the toolbar was trimmed to previous / next, slide counter, Deck select, and Fullscreen; the on-screen notes panel and timer (and their N / T / R / Escape shortcuts) were removed. SPEAKER_NOTES.md remains the notes source, and the validation test now asserts the exact toolbar contents.
 
 Remaining human acceptance: timed spoken rehearsal, projector readability, and native-browser fullscreen on the presentation device. Remaining submission work: team attribution, verified public links, accepted upload format, recorded ≤2-minute video, and final organizer-rule check. Do not mark deployment or the submission task complete just because these slides exist.
+
+## Update — October 9, 2026: AI-assistant story (Phase B)
+
+The application (commit `4f7fe3f`) replaced Ana's manual decisions with a simulated, rule-based AI assistant. The deck was rewritten to that single story; the sections above are kept as the record of the earlier manual-flow version and are superseded where they conflict (for example "staff confirms cancellation", "no patient self-cancellation", "decline and help paths", "No AI runs").
+
+**Arc:** Ana's manual work today (problem) → María cancels in her own patient view → the AI assistant (simulated) detects the cancellation, scans four waiting patients and selects José with the app's real deterministic reasoning (compatible afternoon availability; P3 tie with Elena Morales and Camila Soto broken by the oldest request, Oct 4; Nicolás Díaz excluded, mornings only; Elena next, Oct 5) → offer to José → José explicitly accepts → the assistant updates the schedule and waitlist (4 → 3) → Ana is notified with a summary. End.
+
+| Slide | Focus | Visual | Seconds |
+|---|---|---|---:|
+| 1 | Value proposition / cast | Cast sheet; labels María · Cancels, Ana · Office assistant | 9 |
+| 2 | Problem: Ana connects slot and patient by hand / why now | Availability versus access | 12 |
+| 3 | Ana's manual work today | Ana portrait + Update → Search → Call → Coordinate | 13 |
+| 4 | María cancels in her own view | María portrait + dialogue | 12 |
+| 5 | José could take the slot if he knew | José portrait + dialogue | 12 |
+| 6 | The assistant coordinates; patients keep the decisions | Detect & select → Offer → Update & notify | 14 |
+| 7 | María cancels; the assistant picks José | Real `maria-cancel` + `ai-reasoning` captures | 17 |
+| 8 | Offer → José accepts | "Why José?" list + real `jose-offer` capture | 18 |
+| 9 | Schedule updates; Ana is notified (end) | Real `ana-notification` + `updated-schedule` row | 17 |
+| 10 | Designed benefits | Before / with Smart Queue table | 13 |
+| 11 | Why AI: rule-based today, model-backed later | Working (simulated) versus future | 11 |
+| 12 | Invitation / next steps | Cast + closing line | 12 |
+
+Five-slide mode is unchanged structurally (slides 1, 2, 8, 9, 12): cast, Ana's manual problem, the assistant's offer and José's consent (with the selection reasoning), the automatic update and Ana's notification, and the honest "simulated today, model-backed later" close. Scripts: about 386 words (story) and 221 words (submission); see SPEAKER_NOTES.md.
+
+| Claim | Source / evidence | Boundary |
+|---|---|---|
+| María cancels in her own view; José accepts in his | `frontend/src/pages/patient/`, `e2e/ai-assistant.spec.ts`, `maria-cancel.webp`, `jose-offer.webp` | Explicit confirmation in each view; fictional appointments only. |
+| The assistant detects, selects, offers, updates and notifies | Demo reducer AI phases and AssistantFeed; `ai-reasoning.webp`, `ana-notification.webp` | Simulated and rule-based: no AI model, no network, no real messages. Reasoning is the existing deterministic ranking, not generated text. |
+| Ana is notified only | Office view; e2e asserts no approve/undo controls | Notification is in-app and local to this browser session. |
+| Schedule and waitlist update | `updated-schedule.webp` (SQ-006 → José Pérez, "Just filled"); waitlist 4 → 3 | One browser session; reload resets; no persistence or multi-user sync. |
+| Model-backed assistant | Slides 11–12 | Future work, not implemented. |
+
+Visual system, cast image, control bar and the 12 / 5 slide structure are unchanged. New CSS rules (`.capture-pair`, `.tall-capture`, `.notified`) size the new captures. `tests/capture.mjs` walks the new flow and writes five WebP captures; the four manual-flow screenshots (`cancellation`, `open-slot`, `patient-confirmation`, the previous `updated-schedule`) were replaced or removed. Validation: `node presentation/tests/validate.mjs` and visual review of every slide in both modes.

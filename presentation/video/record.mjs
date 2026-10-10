@@ -47,12 +47,13 @@ async function focus(locator) {
   });
   await pause(250);
 }
-async function presentation(last = false) {
+// Opens the offline deck (controls hidden) at the given story slide.
+async function presentation(slide = 1) {
   await page.goto(`${base}/presentation/index.html`);
   await page.addStyleTag({
     content: ".controls {visibility:hidden !important}",
   });
-  if (last) await page.keyboard.press("End");
+  for (let i = 1; i < slide; i++) await page.keyboard.press("ArrowRight");
   await page
     .locator(".slide:visible img")
     .evaluateAll((imgs) => Promise.all(imgs.map((i) => i.decode())));
@@ -76,71 +77,70 @@ async function scene(index, action) {
 }
 const button = (name) => page.getByRole("button", { name, exact: true });
 await scene(0, async () => {});
+// The single demo story: María cancels → the AI assistant (simulated) detects,
+// selects José and offers → José accepts → the assistant updates the schedule
+// and notifies Ana. Role switches use the header's "Demo workspace" group.
+const role = (name) =>
+  page
+    .getByRole("group", { name: "Demo workspace" })
+    .getByRole("button", { name, exact: true });
+const feed = () => page.locator(".ai-feed-panel");
 await scene(1, async () => {
   await page.goto(`${base}/#/provider`);
-  await expect(page.locator(".demo-scenario")).toContainText("cancellation");
-  await focus(page.locator(".demo-scenario"));
+  await expect(page.getByRole("row").filter({ hasText: "SQ-006" })).toContainText(
+    "María Rodríguez",
+  );
+  await focus(page.locator(".schedule-panel"));
 });
 await scene(2, async () => {
+  await click(role("María (patient)"));
+  await focus(page.locator(".patient-appointment"));
   await pause(900);
-  await click(button("Confirm demo cancellation"));
-  await focus(page.locator(".candidate-review"));
-  await expect(page.locator(".candidate-review")).toContainText("José");
+  await click(button("Cancel my appointment"));
+  await pause(1600);
+  await click(button("Yes, cancel my appointment"));
+  await expect(page.locator(".response-notice")).toBeVisible();
 });
 await scene(3, async () => {
-  await click(
-    page.getByRole("navigation").getByRole("button", { name: /^Waitlist/ }),
-  );
-  const jose = page
-    .locator(".waitlist-person")
-    .filter({ hasText: "José Pérez" });
-  await focus(jose);
-  await jose.getByRole("combobox").selectOption("P1");
-  await pause(500);
-  await click(jose.getByRole("checkbox"));
-  await click(jose.getByRole("button", { name: "Save priority" }));
-  await expect(jose).toContainText("P1");
+  await click(role("Ana (office)"));
+  await focus(feed());
+  await expect(feed()).toContainText("Best match selected");
 });
 await scene(4, async () => {
-  await click(
-    page
-      .getByRole("navigation")
-      .getByRole("button", { name: "Overview", exact: true }),
-  );
-  await focus(page.locator(".demo-scenario"));
-  await pause(900);
-  await click(button("Send demo offer to José"));
-  await expect(page.locator(".demo-scenario")).toContainText("Patient");
+  const reasoning = page.locator(".ai-reasoning");
+  await focus(reasoning);
+  await expect(reasoning).toContainText("the oldest request wins (Oct 4)");
+  await expect(reasoning).toContainText("Next in line: Elena Morales");
 });
 await scene(5, async () => {
-  await click(button("Patient view"));
+  await click(role("José (patient)"));
   await focus(page.locator(".offer-panel"));
   await expect(page.locator(".offer-panel")).toContainText("14 days earlier");
 });
 await scene(6, async () => {
   await pause(800);
-  await click(button("Preview acceptance"));
-  await focus(page.locator(".offer-panel"));
+  await click(button("Accept earlier visit"));
   await pause(2200);
-  await click(button("Confirm preview"));
-  await expect(
-    page.locator(".patient-workspace, .workspace-content").first(),
-  ).toBeVisible();
-  await focus(page.locator(".offer-panel"));
+  await click(button("Yes, move my appointment"));
+  await expect(page.locator(".success-head")).toBeVisible();
+  await focus(page.locator(".patient-appointment"));
 });
 await scene(7, async () => {
-  await click(button("Provider view"));
-  await click(
-    page
-      .getByRole("navigation")
-      .getByRole("button", { name: "Schedule", exact: true }),
-  );
-  await page.getByRole("searchbox").fill("SQ-006");
+  await click(button("See what the office sees"));
   await focus(page.locator(".schedule-panel"));
-  await expect(page.locator(".schedule-panel")).toContainText("José Pérez");
+  await expect(page.getByRole("row").filter({ hasText: "SQ-006" })).toContainText(
+    "José Pérez",
+  );
+});
+await scene(8, async () => {
+  const notification = page.getByRole("region", {
+    name: "Notification for Ana Martínez",
+  });
+  await focus(notification);
+  await expect(notification).toContainText("No action needed");
 });
 let dashboard;
-await scene(8, async () => {
+await scene(9, async () => {
   await click(
     page
       .getByRole("navigation")
@@ -154,56 +154,17 @@ await scene(8, async () => {
   const toggle = dashboard.getByRole("group", { name: "Statistics period" });
   await pause(700);
   await click(toggle.getByRole("button", { name: "Week", exact: true }));
-  await pause(1100);
+  await pause(1300);
   await click(toggle.getByRole("button", { name: "Day", exact: true }));
-  await pause(1000);
+  await pause(1300);
   await click(toggle.getByRole("button", { name: "Month", exact: true }));
   await focus(dashboard.locator(".capacity-kpis"));
 });
-await scene(9, async () => {
-  await dashboard
-    .getByLabel("Schedule date", { exact: true })
-    .fill("2026-10-08");
-  await click(
-    dashboard
-      .getByRole("group", { name: "Statistics period" })
-      .getByRole("button", { name: "Day", exact: true }),
-  );
-  await click(
-    dashboard
-      .locator(".capacity-slots button")
-      .filter({ hasText: "Scheduled" })
-      .first(),
-  );
-  await focus(dashboard.locator(".capacity-actions"));
-  await click(
-    dashboard.getByLabel("Staff confirmation · synthetic scheduling only"),
-  );
-  await click(
-    dashboard.getByRole("button", { name: "Cancel selected appointment" }),
-  );
-  await expect(
-    dashboard.locator(".metric-card").filter({ hasText: "Occupied seats" }),
-  ).toContainText("17");
-  await focus(dashboard.locator(".capacity-kpis"));
-});
 await scene(10, async () => {
-  await focus(dashboard.locator(".capacity-actions"));
-  await click(
-    dashboard.getByLabel("Staff confirmation · synthetic scheduling only"),
-  );
-  await click(
-    dashboard.getByRole("button", { name: "Confirm waiting-list assignment" }),
-  );
-  await expect(
-    dashboard
-      .locator(".metric-card")
-      .filter({ hasText: "Waiting-list fill rate" }),
-  ).toContainText("50.0%");
-  await focus(dashboard.locator(".capacity-kpis"));
+  await presentation(11);
 });
 await scene(11, async () => {
-  await presentation(true);
+  await presentation(12);
 });
 if (errors.length) throw Error(errors.join("\n"));
 const video = page.video();

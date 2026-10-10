@@ -42,20 +42,20 @@ In another terminal, from the repository root:
 node presentation/tests/capture.mjs
 ```
 
-The capture script uses a fresh session, synthetic fixtures, 1440×1000 viewport, 2× pixel density, and actual panel screenshots. It leaves application source unchanged; the app fixtures use the story names (José Pérez, María Rodríguez, Dr. Carlos Rivera). The schedule screenshot intentionally filters to SQ-006. Only the four panels displayed in the presentation are captured, directly to WebP at native 2× panel size; if the app UI changes a panel's height, update that image's `width`/`height` attributes in `index.html`.
+The capture script walks the demo story with real clicks in a fresh session: María cancels in her patient view, the AI assistant (simulated, rule-based) selects José and offers him the slot, José accepts in his view, and the assistant updates the schedule and notifies Ana. It uses synthetic fixtures, a 1440×1000 viewport (1200 px for the activity-feed excerpt, where that column is wider), 2× pixel density, and actual panel screenshots. It leaves application source unchanged; the app fixtures use the story names. Five captures are written directly to WebP at native 2× size: `maria-cancel` (her cancellation confirmation), `ai-reasoning` (the assistant's detect → select → offer feed steps with its reasoning), `jose-offer` (José's offer and confirmation), `ana-notification` (Ana's notification) and `updated-schedule` (the SQ-006 schedule row, filtered). Set `CAPTURE_BASE_URL` to use another local server (for example `npm run preview`). If the app UI changes a panel's size, update that image's `width`/`height` attributes in `index.html`.
 
 ## Before presenting
 
 1. Open the local HTML, select the appropriate mode, and enter fullscreen.
-2. Rehearse aloud with an external timer. The 370-word story assumes about 139 words/minute; timing is estimated, not a measured human performance.
+2. Rehearse aloud with an external timer. The 386-word story assumes about 145 words/minute; timing is estimated, not a measured human performance.
 3. Check readability on the actual projector, especially the large screenshot buttons and schedule row.
-4. Keep the disclosure: browser simulation, synthetic data, no implemented AI or real bookings.
+4. Keep the disclosure: browser simulation, synthetic data, an AI assistant that is simulated and rule-based (no AI model), no real bookings or messages.
 
 No deployment or submission was performed. Team attribution, public links, the recorded backup video, and real-device rehearsal remain separate submission work.
 
 ## Web image optimization
 
-The presentation loads five local WebP images totaling approximately **291 KB**. The October 9 recapture kept the screenshot widths; the patient confirmation (900 px) and schedule (612 px, now with the priority badge) are taller, and `index.html` declares those dimensions. The illustration uses lossy quality 88; screenshots use quality 96 for readable text. Superseded PNGs and the unused activity image are not shipped. No CDN or runtime dependency is needed.
+The presentation loads six local WebP images totaling approximately **533 KB** (the cast illustration plus five screenshots, about 408 KB). The October 9 AI-assistant recapture replaced the four manual-flow screenshots; `index.html` declares each new image's dimensions. The illustration uses lossy quality 88; screenshots use quality 96 for readable text. Superseded PNGs and the unused activity image are not shipped. No CDN or runtime dependency is needed.
 
 `tests/capture.mjs` encodes fresh screenshots directly to WebP using the existing Playwright Chromium installation; intermediate PNG buffers remain in memory. Keep an external original when editing the character illustration to avoid recompressing the delivery image. HTML dimensions and responsive CSS preserve aspect ratios.
 
@@ -63,4 +63,4 @@ After refreshing screenshots, run `node presentation/tests/validate.mjs` and rev
 
 ## Two-minute application video
 
-For a screen-focused walkthrough of the current app, open [the offline video player](video/index.html) or [the MP4](video/smart-queue-demo-2min.mp4). Includes real UI interactions, English synthetic narration, on-screen captions, and the current María → Ana → José → Dr. Rivera scenario. [Video notes and reproduction](video/README.md). This is a separate two-minute recording; the slide presentation remains available unchanged.
+For a screen-focused walkthrough of the app, open [the offline video player](video/index.html) or [the MP4](video/smart-queue-demo-2min.mp4). Includes real UI interactions, English synthetic narration and on-screen captions. **The MP4 is stale:** it still shows the earlier manual flow (Ana confirms and sends the offer). Its script, captions and recording script now follow the AI-assistant story, but the MP4 must be re-rendered on macOS (Samantha voice) — see [Video notes and reproduction](video/README.md). This is a separate two-minute recording.
