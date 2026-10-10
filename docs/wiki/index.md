@@ -19,6 +19,8 @@
 - [[pr-no-show-data]]: Puerto Rico appointment data (CFSE counts, cancellations vs no-shows), proxies, VA San Juan waits, capacity and market size, who pays for an empty slot, candidate data partners.
 - [[waitlist-backfill]]: measured results of automated backfill (UCSF, Mayo, Sutter), acceptance by lead time, the equity gap, vendor claims not to repeat.
 - [[idea-3-competitors]]: the US product category, Puerto Rico and Latin American companies, where the schedules live in Puerto Rico, standalone vendors absorbed, patents, and the white space the pitch can claim.
+- [[pr-vs-us-medicaid]] (added 2026-10-10): Puerto Rico vs US Medicaid — 55% statutory FMAP and capped block grant vs open-ended 50–83% for states, the FY2027 cap and the Oct 2027 "Medicaid cliff", spending per enrollee ($3,293 vs $10,426, FY2024), coverage share, eligibility line, physician pay, shortage areas.
+- [[no-shows-cancellations-benefit]] (added 2026-10-10): no-show, patient-cancellation and provider-cancellation rates, cost of empty slots, what works (reminders, backfill) and a conservative benefit model for a small Puerto Rico office (base case ≈ $17K/year at Medicare 99213).
 
 ## Not in this repository
 Pages cited by the ones above that remain in the team's planning folder: `idea-3-pitch-evidence`, `idea-3-weaknesses` (and its Spanish version), `idea-3-unit-economics`, `no-show-control-risks`, `no-show-control-benefits`, `no-show-impact-by-stakeholder`, `pr-health-plans-and-medicare-advantage`, `ps-1263-pr-wait-times-bill`, `pr-specialist-shortage`, `appointment-no-shows`, and the source indexes. Links to them do not resolve here.
