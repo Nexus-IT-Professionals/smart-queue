@@ -69,7 +69,7 @@ Item IDs are grouped by theme: **G** guided story, **H** hierarchy and noise, **
 
   ```
   ┌──────────────────────────────────────────────────────────────────────────┐
-  │ DEMO GUIDE   ① Cancel ─── ② Offer ─── ③ Patient accepts ─── ④ Result    │
+  │ DEMO GUIDE   ① Cancel ─── ② Offer ─── ③ Patient accepts ─── ④ Result  │
   │              ✓ done        ● now        ○                     ○          │
   │ Elena is next in line for the 2:00 PM slot.   [ Send offer to Elena → ]  │
   └──────────────────────────────────────────────────────────────────────────┘
@@ -274,7 +274,7 @@ Item IDs are grouped by theme: **G** guided story, **H** hierarchy and noise, **
 ## Proposed Provider overview (after Tier 1)
 
 ```
-┌ smartqueue · Isla Care ─────────── [Provider | Patient]  [EN | ES]  Replay demo ┐
+┌ smartqueue · Isla Care ─────────── [Provider | Patient]  [EN | ES]  Replay demo  ┐
 │ ● Demo · fictional data · nothing leaves this browser                            │
 ├────────────┬─────────────────────────────────────────────────────────────────────┤
 │ Overview   │ Today's schedule · Thursday, October 8                              │
@@ -282,11 +282,11 @@ Item IDs are grouped by theme: **G** guided story, **H** hierarchy and noise, **
 │ Waitlist 4 │ │ Elena is next in line for the 2:00 PM slot.  [Send offer →]     │ │
 │ Activity   │ └─────────────────────────────────────────────────────────────────┘ │
 │ Capacity   │ [ 9 slots ] [ 3 completed ] [ 1 open ] [ 4 waiting ]                │
-│            │ ┌ Candidates for 2:00 PM ────────────────────────────────────────┐ │
-│ ▶ Slides   │ │ (●) 1 Elena Morales · Afternoons 1–4 · waiting since Oct 5     │ │
-│            │ │ ( ) 2 Camila Soto  · Afternoons 2–5 · waiting since Oct 7      │ │
-│            │ │ Why: fits the time window; oldest request at the same priority │ │
-│            │ └────────────────────────────────────────────────────────────────┘ │
+│            │ ┌ Candidates for 2:00 PM ────────────────────────────────────────┐  │
+│ ▶ Slides   │ │ (●) 1 Elena Morales · Afternoons 1–4 · waiting since Oct 5     │  │
+│            │ │ ( ) 2 Camila Soto  · Afternoons 2–5 · waiting since Oct 7      │  │
+│            │ │ Why: fits the time window; oldest request at the same priority │  │
+│            │ └────────────────────────────────────────────────────────────────┘  │
 │            │ 2:00 PM  Open slot ── ⏳ offer pending                ◀ highlighted │
 │            │ 8:30 AM  María Rodríguez   Follow-up     Scheduled                  │
 │            │ …                                                                   │
