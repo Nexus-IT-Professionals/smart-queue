@@ -1,6 +1,6 @@
 # Smart Queue — two-minute screen demo
 
-English narration · exactly 2:00 · fictional data and real local UI interactions.
+English narration (Microsoft neural voice en-US-JennyNeural via edge-tts, rate +5%, with background music) · exactly 2:00 · fictional data and real local UI interactions.
 
 The AI assistant shown is simulated and rule-based: no AI model, no network. The separate monthly dataset is explicitly identified. No production bookings or messaging are claimed.
 
@@ -50,4 +50,4 @@ Today the assistant is simulated and rule-based; no AI model runs. A model-backe
 
 ## 1:54–2:00 · Smart Queue — Less Waiting. Better Care.
 
-Fictional patients. Browser-only simulation. Smart Queue. Less waiting. Better care.
+Fictional patients, browser-only simulation. Smart Queue: less waiting, better care.

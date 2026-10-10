@@ -63,4 +63,4 @@ After refreshing screenshots, run `node presentation/tests/validate.mjs` and rev
 
 ## Two-minute application video
 
-For a screen-focused walkthrough of the app, open [the offline video player](video/index.html) or [the MP4](video/smart-queue-demo-2min.mp4). Includes real UI interactions, English synthetic narration and on-screen captions. **The MP4 is stale:** it still shows the earlier manual flow (Ana confirms and sends the offer). Its script, captions and recording script now follow the AI-assistant story, but the MP4 must be re-rendered on macOS (Samantha voice) — see [Video notes and reproduction](video/README.md). This is a separate two-minute recording.
+For a screen-focused walkthrough of the app, open [the offline video player](video/index.html) or [the MP4](video/smart-queue-demo-2min.mp4). Includes real UI interactions of the AI-assistant (simulated) story, English synthetic narration (Microsoft neural voice via edge-tts) over ducked background music, and on-screen captions — see [Video notes, music credit and reproduction](video/README.md). This is a separate two-minute recording.
