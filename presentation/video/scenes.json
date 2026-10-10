@@ -1,62 +1,62 @@
 [
   {
-    "title": "Smart Queue · Two-minute demo",
-    "duration": 7,
-    "text": "Smart Queue's AI assistant turns a cancellation into an earlier visit. Here is the two-minute demo."
-  },
-  {
-    "title": "01 · Today, Ana does it by hand",
-    "duration": 10,
-    "text": "Ana Martínez runs Dr. Rivera's schedule. Today, every cancellation means calls and follow-up by hand. Here, an assistant takes that over."
-  },
-  {
-    "title": "02 · María cancels in her own view",
+    "title": "Smart Queue · What and why",
     "duration": 11,
-    "text": "María Rodríguez can't make her two o'clock visit. In her patient view, she cancels and confirms. Nothing real is cancelled."
+    "text": "Smart Queue fills cancelled appointments with patients who want an earlier visit. In Puerto Rico, waits can run for months, so every open slot matters."
+  },
+  {
+    "title": "01 · Ana today: hours of calls by hand",
+    "duration": 11,
+    "text": "Meet Ana Martínez, Dr. Rivera's office assistant. Today, every cancellation means hours of calls, searching the list, and chasing replies, all by hand."
+  },
+  {
+    "title": "02 · María cancels in two taps",
+    "duration": 10,
+    "text": "María Rodríguez can't make her two o'clock visit. In her patient view, she cancels in two taps. No phone call needed."
   },
   {
     "title": "03 · The AI assistant (simulated) detects and scans",
-    "duration": 12,
-    "text": "The AI assistant, simulated and rule-based, detects the opening and scans four waiting patients. Nicolás is only free in the mornings, so he is excluded."
+    "duration": 10,
+    "text": "The AI assistant detects the opening right away and scans four waiting patients. Nicolás is only free in the mornings, so he is excluded."
   },
   {
     "title": "04 · Its reasoning, step by step",
-    "duration": 11,
+    "duration": 10,
     "text": "José, Elena and Camila share priority three. José's request is the oldest, from October fourth, so he is selected. Elena is next."
   },
   {
-    "title": "05 · A simulated offer to José",
-    "duration": 10,
-    "text": "The assistant sends José an offer: October eighth at two, fourteen days earlier. His current visit stays until he accepts."
+    "title": "05 · José: an earlier visit, no calls",
+    "duration": 8,
+    "text": "José gets an offer: October eighth at two, fourteen days sooner. His current visit stays until he decides."
   },
   {
-    "title": "06 · José explicitly accepts",
-    "duration": 11,
-    "text": "José reviews the change and confirms it himself. Patients keep the decision. No account or real message is involved."
+    "title": "06 · José decides",
+    "duration": 7,
+    "text": "José accepts with one confirmation. The patient always keeps the decision."
   },
   {
-    "title": "07 · The assistant updates the schedule",
-    "duration": 11,
+    "title": "07 · The schedule updates itself",
+    "duration": 9,
     "text": "The assistant moves José to October eighth, releases his October twenty-second visit, and updates the waitlist from four to three."
   },
   {
     "title": "08 · Ana is notified",
-    "duration": 11,
-    "text": "Ana gets a notification with a summary of every change. No calls and no approval needed. That is the end of the story."
+    "duration": 10,
+    "text": "Ana gets one notification summarizing every change. No calls, no approvals. Her time goes back to the patients in front of her."
   },
   {
-    "title": "09 · Separate monthly demo: capacity and statistics",
+    "title": "09 · Dr. Rivera: fewer empty slots · separate synthetic month",
     "duration": 12,
-    "text": "A separate monthly scenario shows capacity. Day, week, and month views calculate totals from synthetic appointments."
+    "text": "For Dr. Rivera, fewer empty slots. In the only measured Puerto Rico dataset, about fifteen percent of appointments were cancelled. Smart Queue turns that lost time back into care."
   },
   {
-    "title": "10 · Honest about AI",
-    "duration": 8,
-    "text": "Today the assistant is simulated and rule-based; no AI model runs. A model-backed assistant is future work."
+    "title": "10 · Why it's different in Puerto Rico",
+    "duration": 15,
+    "text": "Large US systems offer this inside one big record system, in English. Local Puerto Rico tools confirm and remind; we found none that refills cancelled slots. Smart Queue is bilingual and logs every move."
   },
   {
     "title": "Smart Queue — Less Waiting. Better Care.",
-    "duration": 6,
-    "text": "Fictional patients, browser-only simulation. Smart Queue: less waiting, better care."
+    "duration": 7,
+    "text": "Today the assistant is simulated and rule-based. Smart Queue: less waiting, better care."
   }
 ]

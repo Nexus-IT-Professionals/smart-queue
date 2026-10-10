@@ -85,14 +85,15 @@ const role = (name) =>
     .getByRole("group", { name: "Demo workspace" })
     .getByRole("button", { name, exact: true });
 const feed = () => page.locator(".ai-feed-panel");
+// Ana's manual work today: the deck's Ana character slide.
 await scene(1, async () => {
+  await presentation(3);
+});
+await scene(2, async () => {
   await page.goto(`${base}/#/provider`);
   await expect(page.getByRole("row").filter({ hasText: "SQ-006" })).toContainText(
     "María Rodríguez",
   );
-  await focus(page.locator(".schedule-panel"));
-});
-await scene(2, async () => {
   await click(role("María (patient)"));
   await focus(page.locator(".patient-appointment"));
   await pause(900);
@@ -160,8 +161,9 @@ await scene(9, async () => {
   await click(toggle.getByRole("button", { name: "Month", exact: true }));
   await focus(dashboard.locator(".capacity-kpis"));
 });
+// Why it's different: the deck's "Why Smart Queue" slide (refill workflow, English / Español).
 await scene(10, async () => {
-  await presentation(11);
+  await presentation(6);
 });
 await scene(11, async () => {
   await presentation(12);

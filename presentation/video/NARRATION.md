@@ -4,50 +4,50 @@ English narration (Microsoft neural voice en-US-JennyNeural via edge-tts, rate +
 
 The AI assistant shown is simulated and rule-based: no AI model, no network. The separate monthly dataset is explicitly identified. No production bookings or messaging are claimed.
 
-## 0:00–0:07 · Smart Queue · Two-minute demo
+## 0:00–0:11 · Smart Queue · What and why
 
-Smart Queue's AI assistant turns a cancellation into an earlier visit. Here is the two-minute demo.
+Smart Queue fills cancelled appointments with patients who want an earlier visit. In Puerto Rico, waits can run for months, so every open slot matters.
 
-## 0:07–0:17 · 01 · Today, Ana does it by hand
+## 0:11–0:22 · 01 · Ana today: hours of calls by hand
 
-Ana Martínez runs Dr. Rivera's schedule. Today, every cancellation means calls and follow-up by hand. Here, an assistant takes that over.
+Meet Ana Martínez, Dr. Rivera's office assistant. Today, every cancellation means hours of calls, searching the list, and chasing replies, all by hand.
 
-## 0:17–0:28 · 02 · María cancels in her own view
+## 0:22–0:32 · 02 · María cancels in two taps
 
-María Rodríguez can't make her two o'clock visit. In her patient view, she cancels and confirms. Nothing real is cancelled.
+María Rodríguez can't make her two o'clock visit. In her patient view, she cancels in two taps. No phone call needed.
 
-## 0:28–0:40 · 03 · The AI assistant (simulated) detects and scans
+## 0:32–0:42 · 03 · The AI assistant (simulated) detects and scans
 
-The AI assistant, simulated and rule-based, detects the opening and scans four waiting patients. Nicolás is only free in the mornings, so he is excluded.
+The AI assistant detects the opening right away and scans four waiting patients. Nicolás is only free in the mornings, so he is excluded.
 
-## 0:40–0:51 · 04 · Its reasoning, step by step
+## 0:42–0:52 · 04 · Its reasoning, step by step
 
 José, Elena and Camila share priority three. José's request is the oldest, from October fourth, so he is selected. Elena is next.
 
-## 0:51–1:01 · 05 · A simulated offer to José
+## 0:52–1:00 · 05 · José: an earlier visit, no calls
 
-The assistant sends José an offer: October eighth at two, fourteen days earlier. His current visit stays until he accepts.
+José gets an offer: October eighth at two, fourteen days sooner. His current visit stays until he decides.
 
-## 1:01–1:12 · 06 · José explicitly accepts
+## 1:00–1:07 · 06 · José decides
 
-José reviews the change and confirms it himself. Patients keep the decision. No account or real message is involved.
+José accepts with one confirmation. The patient always keeps the decision.
 
-## 1:12–1:23 · 07 · The assistant updates the schedule
+## 1:07–1:16 · 07 · The schedule updates itself
 
 The assistant moves José to October eighth, releases his October twenty-second visit, and updates the waitlist from four to three.
 
-## 1:23–1:34 · 08 · Ana is notified
+## 1:16–1:26 · 08 · Ana is notified
 
-Ana gets a notification with a summary of every change. No calls and no approval needed. That is the end of the story.
+Ana gets one notification summarizing every change. No calls, no approvals. Her time goes back to the patients in front of her.
 
-## 1:34–1:46 · 09 · Separate monthly demo: capacity and statistics
+## 1:26–1:38 · 09 · Dr. Rivera: fewer empty slots · separate synthetic month
 
-A separate monthly scenario shows capacity. Day, week, and month views calculate totals from synthetic appointments.
+For Dr. Rivera, fewer empty slots. In the only measured Puerto Rico dataset, about fifteen percent of appointments were cancelled. Smart Queue turns that lost time back into care.
 
-## 1:46–1:54 · 10 · Honest about AI
+## 1:38–1:53 · 10 · Why it's different in Puerto Rico
 
-Today the assistant is simulated and rule-based; no AI model runs. A model-backed assistant is future work.
+Large US systems offer this inside one big record system, in English. Local Puerto Rico tools confirm and remind; we found none that refills cancelled slots. Smart Queue is bilingual and logs every move.
 
-## 1:54–2:00 · Smart Queue — Less Waiting. Better Care.
+## 1:53–2:00 · Smart Queue — Less Waiting. Better Care.
 
-Fictional patients, browser-only simulation. Smart Queue: less waiting, better care.
+Today the assistant is simulated and rule-based. Smart Queue: less waiting, better care.

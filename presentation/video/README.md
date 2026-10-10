@@ -4,9 +4,10 @@ Open **smart-queue-demo-2min.mp4**, or open `index.html` for an offline player.
 
 - Duration: exactly **2:00**; 1920×1080, 30 fps, H.264 video / AAC audio.
 - English synthetic narration: Microsoft neural voice **en-US-JennyNeural** (via `edge-tts`), over a quiet background music bed that dips whenever the voice speaks. Captions are burned into a separate band below the app; `captions.vtt` is also provided.
-- Real browser recording of the single demo story: Ana's manual work today → María cancels in her own patient view → the AI assistant (simulated) detects the opening, scans four waiting patients and selects José with its real rule-based reasoning (P3 tie broken by the oldest request, Oct 4; Nicolás excluded, mornings only; Elena next) → offer → José explicitly accepts → the assistant updates the schedule and waitlist (4 → 3) → Ana is notified with a summary.
-- A short section shows the **separate monthly capacity demo** (period statistics only). It does not pretend to share the guided story.
-- Opening and closing use the existing HTML presentation, including the "Why AI?" slide: the assistant is simulated and rule-based (no AI model runs); a model-backed assistant is future work.
+- Narration (October 9, 2026 script): what Smart Queue does and why it matters in Puerto Rico, told through María (patient), Ana (office assistant), José (waiting list) and Dr. Rivera, and why it differs from other scheduling software in Puerto Rico.
+- Real browser recording of the single demo story: Ana's manual work today (her slide in the deck) → María cancels in her own patient view → the AI assistant (simulated) detects the opening, scans four waiting patients and selects José with its real rule-based reasoning (P3 tie broken by the oldest request, Oct 4; Nicolás excluded, mornings only; Elena next) → offer → José explicitly accepts → the assistant updates the schedule and waitlist (4 → 3) → Ana is notified with a summary.
+- Dr. Rivera's section shows the **separate monthly capacity demo** (period statistics only); its caption says "separate synthetic month". It does not pretend to share the guided story.
+- Opening, Ana's manual work, "why it's different" (the deck's "Why Smart Queue" slide: refill workflow, English / Español) and closing use the existing HTML presentation. The closing narration states that the assistant is simulated and rule-based.
 - All records are fictional. No production bookings or outbound messages are claimed.
 
 See `NARRATION.md` for the short spoken script and `scenes.json` for exact scene durations. Manual clicks are visually highlighted in the recording; these recording-only outlines do not alter application logic.
@@ -58,9 +59,7 @@ Set `VIDEO_WORK_DIR` explicitly on Windows: the default `/tmp/smart-queue-video-
 
 ### Voice choice
 
-Jenny and Aria (`en-US-AriaNeural`) were both generated for all twelve scenes. Jenny was chosen: Microsoft lists it as a general-purpose, friendly voice (Aria is tuned for news/novel reading), and at the same rate its narration is about 4.5% shorter in total, so a +5% rate fits every scene instead of a larger speed-up. At +5% the tightest clips are the closing line (0.4 s spare) and scene 01 (0.8 s spare).
-
-The closing line did not fit its six seconds in any setting: Jenny pauses after each of its five one- or two-word sentences (about 8 s of speech even at +5%). Its punctuation was changed, not its words — "Fictional patients, browser-only simulation. Smart Queue: less waiting, better care." — which brings it to 5.6 s.
+Jenny and Aria (`en-US-AriaNeural`) were both generated for all twelve scenes. Jenny was chosen: Microsoft lists it as a general-purpose, friendly voice (Aria is tuned for news/novel reading), and at the same rate its narration is about 4.5% shorter in total, so a +5% rate fits every scene instead of a larger speed-up. With the October 9 script at +5%, every scene fits at the planned durations without any wording change; the tightest clips are scene 04, the reasoning (0.2 s spare beyond the 0.2 s margin), and scene 09, Dr. Rivera (0.8 s spare).
 
 ### Mix
 
@@ -75,11 +74,11 @@ Measured on the October 9 render (ffmpeg `ebur128`; voice and ducked-music stems
 | Measure | Value |
 | --- | --- |
 | Voice track, integrated | −27.4 LUFS |
-| Music as mixed (after ducking), integrated | −33.4 LUFS (6.0 LU below the voice) |
-| Voice while speaking (momentary, energy average) | −27.4 LUFS |
-| Music while the voice speaks | −40.6 LUFS — **13.2 LU below the voice** (target ≥ 10) |
-| Music in pauses | −31.1 LUFS (ducking depth 9.5 dB) |
-| Final MP4 | −16.0 LUFS integrated, LRA 3.1 LU, true peak −2.6 dBFS |
+| Music as mixed (after ducking), integrated | −35.3 LUFS (7.9 LU below the voice) |
+| Voice while speaking (momentary, energy average) | −27.5 LUFS |
+| Music while the voice speaks | −41.1 LUFS — **13.7 LU below the voice** (target ≥ 10) |
+| Music in pauses | −31.5 LUFS (ducking depth 9.6 dB) |
+| Final MP4 | −16.0 LUFS integrated, LRA 2.4 LU, true peak −2.1 dBFS |
 
 "While speaking" uses 100 ms steps where the voice's 400 ms momentary loudness is within 12 LU of its integrated level; "pauses" are steps where it is more than 35 LU below (excluding the first 2 s and the fade-out).
 
@@ -87,12 +86,13 @@ The deliverable is local. The existing production presentation asset allowlist i
 
 ## Validation
 
-October 9, 2026 (Windows 11, edge-tts backend with music):
+October 9, 2026 (Windows 11, edge-tts backend with music; narration script v2):
 
 - Step 1 (`npm run build:demo` + preview on 4176): passed.
 - Step 2 (`record.mjs`): passed. All 12 scenes completed within their durations without page errors, with the script's UI assertions (María's SQ-006 row, "Best match selected" and its reasoning, José's "14 days earlier" offer, José Pérez in SQ-006 after acceptance, Ana's "No action needed" notification, 440 monthly seats).
-- Step 3 (`render.py`, edge backend + music): passed. Voice clip lengths 5.6–9.6 s; every clip fits its scene with at least 0.4 s spare.
+- Step 3 (`render.py`, edge backend + music): passed on the first run. Voice clip lengths 4.6–13.1 s; every clip fits its scene with at least 0.2 s spare beyond the 0.2 s margin.
 - Output (`ffprobe`): exactly 120.000 s; H.264 1920×1080, 30 fps, 3,600 frames; AAC 48 kHz stereo, 120.000 s; about 8.5 MB. `ffmpeg -v error -i smart-queue-demo-2min.mp4 -f null -` reported no decoding errors.
 - Captions: `captions.vtt` has 12 cues on the scene boundaries; in the narration track the voice starts 0.12–0.21 s after each cue start.
-- Frames reviewed at 0:03 (title slide), 0:20 (María's cancel view), 0:45 (assistant reasoning: oldest request Oct 4, Elena next), 1:04 (José's offer, 14 days earlier), 1:28 (Ana's notification, waitlist 3) and 1:40 (separate capacity demo); 1:57 caption band checked for the closing line. Captions were readable and matched the scene each time.
+- One frame per scene reviewed (0:09, 0:20, 0:30, 0:40, 0:50, 0:58, 1:05, 1:14, 1:24, 1:36, 1:50, 1:58): title slide, Ana's slide, María's cancelled appointment, the assistant's activity feed and reasoning, José's 14-days-earlier offer, his confirmation, the updated schedule (José in SQ-006, 3 waiting), Ana's notification, the capacity demo (440 seats), the "Why Smart Queue" slide and the closing slide. Caption titles were readable and matched the narration and the visual each time.
+- `npm test` (frontend) and `node presentation/tests/validate.mjs`: passed.
 - The `say` backend was not run (no macOS available); on Windows it still stops at the first clip because `say` does not exist, as before.
