@@ -1,6 +1,9 @@
 # Secrets
 .env*
 !.env.example
+/backend/.env
+/backend/.smart-queue/
+/prompts/TEAMS_AUTO_SETUP_PROMPT.md
 .vercel/
 .vercel-stage/
 *.pem

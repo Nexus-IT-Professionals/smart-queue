@@ -96,13 +96,14 @@ Calculation definitions and limits: [Capacity statistics](docs/CAPACITY_STATISTI
 
 ### Backend
 
-No new backend or authentication service is required for the current browser-only judge workflow. Backend stubs remain intentionally unconnected. Persistent/live workflows are listed under Post-POC; do not add an anonymous bypass to them.
+The public judge workflow remains browser-only and backend booking stubs remain intentionally unconnected. The optional Teams plugin includes a loopback-only relay for synthetic local UI milestones; it does not add authentication or a public event-ingest route. Durable backend transaction events remain future work.
 
 ### Integrations
 
 | ID | Priority | Status / basis | Task and acceptance criteria |
 |---|---|---|---|
 | IN-1 | P2 | Optional · Verified stub | Add bounded EN/ES Ollama assistance only if AI is part of the final demo. Schema/timeout/input limits and manual fallback work; AI never books or ranks. Current explicit buttons complete the scenario without a model. |
+| TEAMS-POC | P1 | Local scenario verified · transactional backend deferred | Reuse the active Isla Care workflow. A local-only relay publishes synthetic cancellation and confirmed reassignment/completion milestones; cancellation, reassignment, and completion cards were visually verified in the channel. Public-demo build remains disconnected. Future backend booking services must publish durable events only after commit. |
 
 ### Testing
 
@@ -259,3 +260,26 @@ Manual checklist at http://127.0.0.1:8001/#/demo:
 4. Repeat at 200% zoom and a narrow viewport. Report any missed/duplicate announcement or inaccessible control with the language and action that triggered it.
 
 Reproduce automation: `cd frontend && npm run lint && npm test && npm run test:e2e`. Next non-deployment task after manual accessibility acceptance: **QA-3 (P1)** judge-device rehearsal.
+
+
+### TEAMS-POC — optional Microsoft Teams notification plugin
+
+- **Implemented server-side groundwork:** explicit plugin registry and event dispatcher; disabled-by-default Teams registration; validated environment configuration; supported-event allowlist; Adaptive Card formatter; HTTPS webhook client with redirects disabled, bounded 3-second default timeout and at most three attempts; sanitized delivery status/logging; bounded process-local event dedupe; and a synthetic notification CLI.
+- Supported event names: `appointment.cancelled`, `ana.waitlist.evaluated`, `ana.invitation.sent`, `ana.invitation.accepted`, `appointment.reassigned`, `ana.workflow.completed`, `ana.workflow.failed`. Default subscriptions are cancellation, reassignment, completed, and failed. Cards carry date/time, provider/resource, workflow status, fixed summary, UTC timestamp, correlation ID and an optional dashboard link. They exclude patient names, IDs, clinical conditions, and raw user text.
+- Added `.env.example` names only (URL empty), setup instructions and troubleshooting, plugin developer documentation, event sequence/failure diagrams, and README links. `demo` and `live` modes are available; live changes the card label only and is not a production-readiness guarantee.
+- **Local integration:** the demo frontend posts only cancellation and confirmed schedule-update milestones to `/api/local-demo/events` outside `public-demo` mode. The endpoint requires a loopback client plus loopback HTTP origin, rejects extra/unrecognized fields, uses a fixed provider label and synthetic appointment fields, and never accepts patient names or clinical text. The public release build's CSP/release guard still passes and includes no API request. Teams receives cancellation, reassignment and workflow-completed notifications when enabled.
+- **Credential handling:** the configured callback was removed from tracked `.env.example` and stored in ignored, mode-0600 `backend/.env`; local metadata was validated without printing the secret. The exact configured value was not found in repository Git history during this review. `.env.example` now uses disabled/demo defaults.
+- **Live validation:** the synthetic test command returned HTTP **202**, and its card was later visible in Teams. After restarting the current source build with the configured plugin enabled, the live María cancellation → José acceptance scenario completed. The Teams channel visibly contained cancellation, reassignment and workflow-completed cards; the provider schedule showed José at 2:00 PM on October 8 and the waitlist decreased 4 → 3. The same-correlation cards omit patient names and clinical details.
+- **Automated validation:** backend **25 passed** (including loopback-origin rejection, duplicate event IDs, and four setup-helper checks); frontend lint passed; **130 unit tests passed**; local mocked relay browser test **1 passed**; public Chromium E2E **103 passed**; TypeScript/Vite public build and 13-file guard passed. Backend tests emit an upstream Starlette/httpx TestClient deprecation warning.
+- **Important integration boundary:** the local UI remains synthetic in-memory state and backend appointment/cancellation services are TODO stubs. The relay reports demo milestones, not committed transactions; production events must be emitted after backend commit. Delivery status/dedupe are in-memory, no durable outbox exists. Existing unrelated `UI_UX_ENHANCEMENTS.md` edits remain untouched.
+- Delivery history and duplicate protection are in-memory and bounded; no durable outbox exists. A timeout after Teams accepts a request can cause a duplicate card on retry. Keep the plugin disabled on the public demo and complete real auth/consent/retention review before any live patient workflow.
+
+### Reusable local setup command
+
+- Added executable `scripts/setup_teams.py` and [quick setup documentation](docs/plugins/TEAMS_QUICK_SETUP.md). The command uses hidden input, preserves unrelated `.env` values, enables the existing Isla Care destination, validates a supported HTTPS workflow URL, writes only to ignored `backend/.env` with mode 0600, and restarts only a verified Smart Queue Uvicorn listener on port 8000. Unknown listeners are left untouched.
+- It checks backend health and the local event route after startup. It asks for explicit confirmation before posting one synthetic test card; declining leaves the server ready without sending a message. No webhook URL is printed.
+- Saved this implementation prompt at ignored `prompts/TEAMS_AUTO_SETUP_PROMPT.md`. `.env.example` remains placeholder-only. Git tracking inspection found only `.env.example`; no secret `.env` or prompt was tracked, so no `git rm --cached` action was needed.
+- Setup helper tests cover Microsoft URL validation, preservation/merging of existing settings, managed-key deduplication, and invalid event/mode rejection. The command was exercised with the saved webhook retained at the hidden prompt; it restarted the server, reported plugin initialization, health passed, and `/api/local-demo/events` was present. The optional test-card prompt was declined, so that setup run sent no Teams card.
+- **Run:** `./scripts/setup_teams.py` from the repository root. Requirements and Windows manual-start limitation are documented in `docs/plugins/TEAMS_QUICK_SETUP.md`.
+
+See [Teams quick setup](docs/plugins/TEAMS_QUICK_SETUP.md), [Teams setup](docs/plugins/TEAMS_SETUP.md), [integration behavior and tests](docs/plugins/TEAMS_INTEGRATION.md), [Isla Care demo](docs/plugins/ISLA_CARE_DEMO.md), and [plugin architecture](docs/plugins/PLUGIN_ARCHITECTURE.md).

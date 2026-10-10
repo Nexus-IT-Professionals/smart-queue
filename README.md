@@ -25,7 +25,7 @@ The public demo at **https://smart-queue-demo.vercel.app** is the React app in t
   push to main → secret scan → lint → unit tests → browser tests → package check → Vercel
   ```
 
-- **What is not deployed.** The FastAPI backend in `backend/` and the local AI model in `docker-compose.yml` are groundwork for future features (see [Proposed AI role](#proposed-ai-role) and [Next steps](#next-steps)). The public demo does not use them.
+- **What is not deployed.** The FastAPI backend in `backend/` and the local AI model in `docker-compose.yml` are groundwork for future features (see [Proposed AI role](#proposed-ai-role) and [Next steps](#next-steps)). The public demo does not use them. An optional server-side Teams plugin is available as integration groundwork, but no current browser action publishes backend events; it is disabled until configured.
 
 ## Judge presentation
 
@@ -59,6 +59,12 @@ Start with one medical office, synthetic patient data, and simulated messages.
 ## Basic flow
 
 Patient cancels → AI assistant (simulated) detects the opening and selects a matching patient → simulated offer is sent → patient accepts → AI updates the booking and waitlist → office is notified and activity is recorded.
+
+## Optional Microsoft Teams plugin
+
+The backend includes an independently enabled Teams Workflows notification plugin, disabled by default. For local development only, María’s cancellation and confirmed schedule update are relayed over a loopback-only endpoint; the public build never calls it. Notifications use synthetic appointment metadata and omit patient names, identifiers, diagnoses, and free-form content. The local cancellation → José acceptance scenario was visually verified in the **Isla Care → Smart Queue Notifications** channel, including cancellation, reassignment, and workflow-completed cards. Use the [one-command local setup](docs/plugins/TEAMS_QUICK_SETUP.md) or see [Teams setup](docs/plugins/TEAMS_SETUP.md), [integration details](docs/plugins/TEAMS_INTEGRATION.md), [Isla Care demo](docs/plugins/ISLA_CARE_DEMO.md), and [plugin architecture](docs/plugins/PLUGIN_ARCHITECTURE.md).
+
+**The public demo remains disconnected from Teams.** Vercel's static build has a CSP with `connect-src 'none'`; only the local browser demo can notify a loopback backend. Backend booking APIs and durable transaction events remain stubs, so the local relay represents synthetic UI milestones, not committed backend scheduling transactions. Keep Teams disabled for public hosting and never put secrets in frontend build variables.
 
 ## Proposed AI role
 

@@ -6,11 +6,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { getHealth } from "./api/client";
+import { getHealth, publishLocalDemoEvent } from "./api/client";
 import { Icon, type IconName } from "./components/ui";
 import {
   OFFICE,
   demoAssistant,
+  demoAppointments,
   selectedPatient,
   demoIdentities,
   demoReducer,
@@ -112,6 +113,8 @@ export default function App() {
   );
   const [healthAttempt, setHealthAttempt] = useState(0);
   const main = useRef<HTMLElement>(null);
+  const publishedStoryEvents = useRef(new WeakSet<object>());
+  const storyCorrelationId = useRef(crypto.randomUUID());
   const previousPage = useRef({ workspace, view });
   useEffect(() => {
     if (
@@ -145,6 +148,26 @@ export default function App() {
       window.clearTimeout(timeout);
     };
   }, [healthAttempt]);
+  useEffect(() => {
+    if (import.meta.env.MODE === "public-demo") return;
+    const milestone = [...demo.events].reverse().find(
+      (event) => typeof event !== "string" && (event.kind === "cancelled" || event.kind === "updated"),
+    );
+    if (!milestone || typeof milestone === "string" || publishedStoryEvents.current.has(milestone)) return;
+    publishedStoryEvents.current.add(milestone);
+    const appointment = demoAppointments(demo).find((slot) => slot.id === "SQ-006");
+    if (!appointment) return;
+    const eventId = crypto.randomUUID();
+    void publishLocalDemoEvent({
+      kind: milestone.kind,
+      appointmentDate: appointment.date,
+      appointmentTime: appointment.time,
+      eventId,
+      correlationId: storyCorrelationId.current,
+    }).catch(() => {
+      // Notification delivery is best effort and never interrupts the POC flow.
+    });
+  }, [demo]);
   return (
     <div className="app-shell">
       {/* biome-ignore lint/a11y/useValidAnchor: Focus-only skip navigation preserves the hash router. */}

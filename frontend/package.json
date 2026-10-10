@@ -17,6 +17,7 @@
     "package:vercel": "node scripts/package-vercel.mjs",
     "lint": "biome lint . --error-on-warnings",
     "test:e2e": "playwright test",
+    "test:local-relay": "playwright test -c playwright.local-relay.config.ts",
     "rehearse": "playwright test -c playwright.rehearsal.config.ts"
   },
   "dependencies": {
