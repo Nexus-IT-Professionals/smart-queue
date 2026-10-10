@@ -13,6 +13,7 @@ export type IconName =
   | "shield"
   | "reset"
   | "presentation"
+  | "document"
   | "chart";
 const paths: Record<IconName, ReactNode> = {
   grid: (
@@ -63,6 +64,12 @@ const paths: Record<IconName, ReactNode> = {
     <>
       <rect x="3" y="4" width="18" height="12" rx="1.5" />
       <path d="M12 16v4M8 21l4-1 4 1M10 8l4 2-4 2Z" />
+    </>
+  ),
+  document: (
+    <>
+      <path d="M6 3h8l4 4v14H6z" />
+      <path d="M14 3v5h5M9 12h6m-6 4h6" />
     </>
   ),
   chart: <path d="M4 20V10m6 10V4m6 16v-7m4 7H2" />,

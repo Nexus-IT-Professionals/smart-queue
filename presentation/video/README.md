@@ -1,6 +1,8 @@
 # Two-minute application demo
 
 Open **smart-queue-demo-2min.mp4**, or open `index.html` for an offline player.
+The [12-page PDF storyboard](smart-queue-demo-2min.pdf) is also available for
+judges who prefer a quick visual walkthrough of the application screens.
 
 - Duration: exactly **2:00**; 1920×1080, 30 fps, H.264 video / AAC audio.
 - English synthetic narration: Microsoft neural voice **en-US-JennyNeural** (via `edge-tts`), over a quiet background music bed that dips whenever the voice speaks. Captions are burned into a separate band below the app; `captions.vtt` is also provided.

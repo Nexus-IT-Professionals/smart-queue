@@ -60,6 +60,7 @@ for (const name of [
   "presentation/assets/screenshots/open-slot.png.map",
   "presentation/assets/screenshots/a.b.png",
   "presentation/assets/cast.png",
+  "presentation/video/other.pdf",
 ]) {
   test(`rejects unexpected release file ${name}`, async (t) => {
     const dir = await fixture(t);
@@ -171,6 +172,7 @@ for (const file of [
   "presentation/index.html",
   "presentation/script.js",
   "presentation/styles.css",
+  "presentation/video/smart-queue-demo-2min.pdf",
 ]) {
   test(`rejects a release without ${file}`, async (t) => {
     const dir = await fixture(t);

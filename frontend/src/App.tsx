@@ -42,6 +42,7 @@ const navigation: { id: StaffView; label: string; icon: IconName }[] = [
 // Relative to the app's path (the #/ route is not part of it), so it resolves
 // to <site>/presentation/index.html wherever the build is hosted.
 const PRESENTATION_URL = "presentation/index.html";
+const PRESENTATION_PDF_URL = "presentation/video/smart-queue-demo-2min.pdf";
 // Desktop: a named, centered popup on the screen showing the demo, reused on
 // repeat clicks. Touch or narrow screens keep the anchor's plain new tab, as
 // does a blocked popup. The demo tab itself never navigates.
@@ -294,6 +295,16 @@ export default function App() {
           >
             <Icon name="presentation" />
             {t("Press for presentation")}
+          </a>
+          <a
+            className="nav-item presentation-link"
+            href={PRESENTATION_PDF_URL}
+            target="_blank"
+            rel="noopener"
+            aria-description={t("Opens in a new window")}
+          >
+            <Icon name="document" />
+            {t("Open demo PDF")}
           </a>
         </div>
         <div className="sidebar-bottom">

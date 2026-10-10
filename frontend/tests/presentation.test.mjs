@@ -6,6 +6,7 @@ import { join } from "node:path";
 import {
   copyPresentation,
   presentationIndexHtml,
+  presentationDevMiddleware,
 } from "../scripts/copy-presentation.mjs";
 import { verifyDemo } from "../scripts/verify-demo.mjs";
 import { policy } from "./presentation-fixture.mjs";
@@ -74,7 +75,7 @@ test("copies PNG and WebP while skipping unrelated image-folder files", async (t
   const root = await mkdtemp(join(tmpdir(), "queue-deck-src-"));
   t.after(() => rm(root, { recursive: true, force: true }));
   const source = join(root, "presentation");
-  for (const sub of ["assets/characters", "assets/screenshots"])
+  for (const sub of ["assets/characters", "assets/screenshots", "video"])
     await mkdir(join(source, sub), { recursive: true });
   await writeFile(join(source, "index.html"), "<html><head></head></html>");
   await writeFile(join(source, "script.js"), "");
@@ -84,6 +85,7 @@ test("copies PNG and WebP while skipping unrelated image-folder files", async (t
   await writeFile(join(source, "assets/characters/cast.webp"), "webp");
   await writeFile(join(source, "assets/characters/.gitkeep"), "");
   await writeFile(join(source, "assets/screenshots/notes.txt"), "x");
+  await writeFile(join(source, "video/smart-queue-demo-2min.pdf"), "%PDF-1.3\nfixture");
   const out = join(root, "dist");
   assert.deepEqual(await copyPresentation(out, source), [
     "presentation/index.html",
@@ -91,5 +93,28 @@ test("copies PNG and WebP while skipping unrelated image-folder files", async (t
     "presentation/styles.css",
     "presentation/assets/characters/cast.png",
     "presentation/assets/characters/cast.webp",
+    "presentation/video/smart-queue-demo-2min.pdf",
   ]);
+});
+
+test("development presentation route serves the PDF with its media type", async (t) => {
+  const root = await mkdtemp(join(tmpdir(), "queue-deck-dev-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await mkdir(join(root, "video"), { recursive: true });
+  await writeFile(join(root, "video/smart-queue-demo-2min.pdf"), "%PDF-1.3\nfixture");
+  const middleware = presentationDevMiddleware(root);
+  const headers = {};
+  let body;
+  let nextCalled = false;
+  await middleware(
+    { url: "/video/smart-queue-demo-2min.pdf" },
+    {
+      setHeader: (key, value) => { headers[key] = value; },
+      end: (content) => { body = content; },
+    },
+    () => { nextCalled = true; },
+  );
+  assert.equal(headers["Content-Type"], "application/pdf");
+  assert.equal(body.toString("utf8", 0, 5), "%PDF-");
+  assert.equal(nextCalled, false);
 });

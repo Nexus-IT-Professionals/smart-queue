@@ -3,14 +3,15 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 // Ships the offline presentation (repo-root presentation/, owned separately)
-// into the build output under presentation/. Only the runtime files are
-// copied: never the plan/notes .md files, tests/, or anything else. The copied
-// index.html gets the same CSP as the public demo; verify-demo.mjs checks it.
+// into the build output under presentation/. Only allowlisted runtime assets
+// are copied, including the judge-facing PDF storyboard; plans, notes and the
+// source video remain private to the repository. The copied index gets CSP.
 export const PRESENTATION_CSP =
   "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'";
 const defaultSource = fileURLToPath(new URL("../../presentation", import.meta.url));
 const ROOT_FILES = ["index.html", "script.js", "styles.css"];
 const IMAGE_DIRS = ["assets/characters", "assets/screenshots"];
+const PDF_FILE = "video/smart-queue-demo-2min.pdf";
 
 async function regularFile(path) {
   const stat = await lstat(path);
@@ -47,6 +48,8 @@ export async function copyPresentation(outDir, source = defaultSource) {
       await regularFile(join(source, dir, name));
       files.push(`${dir}/${name}`);
     }
+  await regularFile(join(source, PDF_FILE));
+  files.push(PDF_FILE);
   for (const file of files) {
     await mkdir(dirname(join(target, file)), { recursive: true });
     if (file === "index.html")
@@ -63,13 +66,14 @@ export async function copyPresentation(outDir, source = defaultSource) {
 // (with the same CSP), so the sidebar link works without a build. `vite
 // preview` serves dist/, which already holds the copied presentation.
 const DEV_FILE =
-  /^(index\.html|script\.js|styles\.css|assets\/(characters|screenshots)\/[\w-]+\.(?:png|webp))$/;
+  /^(index\.html|script\.js|styles\.css|assets\/(characters|screenshots)\/[\w-]+\.(?:png|webp)|video\/smart-queue-demo-2min\.pdf)$/;
 const TYPES = {
   html: "text/html; charset=utf-8",
   js: "text/javascript; charset=utf-8",
   css: "text/css; charset=utf-8",
   png: "image/png",
   webp: "image/webp",
+  pdf: "application/pdf",
 };
 export function presentationDevMiddleware(source = defaultSource) {
   return async (req, res, next) => {

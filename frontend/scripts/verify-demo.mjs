@@ -9,11 +9,12 @@ const DIRECTORIES = new Set([
   "presentation/assets",
   "presentation/assets/characters",
   "presentation/assets/screenshots",
+  "presentation/video",
 ]);
 // The app shell, its favicon, and the exact runtime files of the offline presentation
 // (scripts/copy-presentation.mjs); no notes, tests, maps, or other types.
 const ARTIFACT =
-  /^(index\.html|favicon\.svg|assets\/[\w-]+-[\w-]+\.(js|css)|presentation\/(index\.html|script\.js|styles\.css|assets\/(characters|screenshots)\/[\w-]+\.(?:png|webp)))$/;
+  /^(index\.html|favicon\.svg|assets\/[\w-]+-[\w-]+\.(js|css)|presentation\/(index\.html|script\.js|styles\.css|assets\/(characters|screenshots)\/[\w-]+\.(?:png|webp)|video\/smart-queue-demo-2min\.pdf))$/;
 const CSP =
   "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'";
 // Exactly one CSP meta, with the public-demo policy, ahead of any script.
@@ -47,7 +48,13 @@ export async function verifyDemo(directory) {
     if (!stat.isFile() || !ARTIFACT.test(relative)) {
       throw new Error(`Unexpected artifact: ${relative}`);
     }
-    const content = await readFile(path, "utf8");
+    const bytes = await readFile(path);
+    if (relative.endsWith(".pdf") && !bytes.subarray(0, 5).equals(Buffer.from("%PDF-"))) {
+      throw new Error(`Invalid PDF artifact: ${relative}`);
+    }
+    const content = /\.(?:pdf|png|webp)$/.test(relative)
+      ? ""
+      : bytes.toString("utf8");
     if (
       /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{36}|sourceMappingURL\s*=|\/api\//.test(
         content,
@@ -84,6 +91,8 @@ export async function verifyDemo(directory) {
   for (const required of ["index.html", "script.js", "styles.css"])
     if (!files.includes(`presentation/${required}`))
       throw new Error(`Missing presentation/${required}`);
+  if (!files.includes("presentation/video/smart-queue-demo-2min.pdf"))
+    throw new Error("Missing presentation/video/smart-queue-demo-2min.pdf");
   const deck = await readFile(
     join(directory, "presentation/index.html"),
     "utf8",

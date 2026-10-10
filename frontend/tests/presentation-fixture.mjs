@@ -13,10 +13,12 @@ export const presentationFiles = [
   "presentation/styles.css",
   "presentation/assets/characters/cast.png",
   "presentation/assets/screenshots/open-slot.png",
+  "presentation/video/smart-queue-demo-2min.pdf",
 ];
 export async function writePresentation(dir) {
   await mkdir(join(dir, "presentation/assets/characters"), { recursive: true });
   await mkdir(join(dir, "presentation/assets/screenshots"), { recursive: true });
+  await mkdir(join(dir, "presentation/video"), { recursive: true });
   await writeFile(join(dir, "favicon.svg"), "<svg></svg>");
   await writeFile(join(dir, "presentation/index.html"), deckHtml);
   await writeFile(join(dir, "presentation/script.js"), 'console.log("deck");');
@@ -26,4 +28,8 @@ export async function writePresentation(dir) {
   );
   for (const png of presentationFiles.filter((f) => f.endsWith(".png")))
     await writeFile(join(dir, png), "PNG fixture");
+  await writeFile(
+    join(dir, "presentation/video/smart-queue-demo-2min.pdf"),
+    "%PDF-1.3\nfixture",
+  );
 }

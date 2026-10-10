@@ -338,6 +338,7 @@ export const spanish: Record<string, string> = {
   "My care": "Mi atención",
   "Welcome to the demo": "Bienvenido a la demo",
   "Press for presentation": "Oprima para ver la presentación",
+  "Open demo PDF": "Abrir PDF de la demostración",
   "Opens in a new window": "Se abre en una ventana nueva",
   "Standalone demo · No API connection":
     "Demo independiente · Sin conexión a la API",
