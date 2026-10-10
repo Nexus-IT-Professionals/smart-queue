@@ -8,6 +8,8 @@
 
 Nothing in the application was changed. This file is the only addition to the repository.
 
+> **Note (2026-10-09):** this review predates the AI-assisted flow. The demo is now María cancels → simulated AI assistant offers → José accepts → Ana (office) is notified; the Provider/Patient views, staff offer buttons and decline/help replies described below no longer exist. Recommendations are kept as a record.
+
 ---
 
 ## Executive summary

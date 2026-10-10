@@ -1,16 +1,16 @@
 # Provider calendar and scheduling priorities
 
-Implemented for the **synthetic, credential-free, single-browser POC**. Priority supports scheduling coordination, not diagnosis, medical urgency inference, or emergency assessment. No AI runs. Only the Provider workspace exposes priority/configuration controls; this is a demo role convention, not production authorization or a credential check. Qualified-staff review is an explicit demo confirmation, not verification of a real qualification.
+Implemented for the **synthetic, credential-free, single-browser POC**. Priority supports scheduling coordination, not diagnosis, medical urgency inference, or emergency assessment. Urgency is set only by staff; the simulated AI assistant (rule-based, no AI model) applies these priorities but never sets them. Only Ana's office view exposes priority/configuration controls; this is a demo role convention, not production authorization or a credential check. Qualified-staff review is an explicit demo confirmation, not verification of a real qualification.
 
 ## Calendar
 
-Provider → Overview or Schedule → **Day / Week / Month**. Day retains the existing filtered appointment table. Week shows seven days starting Monday; Month shows a six-week grid including adjacent-month days. Previous/Next moves one day, week, or month, respectively. Selecting a day updates the shared date control, metrics, and appointment table. Month navigation clamps dates safely at month ends, including leap years and year rollover.
+Office view (Ana) → Overview or Schedule → **Day / Week / Month**. Day retains the existing filtered appointment table. Week shows seven days starting Monday; Month shows a six-week grid including adjacent-month days. Previous/Next moves one day, week, or month, respectively. Selecting a day updates the shared date control, metrics, and appointment table. Month navigation clamps dates safely at month ends, including leap years and year rollover.
 
 The sample has nine slots on October 8, 2026 and the four waiting patients’ original appointments on October 22. Other dates correctly have no demo capacity. Counts show scheduled, completed and open slots; original cancellations remain separate historical records, so they do not create duplicate bookable capacity. The history remains visible after the released slot is filled. Month/Week cells show distinct eligible P1/P2 patients **only for real open sample slots that day**. Color is accompanied by text; P1/P2 refers to the stable level IDs even if staff customize labels/order. Mobile calendars scroll horizontally inside a keyboard-focusable region, with no page overflow.
 
 ## Configuration and priority assignment
 
-Provider → Waitlist → **Priority configuration**:
+Office view → Waitlist → **Priority configuration**:
 
 | ID | Default label / indicator | Default order | Description |
 |---|---|---:|---|
@@ -27,15 +27,15 @@ Each waiting entry shows synthetic patient-reported context, availability, reque
 
 ## Deterministic selection and consent
 
-1. Staff confirms the existing sample October 8, 2:00 PM cancellation (SQ-006). The released slot becomes available; the old cancellation is history.
+1. María cancels the existing sample October 8, 2:00 PM appointment (SQ-006) in her patient view, with explicit confirmation. The AI assistant (simulated) detects it; the released slot becomes available and the old cancellation is history.
 2. Filter waiting patients by matching office, provider, consultation type and sufficient duration; the full slot must fit their time window and allowed dates, on or after their request date and strictly before their current booking date.
 3. Exclude overlaps with an existing scheduled/completed appointment for **either that patient or that provider**. Touching endpoints do not overlap; canceled/open records do not block. Insurance and free-text conditions are never ranking inputs.
-4. Sort eligible patients by configured priority order, then oldest ISO request date, then stable record ID. Sorting does not mutate fixtures. The assistant sees the eligible list and an initial suggestion; an explicit choice of another eligible candidate is allowed.
-5. Staff confirms the selected offer. This does **not** book the slot. Only one offer is active. Priority/configuration changes never silently replace its recipient.
-6. Patient view follows the selected synthetic recipient. The patient previews and explicitly accepts. Compatibility/conflicts are rechecked, then one reducer transition fills SQ-006, releases that patient's old October 22 slot, removes their waiting entry, and records acceptance. Repeated or out-of-order actions are ignored.
-7. Decline keeps the old appointment and the opening. Help keeps the pending offer. Automatic next-candidate offers and expiry remain unimplemented; reset to replay.
+4. Sort eligible patients by configured priority order, then oldest ISO request date, then stable record ID. Sorting does not mutate fixtures. The AI assistant selects the first eligible patient; the reasoning it shows (`selectionReasoning()` in `demo/data.ts`) is derived from these same inputs. If no patient is eligible, it says so and the slot stays open.
+5. The assistant sends the selected patient a simulated in-app offer. This does **not** book the slot. Only one offer is active. Priority/configuration changes never silently replace its recipient.
+6. José's role view shows whichever waiting patient was offered the slot. The patient previews and explicitly accepts. Compatibility/conflicts are rechecked, then one reducer transition fills SQ-006, releases that patient's old October 22 slot, removes their waiting entry, and records acceptance. The assistant then records the schedule update and notifies Ana; she is informed, not asked to approve. Repeated or out-of-order actions are ignored.
+7. There is no decline or help reply in the demo. Automatic next-candidate offers and expiry remain unimplemented; reset to replay.
 
-Source path: `StaffWorkspace.tsx` → `demoReducer` in `demo/data.ts` → `eligibleCandidates` / `eligible` in `demo/scheduling.ts` → `PatientWorkspace.tsx` confirmation → reducer acceptance → calendar/waitlist derived views. No network or backend write is part of this path.
+Source path: `CancellingPatientWorkspace.tsx` cancel → `demoReducer` / `runAssistant` in `demo/data.ts` → `eligibleCandidates` (`eligible` and `sortPatients` in `demo/scheduling.ts`) and `selectionReasoning` → `PatientWorkspace.tsx` confirmation → reducer acceptance → assistant update and notification → calendar/waitlist derived views and `AssistantFeed.tsx`. No network or backend write is part of this path.
 
 ## Storage and scope
 
@@ -45,11 +45,11 @@ This protects against duplicate transitions in one browser, not concurrent produ
 
 ## Manual demo scenarios
 
-1. **Normal:** reset → Provider → confirm cancellation. Nicolás is morning-only, so he is excluded even if staff raises his priority. José, Elena and Camila are P3; José's October 4 request precedes Elena's October 5 and Camila's October 7 requests. Send José’s offer and accept in Patient view.
-2. **Urgent scheduling:** reset → Waitlist → change Camila to P1 → check the staff-review box → save. Cancel the sample slot. Camila is first among eligible candidates; confirm her offer. Patient view must show Camila. Preview/confirm, return to Schedule, and find her P1 badge at October 8, 2 PM. October 22 now has an open 3 PM slot and no Camila booking.
+1. **Normal:** reset → María → cancel and confirm. Nicolás is morning-only, so he is excluded even if staff raises his priority. José, Elena and Camila are P3; José's October 4 request precedes Elena's October 5 and Camila's October 7 requests. The AI assistant offers José the slot; accept in José's view, then check Ana's notification and AI activity.
+2. **Urgent scheduling:** reset → Ana → Waitlist → change Camila to P1 → check the staff-review box → save. Cancel as María. The AI assistant selects Camila (highest priority among eligible patients). José's role view must show Camila's offer. Preview/confirm, return to Schedule, and find her P1 badge at October 8, 2 PM. October 22 now has an open 3 PM slot and no Camila booking.
 3. **Disable safely:** set Camila to P1, open configuration, disable P1, retain enabled P3 as default, save. Camila becomes P3; José wins the older-request tie. Try duplicate order numbers or disabling the default: saving must fail without changing active settings.
 4. **Calendar:** navigate Month October → November → October. Pick October 8 and October 22, switch Week and Day. Completed and historical canceled records remain distinguishable; empty days do not imply availability.
-5. **Consent/reset:** send an offer, preview then Go back; the original booking must remain. Try decline/help, role navigation, English/Español, and reload. Reload intentionally restores initial priorities, bookings and configuration.
+5. **Consent/reset:** as María, start a cancellation and choose Keep my appointment; nothing changes. Cancel, then in José's view preview the offer and Go back; the original booking must remain. Try role navigation, English/Español, and reload. Reload intentionally restores initial priorities, bookings and configuration.
 
 ## Automated validation
 

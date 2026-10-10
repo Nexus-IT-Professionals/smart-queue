@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { spanish } from "../src/i18n/catalog";
+import { switchRole } from "./story";
 
 type Language = "en" | "es";
 const plain = (text: string) => text.replace(/\s+/g, " ").trim();
@@ -98,13 +99,16 @@ async function walkEveryState(page: Page, language: Language) {
     .click();
   await expect(page.locator("html")).toHaveAttribute("lang", language);
   await check("entry");
-  await click("Patient view");
+  const role = (who: "maria" | "jose" | "ana") => switchRole(page, who, L);
+  await role("jose");
   await expect(
     page.getByRole("heading", { name: L("No earlier offer yet") }),
   ).toBeVisible();
-  await check("patient, no offer");
-  await click("Provider view");
-  await check("provider overview");
+  await check("José, no offer");
+  await role("maria");
+  await check("María, scheduled");
+  await role("ana");
+  await check("office overview");
   for (const view of ["Schedule", "Waitlist", "Activity log"]) {
     await nav(view);
     await check(`provider ${view}`);
@@ -126,37 +130,36 @@ async function walkEveryState(page: Page, language: Language) {
   ).toBeVisible();
   await check("empty demo date");
   await click("Reset filters and demo date");
-  await click("Confirm demo cancellation");
-  await check("cancellation confirmed");
-  await click("Send demo offer to José");
-  await check("offer sent");
-  await click("Patient view");
-  await click("Accept earlier visit");
-  await check("patient confirmation");
-  await click("Go back");
-  await check("patient offer");
-  await click("I need help");
-  await check("patient help");
-  await click("Keep my current visit");
-  await check("patient declined");
-  await click("Provider view");
-  await check("provider after decline");
-  await nav("Activity log");
-  await check("activity after decline");
-  await click("Reset demo scenario");
-  await check("provider after reset");
-  await nav("Overview");
-  await click("Confirm demo cancellation");
-  await click("Send demo offer to José");
-  await click("Patient view");
-  await click("Accept earlier visit");
-  await click("Yes, move my appointment");
-  await check("patient accepted");
-  await click("Provider view");
+  // María cancels; the AI assistant (simulated) detects, selects and offers.
+  await role("maria");
+  await click("Cancel my appointment");
+  await check("María confirmation");
+  await click("Keep my appointment");
+  await click("Cancel my appointment");
+  await click("Yes, cancel my appointment");
+  await check("María cancelled, AI offered");
+  await role("ana");
   for (const view of ["Overview", "Schedule", "Waitlist", "Activity log"]) {
     await nav(view);
-    await check(`provider ${view} after acceptance`);
+    await check(`office ${view} while the AI offer is pending`);
   }
+  await role("jose");
+  await check("José offer");
+  await click("Accept earlier visit");
+  await check("José confirmation");
+  await click("Go back");
+  await click("Accept earlier visit");
+  await click("Yes, move my appointment");
+  await check("José accepted, AI updated and notified");
+  await role("maria");
+  await check("María after the story");
+  await role("ana");
+  for (const view of ["Overview", "Schedule", "Waitlist", "Activity log"]) {
+    await nav(view);
+    await check(`office ${view} after Ana is notified`);
+  }
+  await click("Reset demo scenario");
+  await check("office after reset");
   return found;
 }
 
@@ -197,7 +200,7 @@ for (const timezoneId of ["Asia/Tokyo", "Pacific/Honolulu"]) {
       };
       const text = async (selector: string) =>
         plain((await page.locator(selector).first().innerText()) ?? "");
-      await page.goto("/#/patient");
+      await page.goto("/#/patient/jose");
       expect(
         await page.evaluate(
           () => Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -210,7 +213,7 @@ for (const timezoneId of ["Asia/Tokyo", "Pacific/Honolulu"]) {
             exact: true,
           })
           .click();
-        await page.goto("/#/patient");
+        await page.goto("/#/patient/jose");
         const want = expected[language];
         expect(await text(".page-footer span:last-child")).toContain(
           want.footer,

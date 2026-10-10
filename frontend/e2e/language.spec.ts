@@ -1,4 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { switchRole, translator } from "./story";
+
+const es = translator("es");
 
 for (const width of [320, 768, 1440]) {
   test(`Spanish workflow and language switching preserve state at ${width}px`, async ({
@@ -11,9 +14,7 @@ for (const width of [320, 768, 1440]) {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Explore la atención sin la espera.",
     );
-    await page
-      .getByRole("button", { name: "Continuar como proveedor demo" })
-      .click();
+    await page.getByRole("button", { name: "Continuar como Ana" }).click();
     await page
       .getByRole("combobox", { name: "Estado de la cita" })
       .selectOption("Completed");
@@ -26,25 +27,22 @@ for (const width of [320, 768, 1440]) {
     await page
       .getByRole("combobox", { name: "Estado de la cita" })
       .selectOption("All statuses");
+    // María cancels in Spanish; the AI assistant (simulated) offers José.
+    await switchRole(page, "maria", es);
+    await page.getByRole("button", { name: "Cancelar mi cita", exact: true }).click();
     await page
-      .getByRole("button", { name: "Confirmar cancelación demo", exact: true })
+      .getByRole("button", { name: "Sí, cancelar mi cita", exact: true })
       .click();
-    await page
-      .getByRole("button", { name: "Enviar oferta demo a José" })
-      .click();
+    await expect(page.locator(".demo-scenario [role=status]")).toHaveText(
+      "Cancelada. El asistente de IA (simulado) ofreció su horario de las 2:00 p. m. a un paciente en espera.",
+    );
+    await switchRole(page, "ana", es);
+    await expect(page.locator(".ai-feed")).toContainText("Asistente de IA (simulado)");
     await page.screenshot({
       path: test.info().outputPath(`spanish-provider-${width}.png`),
       fullPage: true,
     });
-    await page.getByRole("button", { name: "Vista del paciente" }).click();
-    await page
-      .getByRole("button", { name: "Necesito ayuda", exact: true })
-      .click();
-    await expect(
-      page.getByText(
-        "Solicitud de ayuda de prueba registrada. No se envió ningún mensaje al consultorio.",
-      ),
-    ).toBeVisible();
+    await switchRole(page, "jose", es);
     await page
       .getByRole("button", { name: "Aceptar cita más cercana", exact: true })
       .click();
@@ -59,9 +57,17 @@ for (const width of [320, 768, 1440]) {
     await expect(
       page.getByRole("heading", { name: "jueves, 8 de octubre", exact: true }),
     ).toBeVisible();
-    await page.getByRole("button", { name: "Vista del proveedor" }).click();
+    await switchRole(page, "ana", es);
+    await expect(
+      page.getByRole("region", { name: "Notificación para Ana Martínez" }),
+    ).toBeVisible();
     await page.getByRole("button", { name: "Revisar actividad" }).click();
-    await expect(page.locator(".timeline")).toContainText("El paciente aceptó");
+    await expect(page.locator(".timeline")).toContainText(
+      "José Pérez aceptó la cita más cercana",
+    );
+    await expect(page.locator(".timeline")).toContainText(
+      "Notificó a Ana Martínez, asistente de oficina médica",
+    );
     await page.getByRole("button", { name: /^Lista de espera/ }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Lista de espera",
@@ -73,15 +79,12 @@ for (const width of [320, 768, 1440]) {
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
     await expect(
-      page.getByRole("button", {
-        name: "Confirmar cancelación demo",
-        exact: true,
-      }),
-    ).toBeVisible();
+      page.getByRole("row").filter({ hasText: "SQ-006" }),
+    ).toContainText("María Rodríguez");
   });
 }
 
-test("Spanish empty states and decline preserve the original appointment", async ({
+test("Spanish empty states; María backing out preserves her appointment", async ({
   page,
 }) => {
   await page.goto("/#/provider");
@@ -111,19 +114,16 @@ test("Spanish empty states and decline preserve the original appointment", async
   await page
     .getByRole("button", { name: "Restablecer filtros y fecha demo" })
     .click();
-  await page
-    .getByRole("button", { name: "Confirmar cancelación demo", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Enviar oferta demo a José" })
-    .click();
-  await page.getByRole("button", { name: "Vista del paciente" }).click();
-  await page.getByRole("button", { name: "Mantener mi cita actual" }).click();
+  await switchRole(page, "maria", es);
+  await page.getByRole("button", { name: "Cancelar mi cita", exact: true }).click();
+  await page.getByRole("button", { name: "Mantener mi cita", exact: true }).click();
+  await expect(page.locator(".appointment-footer")).toContainText(
+    "Programada · ejemplo",
+  );
   await expect(
-    page.getByText(
-      "Rechazo de prueba registrado. Su cita existente no cambia.",
-    ),
+    page.getByRole("heading", { name: "jueves, 8 de octubre", exact: true }),
   ).toBeVisible();
+  await switchRole(page, "jose", es);
   await expect(
     page.getByRole("heading", { name: "jueves, 22 de octubre", exact: true }),
   ).toBeVisible();
@@ -146,7 +146,7 @@ test("language switching works when browser preference storage is blocked", asyn
   await page.goto("/#/login");
   await page.getByRole("button", { name: "Español", exact: true }).click();
   await page
-    .getByRole("button", { name: "Continuar como paciente demo" })
+    .getByRole("button", { name: "Continuar como José" })
     .click();
   await expect(
     page.getByRole("heading", { name: "Mi cita", level: 1 }),

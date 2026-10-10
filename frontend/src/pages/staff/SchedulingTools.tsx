@@ -5,7 +5,6 @@ import {
   calendarAppointments,
   cancellationHistory,
   demoWaitlist,
-  eligibleCandidates,
   type DemoAction,
   type DemoState,
 } from "../../demo/data";
@@ -111,77 +110,6 @@ export function PriorityEditor({
         {t("Save priority")}
       </button>
     </form>
-  );
-}
-export function CandidateReview({
-  demo,
-  candidateId,
-  onSelect,
-}: {
-  demo: DemoState;
-  candidateId: string;
-  onSelect: (id: string) => void;
-}) {
-  const { t, dateText } = useLanguage();
-  const candidates = eligibleCandidates(demo);
-  const rank = (id: PriorityId) => priorityLevel(demo.config, id).rank;
-  // Ranking is priority first, then the oldest request; say which one decided.
-  const reason =
-    candidates.length > 1 &&
-    rank(candidates[0].priority) < rank(candidates[1].priority)
-      ? "Ranked first: highest scheduling priority among eligible patients."
-      : "Ranked first: earliest request among patients with the same priority.";
-  return (
-    <div className="candidate-review">
-      <h3>{t("Eligible candidates · staff review")}</h3>
-      <p>
-        {t(
-          "Ranked by configured priority, then oldest request. Confirm an offer; the patient must accept before the schedule changes.",
-        )}
-      </p>
-      {candidates.length ? (
-        <fieldset className="candidate-list">
-          <legend>{t("Offer recipient")}</legend>
-          {candidates.map((p, index) => (
-            <label
-              key={p.id}
-              className={`candidate-card${p.id === candidateId ? " selected" : ""}`}
-            >
-              <input
-                type="radio"
-                name="offer-recipient"
-                value={p.id}
-                checked={p.id === candidateId}
-                onChange={() => onSelect(p.id)}
-              />
-              <span className="candidate-rank" aria-hidden="true">
-                {index + 1}
-              </span>
-              <span className="candidate-details">
-                <strong>{p.name}</strong>
-                <span>
-                  {t(p.availability)} · {t("waiting since")}{" "}
-                  {dateText(p.since, { month: "short", day: "numeric" })}
-                </span>
-                {index === 0 && (
-                  <span className="candidate-reason">{t(reason)}</span>
-                )}
-              </span>
-              <PriorityBadge demo={demo} priority={p.priority} />
-            </label>
-          ))}
-        </fieldset>
-      ) : (
-        <p role="status">
-          {t("No eligible candidates. No appointment will be reassigned.")}
-        </p>
-      )}
-      <p className="small-text">
-        {t(
-          "Only matching office, provider, visit type, duration, date and full time window qualify. Existing patient or provider conflicts exclude a candidate.",
-        )}
-      </p>
-    </div>
   );
 }
 export function PriorityConfiguration({

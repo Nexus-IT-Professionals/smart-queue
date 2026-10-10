@@ -17,11 +17,13 @@ import {
   demoWaitlist,
   demoWorkspaceFromHash,
   initialDemoState,
+  workspaceHash,
   type DemoWorkspace,
 } from "./demo/data";
 import DemoAccess from "./pages/DemoAccess";
 import StaffWorkspace from "./pages/staff/StaffWorkspace";
 import PatientWorkspace from "./pages/patient/PatientWorkspace";
+import CancellingPatientWorkspace from "./pages/patient/CancellingPatientWorkspace";
 
 export type StaffView =
   | "overview"
@@ -72,6 +74,12 @@ function openPresentation(event: MouseEvent<HTMLAnchorElement>) {
   event.preventDefault();
   popup.focus();
 }
+// The header role switch: the three people in the story.
+const roles: [DemoWorkspace, string, string][] = [
+  ["maria", "María", "(patient)"],
+  ["jose", "José", "(patient)"],
+  ["staff", "Ana", "(office)"],
+];
 export default function App() {
   const { t, dateText, language, setLanguage } = useLanguage();
   // A public role selector, not a login/session or a backend permission.
@@ -81,7 +89,7 @@ export default function App() {
   const [demo, dispatch] = useReducer(demoReducer, undefined, initialDemoState);
   const waitlist = demoWaitlist(demo);
   function navigate(next: DemoWorkspace) {
-    window.location.hash = next === "staff" ? "/provider" : `/${next}`;
+    window.location.hash = workspaceHash[next];
     setWorkspace(next);
   }
   useEffect(() => {
@@ -191,22 +199,16 @@ export default function App() {
             {" "}
             {t("Demo access")}{" "}
           </button>
-          <button
-            type="button"
-            aria-pressed={workspace === "staff"}
-            onClick={() => navigate("staff")}
-          >
-            {" "}
-            {t("Provider view")}{" "}
-          </button>
-          <button
-            type="button"
-            aria-pressed={workspace === "patient"}
-            onClick={() => navigate("patient")}
-          >
-            {" "}
-            {t("Patient view")}{" "}
-          </button>
+          {roles.map(([role, name, detail]) => (
+            <button
+              type="button"
+              key={role}
+              aria-pressed={workspace === role}
+              onClick={() => navigate(role)}
+            >
+              {name} <span className="role-detail">{t(detail)}</span>
+            </button>
+          ))}
         </div>
         <fieldset className="language-switch" aria-label="Language / Idioma">
           <button
@@ -253,7 +255,7 @@ export default function App() {
             ) : (
               <div className="nav-item patient-nav">
                 <Icon name="heart" />
-                {workspace === "patient"
+                {workspace === "maria" || workspace === "jose"
                   ? t("My care")
                   : t("Welcome to the demo")}
               </div>
@@ -321,18 +323,25 @@ export default function App() {
         {workspace !== "demo" && (
           <div className="demo-identity">
             <span className="demo-identity-people">
-              <span>
-                <strong>
-                  {workspace === "patient"
-                    ? selectedPatient(demo).name
-                    : demoIdentities[workspace].name}
-                </strong>{" "}
-                · {t(demoIdentities[workspace].label)}
-              </span>
-              {workspace === "staff" && (
-                <span className="demo-identity-assistant">
-                  <strong>{demoAssistant.name}</strong> ·{" "}
-                  {t(demoAssistant.label)}
+              {workspace === "staff" ? (
+                <>
+                  <span>
+                    <strong>{demoAssistant.name}</strong> ·{" "}
+                    {t(demoAssistant.label)}
+                  </span>
+                  <span className="demo-identity-assistant">
+                    {t("Observing the schedule of")}{" "}
+                    <strong>{demoIdentities.staff.name}</strong>
+                  </span>
+                </>
+              ) : (
+                <span>
+                  <strong>
+                    {workspace === "jose"
+                      ? selectedPatient(demo).name
+                      : demoIdentities[workspace].name}
+                  </strong>{" "}
+                  · {t(demoIdentities[workspace].label)}
                 </span>
               )}
             </span>
@@ -353,13 +362,18 @@ export default function App() {
             onNavigate={setView}
             demo={demo}
             onAction={dispatch}
-            onPatient={() => navigate("patient")}
+          />
+        ) : workspace === "maria" ? (
+          <CancellingPatientWorkspace
+            demo={demo}
+            onAction={dispatch}
+            onNavigate={navigate}
           />
         ) : (
           <PatientWorkspace
             demo={demo}
             onAction={dispatch}
-            onProvider={() => navigate("staff")}
+            onNavigate={navigate}
           />
         )}
         <footer className="page-footer">

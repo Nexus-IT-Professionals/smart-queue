@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { cancelAsMaria, switchRole } from "./story";
 
-test("urgent eligible patient is reviewed, explicitly accepts, and updates all calendar views", async ({
+test("the AI selects the staff-confirmed urgent eligible patient, who explicitly accepts; all calendar views update", async ({
   page,
 }) => {
   const external: string[] = [];
@@ -26,17 +27,19 @@ test("urgent eligible patient is reviewed, explicitly accepts, and updates all c
   await expect(page.locator(".waitlist-person").first()).toContainText(
     "Camila Soto",
   );
-  await page
-    .getByRole("button", { name: "Confirm demo cancellation", exact: true })
-    .click();
-  await expect(page.getByRole("radio", { name: /Camila Soto/ })).toBeChecked();
-  await expect(page.locator(".candidate-review")).not.toContainText(
-    "Nicolás Díaz",
+  await cancelAsMaria(page);
+  await switchRole(page, "ana");
+  // The assistant follows the staff-confirmed priority; mornings-only stays excluded.
+  const feed = page.locator(".ai-feed");
+  await expect(feed).toContainText("Selected Camila Soto from 4 waiting patients.");
+  await expect(feed.locator(".ai-reasoning")).toContainText(
+    "Highest scheduling priority among eligible patients (P1 · Urgent).",
   );
-  await page
-    .getByRole("button", { name: "Confirm offer to selected patient" })
-    .click();
-  await page.getByRole("button", { name: "Patient view", exact: true }).click();
+  await expect(feed.locator(".ai-reasoning")).toContainText(
+    "Excluded Nicolás Díaz: Mornings · 9–11 AM does not cover 2:00 PM.",
+  );
+  // The waiting patient's view shows whoever the assistant offered the slot.
+  await switchRole(page, "jose");
   await expect(page.locator(".profile-heading")).toContainText("Camila Soto");
   await expect(page.locator(".profile-heading")).toContainText("WL-003");
   await expect(page.locator(".patient-appointment")).toContainText(
@@ -56,9 +59,7 @@ test("urgent eligible patient is reviewed, explicitly accepts, and updates all c
     .getByRole("button", { name: "Yes, move my appointment", exact: true })
     .click();
   await expect(page.locator(".patient-appointment")).toContainText("October 8");
-  await page
-    .getByRole("button", { name: "Provider view", exact: true })
-    .click();
+  await switchRole(page, "ana");
   await page.getByRole("button", { name: "Schedule", exact: true }).click();
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
@@ -124,10 +125,8 @@ test("configuration validation, migration, custom labels/order and session reset
   await expect(
     page.locator(".waitlist-person").filter({ hasText: "Elena Morales" }),
   ).toContainText("P4");
-  await page.getByRole("button", { name: "Patient view", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Provider view", exact: true })
-    .click();
+  await switchRole(page, "jose");
+  await switchRole(page, "ana");
   // The Overview preview hides the default level; the Waitlist shows every badge.
   await page.getByRole("button", { name: "Waitlist 4", exact: true }).click();
   await expect(
@@ -148,11 +147,9 @@ for (const width of [320, 768, 1440])
     page,
   }) => {
     await page.setViewportSize({ width, height: 1000 });
-    await page.goto("/#/provider");
-    await page.getByRole("button", { name: "Schedule", exact: true }).click();
-    await page
-      .getByRole("button", { name: "Confirm demo cancellation", exact: true })
-      .click();
+    await page.goto("/#/patient/maria");
+    await cancelAsMaria(page);
+    await switchRole(page, "ana");
     // A high scheduling level does not bypass the morning-only restriction.
     await page.getByRole("button", { name: /^Waitlist/ }).click();
     const elena = page

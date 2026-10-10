@@ -98,17 +98,23 @@ test("configuration validates unique ranks and enabled nonurgent default; disabl
   config.levels[3].label = "external mutation";
   assert.equal(state.config.levels[3].label, "Low");
 });
-test("custom ordering changes suggestions without auto offering or replacing an existing offer", () => {
-  let state = update(open(), "WL-003", "P4");
+test("staff priority configuration steers the AI's selection; later changes never replace an existing offer", () => {
+  let state = update(initialDemoState(), "WL-003", "P4");
   const config = defaultPriorityConfig();
   config.levels[3].rank = 1;
   config.levels[0].rank = 4;
   state = demoReducer(state, { type: "configure", config });
-  assert.equal(state.phase, "open");
-  assert.equal(eligibleCandidates(state)[0].id, "WL-003");
-  state = demoReducer(state, { type: "offer", candidateId: "WL-001" }); // deliberate staff override
-  state = update(state, "WL-003", "P1");
-  assert.equal(state.candidateId, "WL-001");
+  // Configuration alone never acts: the assistant waits for a cancellation.
+  assert.equal(state.phase, "scheduled");
+  assert.equal(state.candidateId, undefined);
+  state = demoReducer(state, { type: "cancel" });
+  assert.equal(state.phase, "offered");
+  assert.equal(state.candidateId, "WL-003");
+  const selected = state.events.find((e) => e.kind === "selected");
+  assert.equal(selected.reasoning.decidedBy, "priority");
+  assert.equal(selected.reasoning.priority, "P4");
+  state = update(state, "WL-001", "P1");
+  assert.equal(state.candidateId, "WL-003");
 });
 test("all compatibility and overlapping patient/provider constraints are enforced", () => {
   const state = open(),
@@ -157,13 +163,10 @@ test("all compatibility and overlapping patient/provider constraints are enforce
     );
   }
 });
-test("staff selection and patient confirmation atomically move one booking and release the old slot", () => {
-  let state = update(open(), "WL-003", "P1");
-  assert.equal(
-    demoReducer(state, { type: "offer", candidateId: "WL-002" }),
-    state,
-  );
-  state = demoReducer(state, { type: "offer", candidateId: "WL-003" });
+test("AI selection and patient confirmation atomically move one booking and release the old slot", () => {
+  let state = update(initialDemoState(), "WL-003", "P1");
+  state = demoReducer(state, { type: "cancel" });
+  assert.equal(state.candidateId, "WL-003");
   assert.equal(
     calendarAppointments(state).find((a) => a.id === "SQ-006").status,
     "Open slot",
@@ -172,7 +175,7 @@ test("staff selection and patient confirmation atomically move one booking and r
     calendarAppointments(state).find((a) => a.id === "BOOK-WL-003").status,
     "Scheduled",
   );
-  state = demoReducer(state, { type: "respond", response: "accepted" });
+  state = demoReducer(state, { type: "accept" });
   const calendar = calendarAppointments(state);
   assert.equal(calendar.find((a) => a.id === "SQ-006").name, "Camila Soto");
   assert.equal(calendar.find((a) => a.id === "SQ-006").priority, "P1");
@@ -189,18 +192,14 @@ test("staff selection and patient confirmation atomically move one booking and r
     demoWaitlist(state).some((p) => p.id === "WL-003"),
     false,
   );
-  assert.equal(
-    demoReducer(state, { type: "respond", response: "accepted" }),
-    state,
-  );
-  assert.equal(
-    demoReducer(state, { type: "offer", candidateId: "WL-001" }),
-    state,
-  );
+  assert.equal(demoReducer(state, { type: "accept" }), state);
+  assert.equal(demoReducer(state, { type: "cancel" }), state);
   assert.equal(cancellationHistory(state).length, 1);
 });
-test("acceptance rechecks conflicts; decline and reset preserve safe state", () => {
-  let state = demoReducer(open(), { type: "offer", candidateId: "WL-003" });
+test("acceptance rechecks conflicts; reset restores safe state", () => {
+  let state = demoReducer(update(initialDemoState(), "WL-003", "P1"), {
+    type: "cancel",
+  });
   const conflicting = {
     ...state,
     patients: state.patients.map((p) =>
@@ -209,16 +208,13 @@ test("acceptance rechecks conflicts; decline and reset preserve safe state", () 
         : p,
     ),
   };
-  assert.equal(
-    demoReducer(conflicting, { type: "respond", response: "accepted" }),
-    conflicting,
-  );
-  state = demoReducer(state, { type: "respond", response: "declined" });
+  assert.equal(demoReducer(conflicting, { type: "accept" }), conflicting);
   assert.equal(
     calendarAppointments(state).find((a) => a.id === "BOOK-WL-003").status,
     "Scheduled",
   );
   assert.equal(demoWaitlist(state).length, 4);
+  state = demoReducer(state, { type: "accept" });
   assert.deepEqual(demoReducer(state, { type: "reset" }), initialDemoState());
 });
 test("month/week date math covers leap years, year rollover, and Monday grids", () => {

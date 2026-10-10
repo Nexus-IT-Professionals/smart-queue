@@ -4,8 +4,8 @@ import { test, expect, type Locator, type Page } from "@playwright/test";
 // and WCAG 2.2 focus-not-obscured. Class locators keep each flow
 // language-independent so the same steps run in English and Spanish.
 const moved = {
-  en: "Demo appointment moved",
-  es: "Cita demo adelantada",
+  en: "Appointment moved",
+  es: "Cita adelantada",
 } as const;
 type Language = keyof typeof moved;
 const languages = Object.keys(moved) as Language[];
@@ -16,17 +16,26 @@ async function open(page: Page, language: Language) {
     await page.getByRole("button", { name: "Español", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", language);
 }
+// Header role switch: 0 Demo access, 1 María, 2 José, 3 Ana (office).
+const MARIA = 1,
+  JOSE = 2,
+  OFFICE = 3;
 const roleButton = (page: Page, index: number) =>
   page.locator(".workspace-switch button").nth(index);
+// María cancels with an explicit confirmation; the AI assistant then offers.
+async function cancelAsMaria(page: Page) {
+  await roleButton(page, MARIA).click();
+  await page.locator(".offer-actions .secondary-button").click();
+  await page.locator(".confirmation .primary-button").click();
+  await expect(scenarioButton(page)).toBeVisible();
+}
 const scenarioButton = (page: Page) =>
   page.locator(".demo-scenario-actions button");
 
-// Provider confirms the cancellation and sends the offer; patient accepts.
+// María cancels; the AI offers; José accepts; the AI updates and notifies Ana.
 async function completeWorkflow(page: Page, language: Language) {
-  await roleButton(page, 1).click();
-  await scenarioButton(page).click();
-  await scenarioButton(page).click();
-  await roleButton(page, 2).click();
+  await cancelAsMaria(page);
+  await roleButton(page, JOSE).click();
   await page.locator(".offer-actions .primary-button").click();
   await page.locator(".confirmation .primary-button").click();
   await expect(page.locator('[aria-live="polite"]')).toContainText(
@@ -113,37 +122,38 @@ test.describe("forced colors (Windows High Contrast)", () => {
       ).toBe(true);
       await distinguishable(page.locator(".workspace-switch"), "role switch");
       await distinguishable(page.locator(".language-switch"), "language");
-      await roleButton(page, 1).click();
+      await roleButton(page, OFFICE).click();
       await distinguishable(page.locator(".workspace-switch"), "role switch");
       await distinguishable(
         page.getByRole("navigation"),
         "provider nav",
         false,
       );
-      await bordered(scenarioButton(page), "primary button");
-      await focusRing(page, roleButton(page, 1), "selected role");
-      await focusRing(page, roleButton(page, 2), "unselected role");
-      await focusRing(page, scenarioButton(page), "primary button");
+      await focusRing(page, roleButton(page, OFFICE), "selected role");
+      await focusRing(page, roleButton(page, JOSE), "unselected role");
       await page.screenshot({
         path: testInfo.outputPath(`forced-colors-provider-${language}.png`),
         fullPage: true,
       });
-      await scenarioButton(page).click();
-      await scenarioButton(page).click();
-      await roleButton(page, 2).click();
+      await roleButton(page, MARIA).click();
+      const cancel = page.locator(".offer-actions .secondary-button");
+      await bordered(cancel, "secondary button");
+      await focusRing(page, cancel, "secondary button");
+      await cancel.click();
+      await bordered(page.locator(".confirmation .primary-button"), "primary button");
+      await page.locator(".confirmation .primary-button").click();
+      await bordered(scenarioButton(page), "primary button");
+      await focusRing(page, scenarioButton(page), "primary button");
+      await roleButton(page, JOSE).click();
       await distinguishable(page.locator(".workspace-switch"), "role switch");
       await bordered(
         page.locator(".offer-actions .primary-button"),
         "primary button",
       );
-      await bordered(
-        page.locator(".offer-actions .secondary-button"),
-        "secondary button",
-      );
       await focusRing(
         page,
-        page.locator(".offer-actions .secondary-button"),
-        "secondary button",
+        page.locator(".offer-actions .primary-button"),
+        "primary button",
       );
       await page.screenshot({
         path: testInfo.outputPath(`forced-colors-patient-${language}.png`),
@@ -224,7 +234,7 @@ for (const width of [320, 1280]) {
           ),
         ).not.toBe("0px");
         await notClipped(page, "entry");
-        await roleButton(page, 1).click();
+        await roleButton(page, OFFICE).click();
         for (const index of [1, 2, 3, 0]) {
           await page
             .getByRole("navigation")
@@ -237,10 +247,13 @@ for (const width of [320, 1280]) {
             await notClipped(page, "expanded priority configuration");
           }
         }
-        await scenarioButton(page).click();
-        await scenarioButton(page).click();
-        await notClipped(page, "offer sent");
-        await roleButton(page, 2).click();
+        await roleButton(page, MARIA).click();
+        await notClipped(page, "María scheduled");
+        await cancelAsMaria(page);
+        await notClipped(page, "María cancelled, AI offered");
+        await roleButton(page, OFFICE).click();
+        await notClipped(page, "office: AI offered");
+        await roleButton(page, JOSE).click();
         await notClipped(page, "patient offer");
         await page.locator(".offer-actions .primary-button").click();
         await notClipped(page, "confirmation");
@@ -249,6 +262,8 @@ for (const width of [320, 1280]) {
           moved[language],
         );
         await notClipped(page, "accepted");
+        await roleButton(page, OFFICE).click();
+        await notClipped(page, "office: Ana notified");
       });
     }
   });
@@ -308,16 +323,19 @@ test.describe("reduced motion", () => {
       const check = async (state: string) =>
         expect((await longestMotion(page)).s <= 0.01, state).toBe(true);
       await check("entry");
-      await roleButton(page, 1).hover();
+      await roleButton(page, OFFICE).hover();
       await check("hover role");
-      await roleButton(page, 1).click();
-      await scenarioButton(page).hover();
-      await check("hover primary");
+      await roleButton(page, OFFICE).click();
       await page.getByRole("navigation").getByRole("button").nth(1).click();
       await check("schedule");
       await page.getByRole("navigation").getByRole("button").nth(0).click();
+      await roleButton(page, MARIA).click();
+      await page.locator(".offer-actions .secondary-button").hover();
+      await check("hover button");
       await completeWorkflow(page, language);
       await check("accepted");
+      await roleButton(page, OFFICE).click();
+      await check("AI feed and notification");
     });
   }
 });
@@ -369,16 +387,21 @@ for (const { width, height } of [
       test(`every tab stop is visible (${language})`, async ({ page }) => {
         await open(page, language);
         await focusWalk(page, "entry");
-        await roleButton(page, 1).click();
-        await focusWalk(page, "provider overview");
+        await roleButton(page, OFFICE).click();
+        await focusWalk(page, "office overview");
         await page.getByRole("navigation").getByRole("button").nth(1).click();
-        await focusWalk(page, "provider schedule");
-        await scenarioButton(page).click();
-        await scenarioButton(page).click();
-        await roleButton(page, 2).click();
+        await focusWalk(page, "office schedule");
+        await roleButton(page, MARIA).click();
+        await focusWalk(page, "María scheduled");
+        await cancelAsMaria(page);
+        await focusWalk(page, "María cancelled");
+        await roleButton(page, JOSE).click();
         await focusWalk(page, "patient offer");
         await page.locator(".offer-actions .primary-button").click();
         await focusWalk(page, "confirmation");
+        await page.locator(".confirmation .primary-button").click();
+        await roleButton(page, OFFICE).click();
+        await focusWalk(page, "office: Ana notified");
       });
     }
   });

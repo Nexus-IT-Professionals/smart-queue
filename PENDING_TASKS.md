@@ -2,13 +2,15 @@
 
 Updated October 9, 2026. The current decision is a **public, credential-free hackathon POC**, using synthetic data only. Production accounts are not a prerequisite. [Demo access](docs/DEMO_ACCESS.md) supersedes earlier account/session requirements in the technical proposal.
 
+> **Note (2026-10-09):** the demo flow is now the AI-assisted story: María cancels → a simulated, rule-based AI assistant selects and offers the slot → José accepts → the AI updates the schedule and notifies Ana (office). The staff cancellation/offer buttons and the patient decline/help replies were removed. Dated entries below describe the earlier manual flow as it was at the time; current steps are in [Demo access](docs/DEMO_ACCESS.md) and [SUBMISSION.md](docs/SUBMISSION.md).
+
 ## Verified implementation and access review
 
 - No login page, auth library, redirect, middleware guard, or implemented authentication endpoint existed. The auth router was a stub; database user/session tables are unused by this POC.
-- Patient and Staff were the existing interfaces. Staff is now labeled **Provider** and retains schedule, waitlist, and activity navigation. There is no separate Admin interface.
-- `#/demo` and `#/login` always show the public entry page. `#/provider` (`#/staff` alias) and `#/patient` are directly accessible. Root/unknown fragments show the entry page; no credentials or personal input are requested.
-- Fictional provider is Dr. Carlos Rivera; Patient view follows the staff-selected synthetic offer recipient (José Pérez before an offer). Role selection is navigation, not a token or backend permission.
-- The complete **synthetic single-offer scenario** runs in browser memory: provider cancellation → offer → explicit patient acceptance → changed appointment, waitlist, schedule, and activity. Decline/help/reset are supported. Invalid/repeated actions are ignored.
+- Patient and Staff were the existing interfaces. Staff is now the office view (Ana) and retains schedule, waitlist, capacity, and activity navigation. There is no separate Admin interface.
+- `#/demo` and `#/login` always show the public entry page. `#/provider` (`#/staff` alias), `#/patient/maria` and `#/patient/jose` (`#/patient` alias) are directly accessible. Root/unknown fragments show the entry page; no credentials or personal input are requested.
+- Fictional provider is Dr. Carlos Rivera; Ana Martínez (office) observes his schedule. María Rodríguez cancels; José's role view follows the AI-selected offer recipient (José Pérez by default). Role selection is navigation, not a token or backend permission.
+- The complete **synthetic single-offer scenario** runs in browser memory: patient cancellation → simulated AI selection and offer → explicit patient acceptance → changed appointment, waitlist, schedule, activity, and Ana's notification. Reset is supported. Invalid/repeated actions are ignored.
 - Role changes and entry-page visits preserve state; reload/reset clears it. Separate judges/tabs do not share state. No live booking, message, real patient data, or database mutation is involved.
 - `/api/health` remains the only implemented API. The standard build queries it without cookies; the public-demo build makes no API request. Neither gates navigation. No production security check was disabled or universal-login endpoint added.
 - Public hosting is **not yet configured/verified**. Vercel with GitHub Actions is the selected deployment approach; project setup, CI secrets, and a verified judge URL remain pending.

@@ -1,5 +1,6 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
 import { spanish } from "../src/i18n/catalog";
+import { roleName } from "./story";
 async function fits(page: Page) {
   const sizes = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
@@ -95,7 +96,8 @@ for (const { name, width, height, scale } of cases) {
           if (primary) controls = controls.or(button(primary));
           await unobstructed(
             controls,
-            5 + Number(reset) + Number(!!primary),
+            // Four role buttons (Demo access, María, José, Ana) + two languages.
+            6 + Number(reset) + Number(!!primary),
             `${name} ${lang} step ${primary}`,
           );
         }
@@ -111,9 +113,11 @@ for (const { name, width, height, scale } of cases) {
           await button("Español").click();
           await expect(page.locator("html")).toHaveAttribute("lang", "es");
         }
-        await checkpoint("Continue as Demo Provider", false);
-        await button("Continue as Demo Provider").click();
-        await checkpoint("Confirm demo cancellation");
+        const role = (who: "maria" | "jose" | "ana") =>
+          page.getByRole("button", { name: roleName(who, t), exact: true });
+        await checkpoint("Continue as Ana", false);
+        await button("Continue as Ana").click();
+        await checkpoint();
         const nav = page.getByRole("navigation", { name: t("Main navigation") });
         for (const section of [
           "Schedule",
@@ -139,12 +143,14 @@ for (const { name, width, height, scale } of cases) {
         }
         await page.evaluate(() => window.scrollTo(0, 0));
         await shot("provider");
-        await checkpoint("Confirm demo cancellation");
-        await button("Confirm demo cancellation").click();
-        await checkpoint("Send demo offer to José");
-        await button("Send demo offer to José").click();
-        await checkpoint();
-        await button("Patient view").click();
+        // María cancels → the AI offers → José accepts → Ana is notified.
+        await role("maria").click();
+        await checkpoint("Cancel my appointment");
+        await button("Cancel my appointment").click();
+        await checkpoint("Yes, cancel my appointment");
+        await button("Yes, cancel my appointment").click();
+        await checkpoint("Open José's view");
+        await button("Open José's view").click();
         await checkpoint("Accept earlier visit");
         await button("Accept earlier visit").click();
         await checkpoint("Yes, move my appointment");
@@ -155,8 +161,13 @@ for (const { name, width, height, scale } of cases) {
             exact: true,
           }),
         ).toBeVisible();
-        await checkpoint();
+        await checkpoint("See what the office sees");
+        await button("See what the office sees").click();
+        await checkpoint("Review activity");
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await shot("office-notified");
         await button("Reset demo scenario").click();
+        await role("jose").click();
         await expect(
           page.getByRole("heading", { name: t("No earlier offer yet") }),
         ).toBeVisible();

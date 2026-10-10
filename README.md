@@ -4,9 +4,9 @@ Help Puerto Rico medical offices fill cancelled appointments by offering availab
 
 ## Project status
 
-Built for the Caribbean AI 2026 Hackathon. The POC is open to judges without accounts, passwords, or verification. Choose **Continue as Demo Provider** or **Continue as Demo Patient** on the entry page. The Provider workspace reuses the staff scheduling tools; there is no separate Admin interface.
+Built for the Caribbean AI 2026 Hackathon. The POC is open to judges without accounts, passwords, or verification. Choose **Start the guided demo** (it starts as María) or continue as María, José or Ana on the entry page; the header role switch changes role at any time. Ana's office view reuses the staff scheduling tools; there is no separate Admin interface.
 
-The synthetic, single-browser workflow now supports cancellation → offer → explicit acceptance → updated appointment, waitlist, and activity. State lives in memory and resets on refresh. No real appointment, message, or backend write occurs. `/api/health` remains the only implemented API. Production authentication, authorization, registration, and account management are **Post-POC enhancements**, not demo prerequisites.
+The synthetic, single-browser workflow covers patient cancellation → simulated AI assistant selects and offers the slot → explicit acceptance → AI updates the appointment, waitlist and activity and notifies the office. State lives in memory and resets on refresh. No real appointment, message, or backend write occurs. `/api/health` remains the only implemented API. Production authentication, authorization, registration, and account management are **Post-POC enhancements**, not demo prerequisites.
 
 See [Demo access](docs/DEMO_ACCESS.md) for direct entry links and boundaries, and [PENDING_TASKS.md](PENDING_TASKS.md) for validation and the roadmap. The demo is public; see [How the demo is hosted](#how-the-demo-is-hosted) below.
 
@@ -50,7 +50,7 @@ Every figure carries its source and a reliability label in the research pages; "
 Start with one medical office, synthetic patient data, and simulated messages.
 
 - Display a daily appointment schedule and patient waitlist.
-- Let staff confirm a cancellation and open a slot.
+- Let a patient cancel and open the slot.
 - Match patients using availability preferences and offer the slot to one patient at a time.
 - Confirm a booking once; move to the next candidate when an offer expires or is declined.
 - Record cancellations, offers, responses, and bookings in an activity log.
@@ -58,31 +58,31 @@ Start with one medical office, synthetic patient data, and simulated messages.
 
 ## Basic flow
 
-Staff confirms a cancellation → system finds a matching patient → simulated offer is sent → patient responds → booking updates → activity is recorded.
+Patient cancels → AI assistant (simulated) detects the opening and selects a matching patient → simulated offer is sent → patient accepts → AI updates the booking and waitlist → office is notified and activity is recorded.
 
 ## Proposed AI role
 
-Interpret short Spanish or English replies as acceptance, decline, or a request for help. Ambiguous replies go to staff for review, and a manual response selector remains available if AI fails.
+**In the demo today:** an **AI assistant (simulated)** takes over the office's manual work of refilling a cancelled slot. It is rule-based: no AI model and no network request. It detects the cancellation, selects the patient with the app's deterministic ranking (eligibility, then staff-confirmed priority, then oldest request), shows the reasoning taken from those same inputs, sends a simulated in-app offer, updates the schedule once the patient explicitly accepts, and notifies Ana, the office assistant. Ana is informed, not asked to approve. Staff-confirmed priorities on the Waitlist page steer the selection.
 
-Booking rules control availability, offer expiry, and duplicate acceptance. Patients must confirm before their appointments change.
+**Proposed next:** interpret short Spanish or English replies as acceptance, decline, or a request for help, with ambiguous replies going to staff and a manual response selector as fallback. Booking rules keep controlling availability, offer expiry, and duplicate acceptance. Patients must confirm before their appointments change.
 
 ## Demo workflow
 
-1. Enter Provider view and confirm the sample October 8, 2:00 PM cancellation.
-2. Send the demo offer to José, then open Patient view.
-3. Choose **Accept earlier visit** and confirm. José's fictional appointment moves from October 22 to October 8.
-4. Return to Provider: the schedule names José, the waitlist has three remaining patients, and the Activity log records the steps.
-5. Reset the scenario to replay or try decline/help. No credentials are required at any step.
+1. Choose **Start the guided demo**. As María, choose **Cancel my appointment**, then **Yes, cancel my appointment** for October 8, 2:00 PM (or **Keep my appointment** to back out).
+2. The AI assistant (simulated) detects the cancellation, scans the four-patient waitlist and selects José: his afternoon availability covers 2:00 PM, and his October 4 request is the oldest among the P3 patients. Nicolás (mornings only) is excluded. José receives a simulated in-app offer.
+3. Switch to **José** in the header, choose **Accept earlier visit**, then **Yes, move my appointment**. His fictional appointment moves from October 22 to October 8, and his October 22 booking is released.
+4. Switch to **Ana (office)**: her notification summarises the cancellation, why José was selected, his acceptance and the schedule update. The **AI activity** feed and the Activity log list every step; the waitlist drops from four to three.
+5. **Reset demo scenario** or reload to replay. No credentials are required at any step.
 
-AI reply interpretation, expiry, automatic next-candidate offers, persistence, and simultaneous users remain future work.
+A real model-backed assistant, reply interpretation, expiry, automatic next-candidate offers, persistence, and simultaneous users remain future work.
 
 ## Provider calendar and scheduling priorities
 
-Provider → **Schedule** now supports **Day, Week and Month**, period navigation, day selection, slot/status counts, cancellation history and eligible P1/P2 indicators. October 8 and October 22 contain synthetic appointments; empty dates do not imply availability.
+Office view (Ana) → **Schedule** supports **Day, Week and Month**, period navigation, day selection, slot/status counts, cancellation history and eligible P1/P2 indicators. October 8 and October 22 contain synthetic appointments; empty dates do not imply availability.
 
-Provider → **Waitlist** lets demo staff confirm P1–P4 scheduling priorities. **Priority configuration** controls labels, descriptions, indicators, ordering, enabled levels and an enabled non-urgent default. Candidates must meet office/provider, visit, duration, date/time and conflict constraints before priority ranking. Ties use request date, then record ID. Staff confirms an offer; the selected patient must still explicitly accept. The new booking and released old slot appear consistently across calendar views.
+Office view → **Waitlist** lets demo staff confirm P1–P4 scheduling priorities. **Priority configuration** controls labels, descriptions, indicators, ordering, enabled levels and an enabled non-urgent default. Candidates must meet office/provider, visit, duration, date/time and conflict constraints before priority ranking. Ties use request date, then record ID. The AI assistant (simulated) offers the slot to the top-ranked eligible patient, who must still explicitly accept. The new booking and released old slot appear consistently across calendar views.
 
-Try assigning **Camila → P1**, check the qualified-staff review confirmation, save, then cancel the sample slot and review candidates. Camila ranks ahead of normal-priority José; morning-only Nicolás remains ineligible. No AI or condition-text analysis decides urgency. **Scheduling support is not emergency medical assessment.** Changes live in the existing shared browser memory and reset on reload; there is no backend persistence. See [rules, limits and manual scenarios](docs/PRIORITY_CALENDAR.md).
+Try assigning **Camila → P1**, check the qualified-staff review confirmation, save, then cancel as María. The AI assistant selects Camila ahead of normal-priority José, and the waiting-patient view (José's role) shows Camila's offer; morning-only Nicolás remains ineligible. Staff set urgency; neither the AI assistant nor any condition-text analysis decides it. **Scheduling support is not emergency medical assessment.** Changes live in the existing shared browser memory and reset on reload; there is no backend persistence. See [rules, limits and manual scenarios](docs/PRIORITY_CALENDAR.md).
 
 ## Next steps
 
@@ -145,9 +145,9 @@ All data is synthetic. Do not enter real patient information.
 
 ### Explore the UI preview
 
-Open the root URL or `#/demo` to choose a fictional identity. `#/login` is an always-public alias with **Continue as Demo Patient**; it collects no input. `#/provider` and `#/patient` open the workspaces directly. The **Demo access** header button remains available after any action.
+Open the root URL or `#/demo` to choose a fictional identity. `#/login` is an always-public alias of the entry page; it collects no input. `#/patient/maria` (María), `#/patient/jose` (José; `#/patient` also works) and `#/provider` or `#/staff` (Ana's office view) open the roles directly. The **Demo access** header button remains available after any action.
 
-The Provider schedule is dated **October 8, 2026**. Existing search, status/date filters, and empty-state recovery remain available. Role switching and visiting the entry page preserve the local scenario. **Reset demo scenario** or reload starts over; separate tabs do not share data. No login, registration, database seed, or Ollama setup is needed to demonstrate the synthetic workflow.
+The office schedule is dated **October 8, 2026**. Existing search, status/date filters, and empty-state recovery remain available. Role switching and visiting the entry page preserve the local scenario. **Reset demo scenario** or reload starts over; separate tabs do not share data. No login, registration, database seed, or Ollama setup is needed to demonstrate the synthetic workflow.
 
 ## Pre-existing components
 
@@ -162,7 +162,7 @@ The UI takes visual inspiration from this [Pinterest dashboard reference](https:
 
 ## Capacity and statistics
 
-Open **Provider → Capacity** for a deterministic current-month demo with roughly **90% occupancy**, a synchronized Day/Week/Month calendar, resource filters, KPI cards and clickable occupancy trends. Default capacity is **20 seats per resource per operating day**, Monday–Friday, 8 AM–6 PM, with 30-minute visits.
+Open **Ana (office) → Capacity** for a deterministic current-month demo with roughly **90% occupancy**, a synchronized Day/Week/Month calendar, resource filters, KPI cards and clickable occupancy trends. Default capacity is **20 seats per resource per operating day**, Monday–Friday, 8 AM–6 PM, with 30-minute visits.
 
 Select a visit and confirm cancellation, booking, completion, rescheduling or a priority-ranked waiting-list assignment. Counts update immediately. Expand **Capacity configuration & regenerate** to change weekdays, hours, duration, daily cap or resources; confirmation resets that month's synthetic bookings. Previous generated months are retained as comparison snapshots for this browser session.
 

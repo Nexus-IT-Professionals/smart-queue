@@ -108,6 +108,9 @@ for (const width of [320, 1280])
   test(`capacity workspace accessible and fits ${width}px in both languages`, async ({
     page,
   }) => {
+    // Axe scans in two languages take 20-24s alone; under full-suite load
+    // on the demo laptop that exceeded the 30s default (seen 2026-10-09).
+    test.slow();
     await page.setViewportSize({ width, height: 900 });
     const d = await open(page);
     await expect(d.locator(".capacity-calendar button")).toHaveCount(42);

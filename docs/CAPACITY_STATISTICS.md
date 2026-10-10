@@ -1,6 +1,6 @@
 # Capacity and utilization demo
 
-Open **Provider → Capacity** in the sidebar (page title **Capacity & statistics**). The generated workspace and its Day/Week/Month toggle share one selected date, resource filter, slot list and calculation module. The initial month is the current month in Puerto Rico. Use the calendar, date picker, arrows or trend bars to navigate; monthly trend bars drill into weeks, weekly bars into days.
+Open **Ana (office) → Capacity** in the sidebar (page title **Capacity & statistics**). The generated workspace and its Day/Week/Month toggle share one selected date, resource filter, slot list and calculation module. The initial month is the current month in Puerto Rico. Use the calendar, date picker, arrows or trend bars to navigate; monthly trend bars drill into weeks, weekly bars into days.
 
 The **guided cancellation demo** on the Overview remains independently replayable with its fixed October 8/22 fixtures and explicit Patient acceptance. Monthly operations use their own synthetic appointments/waitlist within the same root reducer and priority configuration; their statistics do **not** mix in the guided scenario's nine records. Monthly assignments are explicitly confirmed by demo staff, not sent to the separate guided Patient inbox. Neither workspace writes backend resources.
 
@@ -44,7 +44,7 @@ Eligible waiting patients must match office, provider, visit type, duration, dat
 
 ## Three-minute rehearsal
 
-1. Open Provider → Capacity. Show the refill count, Month KPIs and resource filter (20 seconds).
+1. Open Ana (office) → Capacity. Show the refill count, Month KPIs and resource filter (20 seconds).
 2. Select an operating day and switch to Day. Select a scheduled visit, check staff confirmation, cancel it. Occupied decreases; cancellations and availability increase (30 seconds).
 3. Review the ranked waiting candidates. Confirm the assignment. Occupancy recovers, waiting count decreases, release fill rate updates (30 seconds).
 4. Switch Week/Month and click a trend bar to demonstrate synchronized aggregation (20 seconds).

@@ -175,6 +175,18 @@ Biggest risks: unresolved scheduling policy (staff review instead of invented ru
 - Assign owners; confirm the prototype can be reviewed locally/by video without adding public hosting.
 - Approve cancellation metric denominators, completion semantics and synthetic fixture size.
 
+## 10. Decision note (2026-10-09): AI autonomy in the POC
+
+Appended; the sections above are kept as originally proposed. For the hackathon POC the team decided:
+
+- **The AI acts on people's decisions, not instead of them.** After María (patient) confirms her cancellation, a simulated AI assistant detects the opening, selects a waiting patient, and sends a simulated in-app offer. After José (patient) explicitly accepts, it updates the schedule and waitlist. No staff confirmation step sits between these actions.
+- **Ana (office) is notified only.** She receives a summary (cancellation, who was selected and why, acceptance, schedule update) and an AI activity feed. There is no approval or undo; staff influence the selection beforehand through staff-confirmed priorities.
+- **Simulated and rule-based.** No AI model and no network request; the public-demo CSP is unchanged. Every AI step is labelled "AI assistant (simulated)".
+- **Reasoning comes from the deterministic ranking.** The displayed reasons are derived from the same eligibility and sort inputs (availability, priority, request date, exclusions) that pick the patient, not generated text.
+- **Privacy in patient views.** Patient-facing messages refer to "a waiting patient" instead of naming who received the offer or why; selection reasons appear only in the office view. (Demo role-switch buttons still name the fictional roles.)
+
+This replaces the earlier demo flow in which staff confirmed the cancellation and the offer. A model-backed assistant and reply interpretation (§7) remain future work.
+
 ## Related pages
 
 - [Project overview](README.md)

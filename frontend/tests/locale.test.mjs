@@ -5,7 +5,7 @@ import { spanish } from "../src/i18n/catalog.ts";
 import {
   demoReducer,
   initialDemoState,
-  responseMessages,
+  AI_ASSISTANT,
   waitlist,
 } from "../src/demo/data.ts";
 test("catalog values are nonempty and default language preserves English", () => {
@@ -22,14 +22,16 @@ test("Puerto Rico calendar and time formatting are independent of host timezone"
   assert.match(formatTime("es", "2:00 PM"), /2:00/);
   assert.equal(formatDate("es", ""), "");
 });
-test("all response and reducer event messages have Spanish translations", () => {
-  const open = demoReducer(initialDemoState(), { type: "cancel" });
-  const offered = demoReducer(open, { type: "offer" });
-  for (const response of ["accepted", "declined", "help"]) {
-    const state = demoReducer(offered, { type: "respond", response });
-    for (const event of state.events) assert.ok(spanish[event], event);
-    assert.ok(spanish[responseMessages[response]]);
-  }
+test("every reducer event in the full story has a Spanish rendering", () => {
+  const offered = demoReducer(initialDemoState(), { type: "cancel" });
+  const done = demoReducer(offered, { type: "accept" });
+  assert.equal(done.phase, "notified");
+  // Staff edits are sentences; story steps are structured and rendered by
+  // AssistantFeed from catalog templates (covered by e2e i18n-coverage).
+  for (const event of done.events)
+    if (typeof event === "string") assert.ok(spanish[event], event);
+    else assert.ok(event.kind, JSON.stringify(event));
+  assert.equal(spanish[AI_ASSISTANT], "Asistente de IA (simulado)");
   for (const person of waitlist) assert.ok(formatDate("es", person.since));
 });
 // The catalog is keyed by the English source text, so EN/ES key parity is

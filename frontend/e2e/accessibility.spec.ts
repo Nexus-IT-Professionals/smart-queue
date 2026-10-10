@@ -5,7 +5,7 @@ for (const language of ["en", "es"]) {
   test(`accessible semantics and contrast across demo states (${language})`, async ({
     page,
   }) => {
-    // 14 full axe scans in one test can exceed 30s under parallel workers on real Edge.
+    // ~20 full axe scans in one test can exceed 30s under parallel workers on real Edge.
     test.slow();
     await page.goto("/#/demo");
     if (language === "es")
@@ -30,33 +30,41 @@ for (const language of ["en", "es"]) {
     await expect(page.getByRole("main")).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await audit("entry");
-    await page.locator(".workspace-switch button").nth(1).click();
-    await audit("provider overview");
+    // Header switch: 0 Demo access, 1 María, 2 José, 3 Ana (office).
+    const role = (index: number) =>
+      page.locator(".workspace-switch button").nth(index).click();
+    await role(3);
+    await audit("office overview");
     const nav = page.getByRole("navigation");
-    for (const index of [1, 2, 3, 0]) {
+    for (const index of [1, 2, 3, 4, 0]) {
       await nav.getByRole("button").nth(index).click();
-      await audit(`provider section ${index}`);
+      await audit(`office section ${index}`);
     }
-    await page.locator(".demo-scenario-actions button").click();
-    await audit("cancelled");
-    await page.locator(".demo-scenario-actions button").click();
-    await page.locator(".workspace-switch button").nth(2).click();
-    await audit("patient offer");
-    await page.locator(".offer-actions .text-button").click();
-    await audit("help response");
-    await page.locator(".offer-actions .primary-button").click();
-    await audit("confirmation");
-    await page.locator(".confirmation .primary-button").click();
-    await audit("accepted");
-    await page.locator(".demo-identity button").click();
-    await audit("reset/no offer");
-    await page.locator(".workspace-switch button").nth(1).click();
-    await page.locator(".demo-scenario-actions button").click();
-    await page.locator(".demo-scenario-actions button").click();
-    await page.locator(".workspace-switch button").nth(2).click();
+    await role(1);
+    await audit("María scheduled");
     await page.locator(".offer-actions .secondary-button").click();
-    await audit("declined");
-    await page.locator(".workspace-switch button").nth(1).click();
+    await audit("María confirmation");
+    await page.locator(".confirmation .primary-button").click();
+    await audit("María cancelled, AI offered");
+    await role(3);
+    await audit("office: AI offered");
+    await role(2);
+    await audit("José offer");
+    await page.locator(".offer-actions .primary-button").click();
+    await audit("José confirmation");
+    await page.locator(".confirmation .primary-button").click();
+    await audit("José accepted, AI updated");
+    await role(1);
+    await audit("María after the story");
+    await role(3);
+    await audit("office: Ana notified");
+    await nav.getByRole("button").nth(3).click();
+    await audit("activity log with AI steps");
+    await page.locator(".demo-identity button").click();
+    await audit("reset");
+    await role(2);
+    await audit("José no offer");
+    await role(3);
     await page.getByRole("navigation").getByRole("button").nth(1).click();
     await page.getByRole("searchbox").fill("no matching record");
     await audit("empty schedule");
@@ -68,6 +76,13 @@ async function tabTo(page: Page, target: Locator) {
   for (let i = 0; i < 60; i++) {
     if (await target.evaluate((el) => el === document.activeElement)) return;
     await page.keyboard.press("Tab");
+  }
+  await expect(target).toBeFocused();
+}
+async function tabBackTo(page: Page, target: Locator) {
+  for (let i = 0; i < 60; i++) {
+    if (await target.evaluate((el) => el === document.activeElement)) return;
+    await page.keyboard.press("Shift+Tab");
   }
   await expect(target).toBeFocused();
 }
@@ -87,16 +102,31 @@ for (const language of ["en", "es"]) {
       );
       await page.keyboard.press("Enter");
     }
+    // María (header switch 1) cancels with the keyboard.
     await tabTo(page, page.locator(".workspace-switch button").nth(1));
     await page.keyboard.press("Enter");
     await expect(page.getByRole("main")).toBeFocused();
-    await tabTo(page, page.locator(".demo-scenario-actions button"));
+    const cancel = page.locator(".offer-actions .secondary-button");
+    await tabTo(page, cancel);
     await page.keyboard.press("Enter");
-    await expect(page.locator('.demo-scenario [role="status"]')).toBeFocused();
-    await tabTo(page, page.locator(".demo-scenario-actions button"));
+    await expect(page.locator(".confirmation")).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(page.locator(".confirmation .primary-button")).toBeFocused();
+    await page.keyboard.press("Tab");
     await page.keyboard.press("Enter");
-    await expect(page.locator('.demo-scenario [role="status"]')).toBeFocused();
-    await tabTo(page, page.locator(".demo-scenario-actions button"));
+    await expect(cancel).toBeFocused();
+    await page.keyboard.press("Enter");
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Enter");
+    await expect(page.locator(".response-notice")).toBeFocused();
+    await expect(page.locator('[aria-live="polite"]')).toContainText(
+      language === "es" ? "Cita cancelada" : "Appointment cancelled",
+    );
+    await expect(page.locator('.demo-scenario [role="status"]')).toContainText(
+      language === "es" ? "asistente de IA (simulado)" : "AI assistant (simulated)",
+    );
+    // On to José: "Open José's view" sits in the guide above.
+    await tabBackTo(page, page.locator(".demo-scenario-actions button"));
     await page.keyboard.press("Enter");
     await expect(page.getByRole("main")).toBeFocused();
     await tabTo(page, page.locator(".offer-actions .primary-button"));
@@ -112,9 +142,13 @@ for (const language of ["en", "es"]) {
     await page.keyboard.press("Enter");
     await expect(page.locator(".response-notice")).toBeFocused();
     await expect(page.locator('[aria-live="polite"]')).toContainText(
-      language === "es" ? "Cita demo adelantada" : "Demo appointment moved",
+      language === "es" ? "Cita adelantada" : "Appointment moved",
     );
-    await tabTo(page, page.locator(".success-actions .primary-button"));
+    await expect(page.locator('.demo-scenario [role="status"]')).toContainText(
+      language === "es" ? "notificó a la oficina" : "notified the office",
+    );
+    // "See what the office sees" in the guide above.
+    await tabBackTo(page, page.locator(".demo-scenario-actions button"));
     await page.keyboard.press("Enter");
     await expect(page.getByRole("main")).toBeFocused();
     await page.goBack();
@@ -124,29 +158,22 @@ for (const language of ["en", "es"]) {
   });
 }
 
-test("focus is retained after help, decline and resets during confirmation", async ({
+test("focus is retained after cancellation, resets and resets during confirmation", async ({
   page,
 }) => {
-  await page.goto("/#/provider");
-  await page
-    .getByRole("button", { name: "Confirm demo cancellation", exact: true })
-    .click();
-  await page.getByRole("button", { name: "Send demo offer to José" }).click();
-  await page.getByRole("button", { name: "Open Demo Patient" }).click();
-  await page.getByRole("button", { name: "I need help", exact: true }).click();
-  await expect(page.locator(".response-notice")).toBeFocused();
-  await page.getByRole("button", { name: "Keep my current visit" }).click();
+  await page.goto("/#/patient/maria");
+  await page.getByRole("button", { name: "Cancel my appointment", exact: true }).click();
+  await page.getByRole("button", { name: "Yes, cancel my appointment", exact: true }).click();
   await expect(page.locator(".response-notice")).toBeFocused();
   await page
     .getByRole("button", { name: "Reset demo scenario", exact: true })
     .click();
-  await expect(page.locator(".patient-grid .demo-access-card")).toBeFocused();
-  await page.getByRole("button", { name: "Open Demo Provider" }).click();
-  await page
-    .getByRole("button", { name: "Confirm demo cancellation", exact: true })
-    .click();
-  await page.getByRole("button", { name: "Send demo offer to José" }).click();
-  await page.getByRole("button", { name: "Open Demo Patient" }).click();
+  await expect(
+    page.getByRole("button", { name: "Cancel my appointment", exact: true }),
+  ).toBeFocused();
+  await page.getByRole("button", { name: "Cancel my appointment", exact: true }).click();
+  await page.getByRole("button", { name: "Yes, cancel my appointment", exact: true }).click();
+  await page.getByRole("button", { name: "Open José's view" }).click();
   await page
     .getByRole("button", { name: "Accept earlier visit", exact: true })
     .click();

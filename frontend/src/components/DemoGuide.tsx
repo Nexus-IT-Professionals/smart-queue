@@ -3,19 +3,25 @@ import { useLanguage } from "../i18n/LanguageProvider";
 import type { DemoPhase } from "../demo/data";
 import { Icon } from "./ui";
 
-// The same four steps on the entry page, Provider and Patient, so judges
-// always see where they are in the cancellation → offer → acceptance story.
-export const demoSteps = ["Cancel", "Offer", "Patient accepts", "Result"];
+// The same four steps on the entry page and in every role, so judges always
+// see where they are: María cancels → the AI offers → the patient accepts →
+// the AI updates the schedule and notifies Ana.
+export const demoSteps = [
+  "María cancels",
+  "AI assistant offers",
+  "Patient accepts",
+  "Ana is notified",
+];
 export function demoStepIndex(phase: DemoPhase) {
   if (phase === "scheduled") return 0;
-  if (phase === "open") return 1;
-  if (phase === "accepted") return 3;
-  return 2;
+  if (phase === "offered" || phase === "accepted") return 2;
+  if (phase === "updated" || phase === "notified") return 3;
+  return 1;
 }
 export function DemoSteps({ phase }: { phase?: DemoPhase }) {
   const { t } = useLanguage();
   const current = phase ? demoStepIndex(phase) : -1;
-  const finished = phase === "accepted";
+  const finished = phase === "notified";
   return (
     <ol className="stepper">
       {demoSteps.map((label, index) => {
@@ -50,7 +56,7 @@ export default function DemoGuide({
   const { t } = useLanguage();
   return (
     <section
-      className={`panel demo-scenario${phase === "accepted" ? " demo-result" : ""}`}
+      className={`panel demo-scenario${phase === "notified" ? " demo-result" : ""}`}
       aria-label={t("Demo appointment workflow")}
     >
       <div className="demo-scenario-head">

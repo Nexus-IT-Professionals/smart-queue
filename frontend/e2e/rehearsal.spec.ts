@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { test as base, expect, type Page } from "@playwright/test";
 import { spanish } from "../src/i18n/catalog";
+import { fill, switchRole } from "./story";
 
 // QA-3 judge-device rehearsal: the one-tab scenario in EN and ES against
 // REHEARSAL_URL (default: local build:demo preview), with a network audit
@@ -95,22 +96,22 @@ async function open(page: Page, language: Language): Promise<Translate> {
   return t;
 }
 
-// Provider: confirm cancellation, offer José, then switch to his view.
+// María cancels in her view; the AI assistant (simulated) offers José the
+// slot; then switch to José's view.
 async function offer(page: Page, t: Translate) {
   await page.getByRole("button", { name: t("Demo access"), exact: true }).click();
-  await page
-    .getByRole("button", { name: t("Continue as Demo Provider") })
-    .click();
+  await page.getByRole("button", { name: t("Continue as Ana") }).click();
   const first = page.locator(".schedule-panel tbody tr").first();
   await expect(first).toContainText("Adrián López");
   await expect(first.locator(".time-cell")).toContainText(/8:30/);
+  await switchRole(page, "maria", t);
   await page
-    .getByRole("button", { name: t("Confirm demo cancellation"), exact: true })
+    .getByRole("button", { name: t("Cancel my appointment"), exact: true })
     .click();
   await page
-    .getByRole("button", { name: t("Send demo offer to José"), exact: true })
+    .getByRole("button", { name: t("Yes, cancel my appointment"), exact: true })
     .click();
-  await page.getByRole("button", { name: t("Patient view"), exact: true }).click();
+  await page.getByRole("button", { name: t("Open José's view") }).click();
 }
 
 async function waitlist(page: Page, t: Translate) {
@@ -123,7 +124,8 @@ async function waitlist(page: Page, t: Translate) {
   );
 }
 
-// Full scenario: cancel -> offer -> patient accept -> provider sees the result.
+// Full scenario: María cancels -> AI offers -> José accepts -> AI updates the
+// schedule and notifies Ana, who sees the result.
 async function accept(page: Page, t: Translate, language: Language) {
   await offer(page, t);
   await page
@@ -135,10 +137,13 @@ async function accept(page: Page, t: Translate, language: Language) {
   await expect(
     page.getByRole("heading", { name: dates[language].earlier, exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: t("Provider view"), exact: true }).click();
+  await page.getByRole("button", { name: t("See what the office sees") }).click();
   await expect(
     page.getByRole("row").filter({ hasText: "SQ-006" }),
   ).toContainText("José Pérez");
+  await expect(
+    page.getByRole("region", { name: fill(t, "Notification for {name}", { name: "Ana Martínez" }) }),
+  ).toBeVisible();
   const nav = page.getByRole("navigation");
   await expect(
     nav.getByRole("button", { name: `${t("Waitlist")} 3` }),
@@ -150,14 +155,13 @@ async function accept(page: Page, t: Translate, language: Language) {
   ]);
   await nav.getByRole("button", { name: t("Activity log") }).click();
   const events = page.locator(".timeline li p");
-  await expect(events).toHaveCount(3);
-  await expect(events.nth(0)).toContainText("Ana Martínez");
-  await expect(events.nth(1)).toContainText("Ana Martínez");
-  await expect(events.nth(1)).toContainText("José Pérez");
-  await expect(events.nth(2)).toHaveText(
-    t(
-      "Patient accepted: demo booking moved from October 22 to October 8, 2:00 PM; waitlist entry removed.",
-    ),
+  // María, AI detect/select/offer, José, AI update/notify.
+  await expect(events).toHaveCount(7);
+  await expect(events.nth(0)).toContainText("María Rodríguez");
+  await expect(events.nth(2)).toContainText("José Pérez");
+  await expect(page.locator(".timeline .ai-label")).toHaveCount(5);
+  await expect(events.nth(6)).toHaveText(
+    fill(t, "Notified {name}, Medical Office Assistant, with a summary of the changes.", { name: "Ana Martínez" }),
   );
 }
 
@@ -171,8 +175,8 @@ async function expectInitial(page: Page, t: Translate) {
       .getByRole("button", { name: `${t("Waitlist")} 4` }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: t("Confirm demo cancellation") }),
-  ).toBeVisible();
+    page.getByRole("region", { name: fill(t, "Notification for {name}", { name: "Ana Martínez" }) }),
+  ).toHaveCount(0);
 }
 
 for (const language of ["en", "es"] as const) {
@@ -206,26 +210,26 @@ for (const language of ["en", "es"] as const) {
       ]);
     });
 
-    test("decline keeps the original appointment", async ({ page }) => {
+    test("María backing out keeps her appointment and José's", async ({ page }) => {
       const t = await open(page, language);
-      await offer(page, t);
+      await switchRole(page, "maria", t);
       await page
-        .getByRole("button", { name: t("Keep my current visit"), exact: true })
+        .getByRole("button", { name: t("Cancel my appointment"), exact: true })
+        .click();
+      await page
+        .getByRole("button", { name: t("Keep my appointment"), exact: true })
         .click();
       await expect(
-        page.getByText(
-          t("Decline preview recorded. Your existing appointment is unchanged."),
-        ),
+        page.getByRole("heading", { name: dates[language].earlier, exact: true }),
       ).toBeVisible();
+      await switchRole(page, "jose", t);
       await expect(
         page.getByRole("heading", {
           name: dates[language].original,
           exact: true,
         }),
       ).toBeVisible();
-      await page
-        .getByRole("button", { name: t("Provider view"), exact: true })
-        .click();
+      await switchRole(page, "ana", t);
       await expect(
         page
           .getByRole("navigation")
@@ -233,18 +237,19 @@ for (const language of ["en", "es"] as const) {
       ).toBeVisible();
     });
 
-    test("help records a request and still allows a later response", async ({
+    test("José's offer comes from the AI assistant and needs his explicit acceptance", async ({
       page,
     }) => {
       const t = await open(page, language);
       await offer(page, t);
-      await page
-        .getByRole("button", { name: t("I need help"), exact: true })
-        .click();
+      await expect(page.locator(".ai-offer-reason .ai-label")).toHaveText(
+        t("AI assistant (simulated)"),
+      );
       await expect(
-        page.getByText(
-          t("Help request preview recorded. No message was sent to the office."),
-        ),
+        page.getByRole("heading", {
+          name: dates[language].original,
+          exact: true,
+        }),
       ).toBeVisible();
       await page
         .getByRole("button", { name: t("Accept earlier visit"), exact: true })

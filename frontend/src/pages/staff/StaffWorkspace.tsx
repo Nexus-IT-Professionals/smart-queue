@@ -3,7 +3,6 @@ import {
   PriorityBadge,
   PriorityEditor,
   PriorityConfiguration,
-  CandidateReview,
   ProviderCalendar,
 } from "./SchedulingTools";
 import { priorityDisclaimer } from "../../demo/scheduling";
@@ -11,6 +10,13 @@ import { useLanguage } from "../../i18n/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import type { StaffView } from "../../App";
 import DemoGuide from "../../components/DemoGuide";
+import {
+  AssistantFeed,
+  AssistantLabel,
+  AssistantNotification,
+  fill,
+  useStoryText,
+} from "../../components/AssistantFeed";
 import {
   Avatar,
   Badge,
@@ -20,8 +26,9 @@ import {
 } from "../../components/ui";
 import {
   calendarAppointments,
-  eligibleCandidates,
   daysEarlier,
+  isAssistantEvent,
+  scheduleUpdated,
   selectedPatient,
   demoWaitlist,
   DEMO_DATE,
@@ -45,13 +52,9 @@ const titles: Record<StaffView, [string, string]> = {
     "Occupancy, cancellations and waitlist refills for a synthetic month.",
   ],
 };
-// Activity entries are stored as sentences; each gets a short title and icon.
+// Staff edits are stored as sentences; each gets a short title and icon.
+// Story steps (María, the AI assistant, the patient) render via useStoryText.
 const eventKinds: [string, string, IconName][] = [
-  ["confirmed the sample cancellation", "Slot released", "calendar"],
-  ["sent a simulated in-app offer", "Offer sent", "arrow"],
-  ["Patient accepted", "Offer accepted", "check"],
-  ["Patient declined", "Offer declined", "reset"],
-  ["requested help", "Help requested", "heart"],
   ["scheduling priority:", "Priority updated", "users"],
   ["priority configuration", "Priority settings updated", "grid"],
   ["monthly demo scheduling", "Capacity updated", "chart"],
@@ -144,15 +147,14 @@ export default function StaffWorkspace({
   onNavigate,
   demo,
   onAction,
-  onPatient,
 }: {
   view: StaffView;
   onNavigate: (view: StaffView) => void;
   demo: DemoState;
   onAction: (action: DemoAction) => void;
-  onPatient: () => void;
 }) {
   const { t, dateText, timeText } = useLanguage();
+  const story = useStoryText();
   const scenarioStatus = useRef<HTMLParagraphElement>(null);
   const previousPhase = useRef(demo.phase);
   useEffect(() => {
@@ -166,11 +168,6 @@ export default function StaffWorkspace({
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All statuses");
   const day = calendarAppointments(demo).filter((a) => a.date === shownDate);
-  const candidates = eligibleCandidates(demo);
-  const [chosenId, setChosenId] = useState("");
-  const candidateId = candidates.some((p) => p.id === chosenId)
-    ? chosenId
-    : (candidates[0]?.id ?? "");
   const patient = selectedPatient(demo);
   const waitlist = demoWaitlist(demo);
   const filtered = day.filter(
@@ -251,68 +248,32 @@ export default function StaffWorkspace({
           status={
             demo.phase === "scheduled" ? (
               t(
-                "María Rodríguez cancelled her October 8, 2:00 PM visit. Confirm it to open the slot.",
+                "Watching Dr. Carlos Rivera's schedule. When María cancels in her view, the AI assistant (simulated) takes it from there. Nothing to do here.",
               )
-            ) : demo.phase === "open" ? (
-              t(
-                "The 2:00 PM slot is open. The best match is ranked first below; send the offer.",
-              )
-            ) : demo.phase === "offered" ? (
-              `${t("Offer sent to")} ${patient.name}. ${t("Nothing changes until the patient accepts. Open the Patient view to answer.")}`
-            ) : demo.phase === "accepted" ? (
+            ) : demo.phase === "notified" ? (
               <>
-                <strong>{t("Open slot filled in 3 steps.")}</strong>{" "}
+                <strong>{t("Open slot filled by the AI assistant.")}</strong>{" "}
                 {patient.name} ·{" "}
                 {dateText(patient.bookingDate, SHORT_DATE)} →{" "}
                 {dateText(DEMO_DATE, SHORT_DATE)} · {daysEarlier(patient)}{" "}
                 {t("days sooner")} · {t("Waitlist")} {demo.patients.length} →{" "}
                 {waitlist.length}
               </>
-            ) : demo.phase === "declined" ? (
+            ) : demo.phase === "unmatched" ? (
               t(
-                "Offer declined. The slot remains open and the original patient appointment is preserved. Reset to replay.",
+                "AI assistant (simulated): María Rodríguez cancelled, but no waiting patient fits. The 2:00 PM slot stays open.",
               )
             ) : (
-              t(
-                "The selected patient requested help. Return to Patient; no message leaves this browser.",
+              fill(
+                t(
+                  "AI assistant (simulated): María Rodríguez cancelled; {name} was selected and offered the 2:00 PM slot. Waiting for the patient's answer.",
+                ),
+                { name: patient.name },
               )
             )
           }
         >
-          {demo.phase === "scheduled" && (
-            <button
-              type="button"
-              className="primary-button"
-              onClick={() => onAction({ type: "cancel" })}
-            >
-              {" "}
-              {t("Confirm demo cancellation")}{" "}
-            </button>
-          )}
-          {demo.phase === "open" && (
-            <button
-              type="button"
-              className="primary-button"
-              disabled={!candidateId}
-              onClick={() => onAction({ type: "offer", candidateId })}
-            >
-              {" "}
-              {candidateId === "WL-004"
-                ? t("Send demo offer to José")
-                : t("Confirm offer to selected patient")}{" "}
-            </button>
-          )}
-          {(demo.phase === "offered" || demo.phase === "help") && (
-            <button
-              type="button"
-              className="primary-button"
-              onClick={onPatient}
-            >
-              {" "}
-              {t("Open Demo Patient")} <Icon name="arrow" />
-            </button>
-          )}
-          {(demo.phase === "accepted" || demo.phase === "declined") && (
+          {demo.phase === "notified" && (
             <button
               type="button"
               className="secondary-button"
@@ -327,12 +288,8 @@ export default function StaffWorkspace({
       {view !== "activity" && (
         <p className="priority-disclaimer">{t(priorityDisclaimer)}</p>
       )}
-      {demo.phase === "open" && (dayView || view === "waitlist") && (
-        <CandidateReview
-          demo={demo}
-          candidateId={candidateId}
-          onSelect={setChosenId}
-        />
+      {(dayView || view === "waitlist") && (
+        <AssistantNotification demo={demo} />
       )}
       {dayView && (
         <>
@@ -421,10 +378,8 @@ export default function StaffWorkspace({
                     <tbody>
                       {filtered.map((appointment) => {
                         const slot = appointment.id === "SQ-006";
-                        const pending =
-                          slot &&
-                          (demo.phase === "offered" || demo.phase === "help");
-                        const filled = slot && demo.phase === "accepted";
+                        const pending = slot && demo.phase === "offered";
+                        const filled = slot && scheduleUpdated(demo);
                         return (
                           <tr
                             key={appointment.id}
@@ -467,7 +422,7 @@ export default function StaffWorkspace({
                                     {pending
                                       ? `${t("Waiting for")} ${patient.name}`
                                       : appointment.status === "Open slot"
-                                        ? t("Staff-confirmed sample cancellation")
+                                        ? t("Cancelled by María Rodríguez")
                                         : appointment.id}
                                   </span>
                                   <span className="table-visit">
@@ -543,6 +498,7 @@ export default function StaffWorkspace({
                   demo={demo}
                   onAction={onAction}
                 />
+                <AssistantFeed demo={demo} />
               </div>
             )}
           </div>
@@ -555,7 +511,7 @@ export default function StaffWorkspace({
             <p>
               <strong>{t("A smaller wait starts with a good match.")}</strong>{" "}
               {t(
-                "Synthetic scheduling only. Assign staff-confirmed priorities, then review eligible candidates after cancellation.",
+                "Synthetic scheduling only. Staff confirm priorities; when a slot opens, the AI assistant (simulated) ranks eligible patients by these rules.",
               )}{" "}
             </p>
           </div>
@@ -578,26 +534,37 @@ export default function StaffWorkspace({
           </div>
           {demo.events.length ? (
             <ol className="timeline">
-              {demo.events.map((event, index) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: Session activity is append-only; positions never reorder.
-                <li key={`${index}-${event}`}>
-                  <span className="timeline-icon">
-                    <Icon name={eventKind(event)[1]} />
-                  </span>
-                  <div>
-                    <strong>
-                      {index + 1} · {t(eventKind(event)[0])}
-                    </strong>
-                    <p>{t(event)}</p>
-                  </div>
-                </li>
-              ))}
+              {demo.events.map((event, index) => {
+                const [title, icon] =
+                  typeof event === "string"
+                    ? [t(eventKind(event)[0]), eventKind(event)[1]]
+                    : story.title(event);
+                return (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: Session activity is append-only; positions never reorder.
+                  <li key={index}>
+                    <span className="timeline-icon">
+                      <Icon name={icon} />
+                    </span>
+                    <div>
+                      <strong>
+                        {index + 1} · {title}
+                      </strong>{" "}
+                      {isAssistantEvent(event) && <AssistantLabel />}
+                      <p>
+                        {typeof event === "string"
+                          ? t(event)
+                          : story.sentence(event)}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
             </ol>
           ) : (
             <EmptyState title={t("No demo actions yet")}>
               <p>
                 {t(
-                  "Confirm the sample cancellation to start the activity log.",
+                  "Cancel María's appointment in her view to start the activity log.",
                 )}
               </p>
             </EmptyState>

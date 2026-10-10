@@ -1999,3 +1999,103 @@ details[open] > summary::after {
     grid-column: 1 / -1;
   }
 }
+
+/* AI assistant (simulated): role cards, feed, reasoning and Ana's notification. */
+.demo-access-roles {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 1100px) {
+  .demo-access-roles {
+    grid-template-columns: 1fr;
+  }
+}
+.role-detail {
+  font-weight: 400;
+}
+@media (max-width: 1100px) {
+  /* The role names stay; the "(patient)/(office)" hint is kept for screen readers. */
+  .role-detail {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+.ai-label {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #efeafd;
+  color: #5b3fb0;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+}
+.ai-actor {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+.ai-feed {
+  padding-top: 0;
+}
+.ai-feed li {
+  padding-bottom: 20px;
+}
+.ai-feed-empty {
+  padding: 0 24px 22px;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+.ai-reasoning {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+.ai-notification {
+  margin-bottom: 20px;
+  border-left: 4px solid var(--teal);
+}
+.ai-notification .eyebrow {
+  margin-bottom: 6px;
+}
+.ai-summary {
+  margin: 0;
+  padding: 0 24px 22px 44px;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+.ai-summary li + li {
+  margin-top: 6px;
+}
+.ai-offer-reason .ai-label {
+  margin-right: 4px;
+}
+@media (forced-colors: active) {
+  .ai-label {
+    border: 1px solid CanvasText;
+  }
+}
+/* Reasoning bullets sit inside a timeline entry; keep them plain list items. */
+.timeline .ai-reasoning li {
+  display: list-item;
+  padding: 0;
+}
+.timeline .ai-reasoning li::before {
+  content: none;
+}
+.ai-reasoning li + li {
+  margin-top: 4px;
+}
+/* The AI fills the slot while the office may be watching: muted text in the
+   just-filled row stays at 4.5:1 even at the start of the flash. */
+.filled-row .time-cell span,
+.filled-row .table-person span,
+.filled-row > td:nth-child(3) {
+  color: #4f5b70;
+}

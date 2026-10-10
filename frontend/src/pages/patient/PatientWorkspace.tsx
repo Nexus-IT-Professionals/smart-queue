@@ -2,51 +2,56 @@ import { endTime } from "../../demo/scheduling";
 import { useLanguage } from "../../i18n/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import DemoGuide from "../../components/DemoGuide";
+import { AssistantLabel, useStoryText } from "../../components/AssistantFeed";
 import { Avatar, Badge, Icon } from "../../components/ui";
 import {
   daysEarlier,
-  responseMessages,
+  isStoryEvent,
+  scheduleUpdated,
   selectedPatient,
   type DemoState,
   type DemoAction,
+  type DemoWorkspace,
 } from "../../demo/data";
 
+// José's view: the waiting patient who receives the AI assistant's offer.
 export default function PatientWorkspace({
   demo,
   onAction,
-  onProvider,
+  onNavigate,
 }: {
   demo: DemoState;
   onAction: (action: DemoAction) => void;
-  onProvider: () => void;
+  onNavigate: (role: DemoWorkspace) => void;
 }) {
   const { t, dateText, timeText } = useLanguage();
+  const { reasons } = useStoryText();
   const patient = selectedPatient(demo);
-  const currentTime =
-    demo.phase === "accepted" ? "2:00 PM" : patient.bookingTime;
-  const response = ["accepted", "declined", "help"].includes(demo.phase)
-    ? (demo.phase as "accepted" | "declined" | "help")
-    : null;
-  const hasOffer = demo.phase === "offered" || demo.phase === "help";
-  const accepted = demo.phase === "accepted";
+  const accepted = scheduleUpdated(demo);
+  const currentTime = accepted ? "2:00 PM" : patient.bookingTime;
+  const hasOffer = demo.phase === "offered";
+  // Only this patient's own reason is shown; other patients stay private.
+  const selection = demo.events
+    .filter(isStoryEvent)
+    .find((e) => e.kind === "selected" && e.patientId === patient.id);
   const [confirming, setConfirming] = useState(false);
   const acceptButton = useRef<HTMLButtonElement>(null);
   const confirmation = useRef<HTMLDivElement>(null);
   const result = useRef<HTMLDivElement>(null);
   const noOffer = useRef<HTMLElement>(null);
-  const previousStep = useRef({ response, confirming });
+  const previousStep = useRef({ accepted, confirming });
   useEffect(() => {
     if (demo.phase === "scheduled") setConfirming(false);
   }, [demo.phase]);
   useEffect(() => {
     const previous = previousStep.current;
-    if (previous.response !== response || previous.confirming !== confirming) {
+    if (previous.accepted !== accepted || previous.confirming !== confirming) {
       if (confirming) confirmation.current?.focus();
-      else if (response) result.current?.focus();
+      else if (accepted) result.current?.focus();
       else (acceptButton.current ?? noOffer.current)?.focus();
     }
-    previousStep.current = { response, confirming };
-  }, [response, confirming]);
+    previousStep.current = { accepted, confirming };
+  }, [accepted, confirming]);
   return (
     <div className="workspace-content patient-content">
       <div className="page-heading">
@@ -64,15 +69,24 @@ export default function PatientWorkspace({
       <DemoGuide
         phase={demo.phase}
         status={t(
-          demo.phase === "scheduled" || demo.phase === "open"
-            ? "Waiting for the office to offer an earlier slot."
-            : demo.phase === "accepted"
-              ? "Done. The office sees the change right away."
-              : demo.phase === "declined"
-                ? "You kept your current visit. Reset to replay."
-                : "Your turn: review the earlier visit below and decide.",
+          hasOffer
+            ? "The AI assistant (simulated) offered you October 8 at 2:00 PM. Review it below and decide."
+            : accepted
+              ? "Done. The AI assistant updated the schedule and notified the office."
+              : "Waiting for an earlier slot. Nothing to do yet.",
         )}
-      />
+      >
+        {accepted && (
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => onNavigate("staff")}
+          >
+            {" "}
+            {t("See what the office sees")} <Icon name="arrow" />
+          </button>
+        )}
+      </DemoGuide>
       <div className="patient-grid">
         <div>
           <section className="panel patient-appointment">
@@ -92,14 +106,10 @@ export default function PatientWorkspace({
                     month: "short",
                   }).toLocaleUpperCase()}
                 </span>
-                <strong>{demo.phase === "accepted" ? "8" : "22"}</strong>
+                <strong>{accepted ? "8" : "22"}</strong>
               </div>
               <div>
-                <h3>
-                  {dateText(
-                    demo.phase === "accepted" ? "2026-10-08" : "2026-10-22",
-                  )}
-                </h3>
+                <h3>{dateText(accepted ? "2026-10-08" : "2026-10-22")}</h3>
                 <p>
                   {timeText(currentTime)}–
                   {timeText(endTime(currentTime, patient.duration))} ·{" "}
@@ -111,13 +121,13 @@ export default function PatientWorkspace({
             <div className="appointment-footer">
               <Badge tone="green">{t("Scheduled · sample")}</Badge>
               <span>
-                {demo.phase === "accepted"
+                {accepted
                   ? t("Moved 14 days earlier in the demo only.")
                   : t("Your current appointment stays in place.")}
               </span>
             </div>
           </section>
-          {demo.phase === "scheduled" || demo.phase === "open" ? (
+          {!hasOffer && !accepted ? (
             <section
               className="panel demo-access-card"
               ref={noOffer}
@@ -127,16 +137,16 @@ export default function PatientWorkspace({
               <p>
                 {" "}
                 {t(
-                  "Your October 22 sample appointment is unchanged. Switch to Provider, confirm the fictional cancellation, and send the demo offer.",
+                  "Your October 22 sample appointment is unchanged. Switch to María and cancel her 2:00 PM appointment; the AI assistant (simulated) then offers the opening.",
                 )}{" "}
               </p>
               <button
                 type="button"
                 className="primary-button"
-                onClick={onProvider}
+                onClick={() => onNavigate("maria")}
               >
                 {" "}
-                {t("Open Demo Provider")} <Icon name="arrow" />
+                {t("Open María's view")} <Icon name="arrow" />
               </button>
             </section>
           ) : (
@@ -182,6 +192,12 @@ export default function PatientWorkspace({
                       <p>{t("30-minute consultation · Isla Care, San Juan")}</p>
                     </div>
                   </div>
+                  {selection?.kind === "selected" && (
+                    <p className="offer-explanation ai-offer-reason">
+                      <AssistantLabel />{" "}
+                      {reasons(selection.reasoning)[0]}
+                    </p>
+                  )}
                   <p className="offer-explanation">
                     {" "}
                     {t(
@@ -201,26 +217,6 @@ export default function PatientWorkspace({
                     {" "}
                     {t("Accept earlier visit")} <Icon name="arrow" />
                   </button>
-                  <button
-                    type="button"
-                    className="secondary-button"
-                    onClick={() =>
-                      onAction({ type: "respond", response: "declined" })
-                    }
-                  >
-                    {" "}
-                    {t("Keep my current visit")}{" "}
-                  </button>
-                  <button
-                    type="button"
-                    className="text-button"
-                    onClick={() =>
-                      onAction({ type: "respond", response: "help" })
-                    }
-                  >
-                    {" "}
-                    {t("I need help")}{" "}
-                  </button>
                 </div>
               )}
               {hasOffer && confirming && (
@@ -238,7 +234,7 @@ export default function PatientWorkspace({
                   <p>
                     {" "}
                     {t(
-                      "This moves your fictional appointment to October 8 and updates the Provider view. No real appointment is reserved.",
+                      "This moves your fictional appointment to October 8. The AI assistant (simulated) then updates the schedule and notifies the office. No real appointment is reserved.",
                     )}{" "}
                   </p>
                   <div className="offer-actions">
@@ -246,7 +242,7 @@ export default function PatientWorkspace({
                       type="button"
                       className="primary-button"
                       onClick={() => {
-                        onAction({ type: "respond", response: "accepted" });
+                        onAction({ type: "accept" });
                         setConfirming(false);
                       }}
                     >
@@ -265,25 +261,17 @@ export default function PatientWorkspace({
                 </div>
               )}
               <div role="status" aria-live="polite">
-                {response && (
+                {accepted && (
                   <div className="response-notice" ref={result} tabIndex={-1}>
                     <Icon name="check" />
-                    <p>{t(responseMessages[response])}</p>
+                    <p>
+                      {t(
+                        "Appointment moved to October 8 at 2:00 PM. The AI assistant (simulated) updated the schedule and the waitlist and notified the office, in this browser only.",
+                      )}
+                    </p>
                   </div>
                 )}
               </div>
-              {accepted && (
-                <div className="offer-actions success-actions">
-                  <button
-                    type="button"
-                    className="primary-button"
-                    onClick={onProvider}
-                  >
-                    {" "}
-                    {t("See what the office sees")} <Icon name="arrow" />
-                  </button>
-                </div>
-              )}
               {!accepted && (
                 <div className="panel-note">
                   <Icon name="shield" />
@@ -342,13 +330,13 @@ export default function PatientWorkspace({
             <p>
               {" "}
               {t(
-                "Declining an earlier offer does not mean losing your current appointment.",
+                "Nothing changes unless you accept. Your current appointment stays in place until then.",
               )}{" "}
             </p>
             <p className="small-text">
               {" "}
               {t(
-                "AI reply assistance is not connected. This preview uses explicit response buttons.",
+                "Offers come from a simulated, rule-based AI assistant: no AI model, no real messages.",
               )}{" "}
             </p>
           </section>

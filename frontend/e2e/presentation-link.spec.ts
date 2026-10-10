@@ -6,6 +6,7 @@ import {
   type Page,
 } from "@playwright/test";
 import { spanish } from "../src/i18n/catalog";
+import { cancelAsMaria, roleName, translator } from "./story";
 
 // The sidebar "Press for presentation" link: a named, centered popup on
 // desktop, a plain new tab on narrow screens or when popups are blocked, and
@@ -99,8 +100,14 @@ async function start(page: Page, lang: Lang) {
 // The link sits in every workspace, right below the navigation.
 async function checkEveryWorkspace(page: Page, lang: Lang, link: Locator) {
   const views = page.getByRole("group", { name: tr(lang, "Demo workspace") });
-  for (const view of ["Demo access", "Provider view", "Patient view"]) {
-    await views.getByRole("button", { name: tr(lang, view), exact: true }).click();
+  const t = translator(lang);
+  for (const view of [
+    t("Demo access"),
+    roleName("maria", t),
+    roleName("jose", t),
+    roleName("ana", t),
+  ]) {
+    await views.getByRole("button", { name: view, exact: true }).click();
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute("href", "presentation/index.html");
     await expect(link).toHaveAttribute("target", "_blank");
@@ -149,19 +156,10 @@ for (const lang of ["en", "es"] as const) {
       expect(appIcon).toMatch(/\/favicon\.svg$/);
       expect((await page.request.get(appIcon)).status()).toBe(200);
 
-      // Demo state in progress: a confirmed cancellation on the provider view.
-      await page
-        .getByRole("group", { name: tr(lang, "Demo workspace") })
-        .getByRole("button", { name: tr(lang, "Provider view"), exact: true })
-        .click();
-      await page
-        .getByRole("button", {
-          name: tr(lang, "Confirm demo cancellation"),
-          exact: true,
-        })
-        .click();
+      // Demo state in progress: María cancelled and the AI offered José.
+      await cancelAsMaria(page, translator(lang));
       const next = page.getByRole("button", {
-        name: tr(lang, "Send demo offer to José"),
+        name: tr(lang, "Open José's view"),
         exact: true,
       });
       await expect(next).toBeVisible();

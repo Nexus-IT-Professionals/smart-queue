@@ -509,4 +509,139 @@ export const spanish: Record<string, string> = {
     "Rechazo de prueba registrado. Su cita existente no cambia.",
   "Help request preview recorded. No message was sent to the office.":
     "Solicitud de ayuda de prueba registrada. No se envió ningún mensaje al consultorio.",
+  // AI assistant (simulated) story: María cancels → AI offers → José accepts → AI notifies Ana.
+  "AI assistant (simulated)": "Asistente de IA (simulado)",
+  "(patient)": "(paciente)",
+  "(office)": "(oficina)",
+  "Observing the schedule of": "Observa la agenda de",
+  "Appointment cancelled": "Cita cancelada",
+  "Cancellation detected": "Cancelación detectada",
+  "Best match selected": "Mejor coincidencia seleccionada",
+  "No eligible patient": "Ningún paciente elegible",
+  "Schedule updated": "Agenda actualizada",
+  "Office notified": "Oficina notificada",
+  "{name} cancelled her October 8 · 2:00 PM appointment with Dr. Carlos Rivera.":
+    "{name} canceló su cita del 8 de octubre · 2:00 p. m. con el Dr. Carlos Rivera.",
+  "Detected {name}'s cancellation. The October 8 · 2:00 PM slot is open.":
+    "Detectó la cancelación de {name}. El espacio del 8 de octubre · 2:00 p. m. está disponible.",
+  "Selected {name} from {count} waiting patients.":
+    "Seleccionó a {name} entre {count} pacientes en espera.",
+  "No waiting patient fits the October 8 · 2:00 PM slot. It stays open.":
+    "Ningún paciente en espera se ajusta al espacio del 8 de octubre · 2:00 p. m. Sigue disponible.",
+  "Sent {name} a simulated in-app offer for October 8 · 2:00 PM.":
+    "Envió a {name} una oferta simulada en la aplicación para el 8 de octubre · 2:00 p. m.",
+  "{name} accepted the earlier visit in the patient view.":
+    "{name} aceptó la cita más cercana en la vista del paciente.",
+  "Moved {name} to October 8 · 2:00 PM, released the {released} appointment and updated the waitlist ({before} → {after}).":
+    "Movió a {name} al 8 de octubre · 2:00 p. m., liberó la cita del {released} y actualizó la lista de espera ({before} → {after}).",
+  "Notified {name}, Medical Office Assistant, with a summary of the changes.":
+    "Notificó a {name}, asistente de oficina médica, con un resumen de los cambios.",
+  "Availability {availability} covers the 2:00 PM slot.":
+    "Su disponibilidad ({availability}) cubre el espacio de las 2:00 p. m.",
+  "Same priority ({priority}) as {names}; the oldest request wins ({date}).":
+    "Misma prioridad ({priority}) que {names}; gana la solicitud más antigua ({date}).",
+  "Highest scheduling priority among eligible patients ({priority}).":
+    "Mayor prioridad de cita entre los pacientes elegibles ({priority}).",
+  "Same priority and request date as {names}; the record ID breaks the tie.":
+    "Misma prioridad y fecha de solicitud que {names}; el ID del registro desempata.",
+  "The only eligible patient on the waitlist.":
+    "El único paciente elegible de la lista de espera.",
+  "Next in line: {name}, newer request ({date}).":
+    "Siguiente en la lista: {name}, solicitud más reciente ({date}).",
+  "Excluded {name}: {availability} does not cover 2:00 PM.":
+    "Excluyó a {name}: {availability} no cubre las 2:00 p. m.",
+  "Excluded {name}: provider, visit type or dates do not match this slot.":
+    "Excluyó a {name}: el proveedor, el tipo de visita o las fechas no coinciden con este espacio.",
+  "AI activity": "Actividad de la IA",
+  "Rule-based and simulated: no AI model, no network. Each step is shown as it happens.":
+    "Basado en reglas y simulado: sin modelo de IA ni red. Cada paso se muestra cuando ocurre.",
+  "Watching Dr. Carlos Rivera's schedule. The assistant acts as soon as a patient cancels.":
+    "Vigilando la agenda del Dr. Carlos Rivera. El asistente actúa en cuanto un paciente cancela.",
+  "Notification for {name}": "Notificación para {name}",
+  "The opening was filled without manual work. No action needed.":
+    "El espacio se cubrió sin trabajo manual. No se requiere ninguna acción.",
+  "An AI assistant (simulated) takes over the office's manual work of refilling a cancelled appointment. No account, password, or personal information needed.":
+    "Un asistente de IA (simulado) asume el trabajo manual de la oficina para volver a llenar una cita cancelada. No necesita cuenta, contraseña ni información personal.",
+  "Starts as María · about 2 minutes": "Empieza como María · unos 2 minutos",
+  "María cancels": "María cancela",
+  "As María, cancel her October 8, 2:00 PM appointment.":
+    "Como María, cancele su cita del 8 de octubre a las 2:00 p. m.",
+  "AI assistant offers": "El asistente de IA ofrece",
+  "The AI assistant (simulated) detects the opening, picks José with the scheduling rules and sends him an offer.":
+    "El asistente de IA (simulado) detecta el espacio, elige a José según las reglas de citas y le envía una oferta.",
+  "Switch to José and accept the earlier visit.":
+    "Cambie a José y acepte la cita más cercana.",
+  "Ana is notified": "Ana recibe la notificación",
+  "The AI assistant updates the schedule and notifies Ana. Switch to Ana to see it.":
+    "El asistente de IA actualiza la agenda y notifica a Ana. Cambie a Ana para verlo.",
+  "Switch roles at any time from the header. Reset or reload starts over. Nothing leaves this browser. The AI assistant is simulated: fixed scheduling rules, no AI model, no network.":
+    "Cambie de rol desde el encabezado en cualquier momento. Reiniciar o recargar empieza de nuevo. Nada sale de este navegador. El asistente de IA es simulado: reglas de citas fijas, sin modelo de IA ni red.",
+  "María · patient who cancels": "María · paciente que cancela",
+  "Continue as María Rodríguez and cancel her October 8, 2:00 PM appointment.":
+    "Continúe como María Rodríguez y cancele su cita del 8 de octubre a las 2:00 p. m.",
+  "Continue as María": "Continuar como María",
+  "José · waiting patient": "José · paciente en espera",
+  "Continue as José Pérez, on the waitlist for an earlier visit, and accept the AI assistant's offer.":
+    "Continúe como José Pérez, en lista de espera para una cita más cercana, y acepte la oferta del asistente de IA.",
+  "Continue as José": "Continuar como José",
+  "Ana · medical office": "Ana · oficina médica",
+  "Continue as Ana Martínez to watch Dr. Carlos Rivera's schedule, the AI activity and her notification.":
+    "Continúe como Ana Martínez para ver la agenda del Dr. Carlos Rivera, la actividad de la IA y su notificación.",
+  "Continue as Ana": "Continuar como Ana",
+  "Welcome, María. Plans changed? You can cancel below.":
+    "Bienvenida, María. ¿Cambiaron sus planes? Puede cancelar abajo.",
+  "Your turn: cancel your October 8, 2:00 PM appointment below.":
+    "Su turno: cancele abajo su cita del 8 de octubre a las 2:00 p. m.",
+  "Cancelled. No waiting patient fits the 2:00 PM time, so it stays open.":
+    "Cancelada. Ningún paciente en espera se ajusta a las 2:00 p. m., así que sigue disponible.",
+  "Done. A waiting patient now has your former 2:00 PM time, and the office was notified.":
+    "Listo. Un paciente en espera tiene ahora su antiguo horario de las 2:00 p. m. y la oficina fue notificada.",
+  "Cancelled. The AI assistant (simulated) offered your 2:00 PM time to a waiting patient.":
+    "Cancelada. El asistente de IA (simulado) ofreció su horario de las 2:00 p. m. a un paciente en espera.",
+  "Open José's view": "Abrir la vista de José",
+  "Cancelled in this demo only.": "Cancelada solo en esta demo.",
+  "With Dr. Carlos Rivera.": "Con el Dr. Carlos Rivera.",
+  "Cancel my appointment": "Cancelar mi cita",
+  "Confirm cancellation": "Confirmar cancelación",
+  "Cancel your October 8, 2:00 PM appointment?":
+    "¿Cancelar su cita del 8 de octubre a las 2:00 p. m.?",
+  "The time goes back to the office, and the AI assistant (simulated) offers it to a waiting patient. Fictional appointment; nothing real is cancelled.":
+    "El horario vuelve a la oficina y el asistente de IA (simulado) lo ofrece a un paciente en espera. Cita ficticia; no se cancela nada real.",
+  "Yes, cancel my appointment": "Sí, cancelar mi cita",
+  "Keep my appointment": "Mantener mi cita",
+  "Appointment cancelled in this browser only. The AI assistant (simulated) is offering the time to a waiting patient.":
+    "Cita cancelada solo en este navegador. El asistente de IA (simulado) está ofreciendo el horario a un paciente en espera.",
+  "Your time helps someone else.": "Su horario ayuda a otra persona.",
+  "When you cancel, a simulated, rule-based AI assistant offers the time to the best-matched waiting patient. No AI model and no real messages.":
+    "Cuando usted cancela, un asistente de IA simulado y basado en reglas ofrece el horario al paciente en espera más adecuado. Sin modelo de IA ni mensajes reales.",
+  "The AI assistant (simulated) offered you October 8 at 2:00 PM. Review it below and decide.":
+    "El asistente de IA (simulado) le ofreció el 8 de octubre a las 2:00 p. m. Revíselo abajo y decida.",
+  "Done. The AI assistant updated the schedule and notified the office.":
+    "Listo. El asistente de IA actualizó la agenda y notificó a la oficina.",
+  "Waiting for an earlier slot. Nothing to do yet.":
+    "En espera de un espacio más cercano. Todavía no hay nada que hacer.",
+  "Your October 22 sample appointment is unchanged. Switch to María and cancel her 2:00 PM appointment; the AI assistant (simulated) then offers the opening.":
+    "Su cita de ejemplo del 22 de octubre no ha cambiado. Cambie a María y cancele su cita de las 2:00 p. m.; luego el asistente de IA (simulado) ofrece el espacio.",
+  "Open María's view": "Abrir la vista de María",
+  "This moves your fictional appointment to October 8. The AI assistant (simulated) then updates the schedule and notifies the office. No real appointment is reserved.":
+    "Esto mueve su cita ficticia al 8 de octubre. Luego el asistente de IA (simulado) actualiza la agenda y notifica a la oficina. No se reserva ninguna cita real.",
+  "Appointment moved to October 8 at 2:00 PM. The AI assistant (simulated) updated the schedule and the waitlist and notified the office, in this browser only.":
+    "Cita adelantada al 8 de octubre a las 2:00 p. m. El asistente de IA (simulado) actualizó la agenda y la lista de espera y notificó a la oficina, solo en este navegador.",
+  "Nothing changes unless you accept. Your current appointment stays in place until then.":
+    "Nada cambia a menos que usted acepte. Su cita actual se mantiene hasta entonces.",
+  "Offers come from a simulated, rule-based AI assistant: no AI model, no real messages.":
+    "Las ofertas vienen de un asistente de IA simulado y basado en reglas: sin modelo de IA ni mensajes reales.",
+  "Watching Dr. Carlos Rivera's schedule. When María cancels in her view, the AI assistant (simulated) takes it from there. Nothing to do here.":
+    "Vigilando la agenda del Dr. Carlos Rivera. Cuando María cancele en su vista, el asistente de IA (simulado) se encarga del resto. Aquí no hay nada que hacer.",
+  "Open slot filled by the AI assistant.":
+    "Espacio cubierto por el asistente de IA.",
+  "AI assistant (simulated): María Rodríguez cancelled, but no waiting patient fits. The 2:00 PM slot stays open.":
+    "Asistente de IA (simulado): María Rodríguez canceló, pero ningún paciente en espera se ajusta. El espacio de las 2:00 p. m. sigue disponible.",
+  "AI assistant (simulated): María Rodríguez cancelled; {name} was selected and offered the 2:00 PM slot. Waiting for the patient's answer.":
+    "Asistente de IA (simulado): María Rodríguez canceló; se seleccionó a {name} y se le ofreció el espacio de las 2:00 p. m. Esperando la respuesta del paciente.",
+  "Cancelled by María Rodríguez": "Cancelada por María Rodríguez",
+  "Synthetic scheduling only. Staff confirm priorities; when a slot opens, the AI assistant (simulated) ranks eligible patients by these rules.":
+    "Solo citas ficticias. El personal confirma las prioridades; cuando se libera un espacio, el asistente de IA (simulado) ordena a los pacientes elegibles con estas reglas.",
+  "Cancel María's appointment in her view to start the activity log.":
+    "Cancele la cita de María en su vista para iniciar el registro.",
 };
