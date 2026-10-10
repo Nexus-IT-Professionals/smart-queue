@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Smart Queue: a fictional healthcare story and a verified browser-only POC with a simulated, rule-based AI assistant, in 160 seconds.">
+<meta name="description" content="Smart Queue: a fictional healthcare story and a verified browser-only POC with a simulated, rule-based AI assistant, in under three minutes.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'">
 <title>Smart Queue — Less Waiting. Better Care.</title>
 <link rel="stylesheet" href="styles.css">
@@ -21,11 +21,15 @@
   <div class="cast-cover"><img src="assets/characters/cast.webp" width="1536" height="1024" decoding="async" alt="Original illustrations of María in coral, Ana in teal, José in mustard, and Dr. Carlos Rivera in a white coat."><div class="cast-labels"><span>María<small>Cancels</small></span><span>Ana<small>Office assistant</small></span><span>José<small>Waiting</small></span><span>Dr. Rivera<small>Provider</small></span></div></div>
 </section>
 <section class="slide dark" data-slide="2" aria-labelledby="title-2" hidden>
-  <div class="eyebrow">THE PROBLEM · WHY IT MATTERS</div>
-  <h2 id="title-2">An empty appointment.<br><em>A patient still waiting.</em></h2>
-  <div class="problem-line"><div><strong>Availability</strong><p>A cancellation opens a slot.</p></div><span class="disconnect" aria-hidden="true">···</span><div><strong>Access</strong><p>Someone needs that time.</p></div></div>
-  <p class="bottom-statement">Today Ana connects them by hand: update, search, call, chase replies.</p>
-  <div class="why-now"><b>WHY NOW</b> The capacity is already on the schedule. The decisions follow clear rules.</div>
+  <div class="eyebrow">THE PROBLEM · WHY IT MATTERS IN PUERTO RICO</div>
+  <h2 id="title-2">Why it matters <em>in Puerto Rico.</em></h2>
+  <div class="why-grid">
+    <div><b>TIME</b><p><strong>“Might be in six months”</strong> for the next specialist slot <i>Oversight Board workforce study, Feb 2025 · interview quote</i></p><p><strong>23 days</strong> to the next visit after a clinic cancels <i>VA primary care, AJMC 2025 · US data</i></p></div>
+    <div><b>RESOURCES</b><p><strong>15.6%</strong> of appointments cancelled, about 1 in 6; no-shows <span class="nw">3.9–4.7%</span> <i>CFSE FY2025-26 · only measured PR dataset</i></p><p><strong>73.7%</strong> of physician offices have under 5 employees (US 54.4%): call-backs fall on one or two people <i>Census 2023</i></p></div>
+    <div><b>MONEY</b><p><strong>$3,293</strong> Medicaid spending per enrollee vs <strong>$10,426</strong> in the states: about one third <i>MACPAC · FY2024</i></p><p>Federal match <strong>55%</strong> by statute; the temporary 76% ends <span class="nw">Sept 30, 2027</span> <i>CRS · KFF</i></p></div>
+    <div><b>HEALTH</b><p><strong>28.9%</strong> of primary-care need met in shortage areas (US <strong>48.2%</strong>) <i>HRSA via KFF · Dec 2025</i></p><p><strong>40.7%</strong> of PR physicians are 65 or older <i>AAMC 2025</i></p></div>
+  </div>
+  <p class="why-takeaway">Every refilled cancellation turns capacity already paid for into a visit.</p>
 </section>
 <section class="slide character-slide" data-slide="3" aria-labelledby="title-3" hidden>
   <div class="eyebrow">01 / ANA MARTÍNEZ · MEDICAL OFFICE ASSISTANT · TODAY</div>
@@ -66,10 +70,31 @@
   <figure class="schedule-capture"><img src="assets/screenshots/updated-schedule.webp" width="1664" height="234" decoding="async" alt="Actual updated schedule row SQ-006: 2:00 PM, José Pérez, Just filled, Consultation, Scheduled."><figcaption>Dr. Carlos Rivera’s schedule · SQ-006 · synthetic data</figcaption></figure>
 </section>
 <section class="slide impact" data-slide="10" aria-labelledby="title-10" hidden>
-  <div class="eyebrow">THE IMPACT · DESIGNED BENEFITS, NOT MEASURED RESULTS</div>
-  <h2 id="title-10">Less chasing.<br><em>More clarity.</em></h2>
-  <table><thead><tr><th>For</th><th>Before</th><th>With Smart Queue</th></tr></thead><tbody><tr><th>Patients</th><td>Uncertainty</td><td>A fitting offer, and the final say</td></tr><tr><th>Assistants</th><td>Calls and manual follow-up</td><td>A summary when it’s done</td></tr><tr><th>Providers</th><td>Schedule ambiguity</td><td>An updated appointment list</td></tr></tbody></table>
-  <p class="caption">The POC demonstrates the workflow. Time saved and access outcomes still need a real-world pilot.</p>
+  <div class="eyebrow">THE IMPACT · ESTIMATE · DERIVED · ASSUMPTIONS ON THE RESEARCH PAGE</div>
+  <h2 id="title-10">What it means — <em>per office, per month and per year.</em></h2>
+  <p class="base-case">Base case: 1 physician · 20 visits a day · 240 days a year. A model, not a measurement.</p>
+  <div class="impact-cols">
+    <div><b>HEALTH PROVIDER · OFFICE</b><ul>
+      <li><strong>~15 / month</strong> recovered visits <span>178 / year</span></li>
+      <li><strong>~$1,418 / month</strong> at Medicare 99213 ($95.68) <span>$17.0K / year</span></li>
+      <li><strong>~$993 / month</strong> at Plan Vital 70% <span>$11.9K / year</span></li>
+      <li><strong>~7 h / month</strong> staff phone time saved <span>87 h · ~$1.1K / year</span></li>
+      <li><strong>~3 / month</strong> doctor cancellations avoided, with a backlog <span>37 / year</span></li>
+    </ul><p class="note">Capitated primary care gains time, not revenue.</p></div>
+    <div><b>PATIENT</b><ul>
+      <li><strong>~13 / month</strong> patients seen about 14 days sooner <span>154 / year</span></li>
+      <li><strong>~2,160</strong> patient-days earlier <span>per year</span></li>
+      <li><strong>No calls</strong> to chase an earlier slot</li>
+      <li><strong>Keeps the current visit</strong> until accepting</li>
+    </ul></div>
+    <div><b>MEDICAID EFFICIENCY</b><ul>
+      <li>Plan Vital pays primary care a capitation (<strong>$18 PMPM</strong> minimum) whether or not a visit happens</li>
+      <li>Each refilled cancellation turns <strong>already-paid capacity</strong> into a visit</li>
+      <li class="illustrative">Illustrative only: if 100 per-visit offices matched the base case, <strong>≈ $1.19M / year</strong> at Plan Vital rates (100 × $11.9K)</li>
+      <li>Range per office: <strong>$7.3K–$28.5K / year</strong> at 99213 (low–high)</li>
+    </ul></div>
+  </div>
+  <p class="caption sources">Monthly = yearly ÷ 12, rounded. Rates: CFSE FY2025-26. Refill: UCSF waitlist (JMIR 2024). Reminders: Robotham, BMJ Open 2016. Prices: PR Medicare 2026; Plan Vital terms (medicaid.gov). Model: docs/wiki/no-shows-cancellations-benefit.md</p>
 </section>
 <section class="slide dark ai" data-slide="11" aria-labelledby="title-11" hidden>
   <div class="eyebrow">WHY AI? · HONEST ABOUT WHAT RUNS TODAY</div>

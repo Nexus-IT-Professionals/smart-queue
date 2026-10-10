@@ -29,7 +29,7 @@ The public demo at **https://smart-queue-demo.vercel.app** is the React app in t
 
 ## Judge presentation
 
-Open [presentation/index.html](presentation/index.html) offline for the 12-slide character story (2:40 estimated narration), or choose its five-slide submission mode (1:50). Includes original artwork, real synthetic POC screenshots, separate speaker notes, keyboard controls, and fullscreen. [Presentation instructions](presentation/README.md) cover rehearsal and the event’s five-slide / two-minute submission limits. The story follows the demo's AI assistant, clearly labeled as simulated and rule-based (no AI model runs); a model-backed assistant is future work.
+Open [presentation/index.html](presentation/index.html) offline for the 12-slide character story (2:49 estimated narration), or choose its five-slide submission mode (1:50). Includes original artwork, real synthetic POC screenshots, separate speaker notes, keyboard controls, and fullscreen. [Presentation instructions](presentation/README.md) cover rehearsal and the event’s five-slide / two-minute submission limits. The story follows the demo's AI assistant, clearly labeled as simulated and rule-based (no AI model runs); a model-backed assistant is future work.
 
 ## The problem
 

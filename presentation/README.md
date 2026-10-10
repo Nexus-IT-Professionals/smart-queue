@@ -2,7 +2,7 @@
 
 Open **`index.html`** in a modern desktop browser. Keep this folder and its assets together. It works directly from disk, offline, with no installation, account, app server, fonts, or CDN required.
 
-- **Story:** 12 slides, 2:40 estimated narration + 15 seconds of transitions = 2:55 target. No live demo included.
+- **Story:** 12 slides, 2:49 estimated narration + 15 seconds of transitions ≈ 3:04. No live demo included.
 - **Submission:** choose “Submission · 5 slides” in the toolbar. Separate 1:50 narration leaves 10 seconds within a two-minute recording. `index.html?mode=submission` also selects it.
 - The official optional deck limit is five slides; use submission mode when submitting. The 12-slide story is for rehearsal or a separately permitted presentation. Check the [current rules](https://caribbean-ai-summit-hackathon.devpost.com/rules) before submission.
 

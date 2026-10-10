@@ -199,41 +199,58 @@ figcaption {
 .dark .caption {
 	color: #c3d0df;
 }
-.problem-line {
-	display: flex;
-	align-items: center;
-	gap: 80px;
-	margin-top: 72px;
-}
-.problem-line strong {
-	font-size: 47px;
-	font-weight: 500;
-}
-.problem-line p {
-	font-size: 29px;
-	color: #ced8e7;
-	margin-top: 20px;
-}
-.disconnect {
-	font-size: 100px;
-	color: #e6a181;
-	letter-spacing: 20px;
-}
 .bottom-statement {
 	margin-top: 55px;
 	font-size: 30px;
 }
-.why-now {
-	border-top: 1px solid #627189;
-	margin-top: 48px;
-	padding-top: 28px;
-	font-size: 25px;
-	color: #d3deea;
+/* Slide 2: four evidence blocks (time, resources, money, health) with source tags. */
+[data-slide="2"] .eyebrow {
+	margin-bottom: 22px;
 }
-.why-now b {
+[data-slide="2"] h2 {
+	font-size: 58px;
+}
+.why-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 22px 64px;
+	margin-top: 26px;
+}
+.why-grid > div {
+	border-top: 1px solid #627189;
+	padding-top: 14px;
+}
+.why-grid b {
 	font-size: 18px;
 	letter-spacing: 2px;
-	margin-right: 30px;
+	color: #a9d7cc;
+}
+.why-grid p {
+	font-size: 23px;
+	line-height: 1.3;
+	color: #dde6f0;
+	margin-top: 10px;
+}
+.why-grid strong {
+	font-size: 30px;
+	font-weight: 650;
+	color: #fff;
+}
+.why-grid i {
+	display: block;
+	font-style: normal;
+	font-size: 16px;
+	letter-spacing: 0.5px;
+	color: #aebdd0;
+	margin-top: 3px;
+}
+.why-grid .nw {
+	white-space: nowrap;
+}
+.why-takeaway {
+	margin-top: 26px;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 32px;
 	color: #a9d7cc;
 }
 .character {
@@ -494,37 +511,68 @@ blockquote small {
 	margin-top: 22px;
 	width: 900px;
 }
+/* Slide 10: per-office monthly and yearly estimates in three columns. */
+.impact .eyebrow {
+	margin-bottom: 22px;
+}
 .impact h2 {
-	margin-bottom: 45px;
+	font-size: 54px;
 }
-.impact table {
-	border-collapse: collapse;
-	width: 100%;
-	font-size: 29px;
-	text-align: left;
-}
-.impact th,
-.impact td {
-	padding: 24px 20px;
-	border-bottom: 1px solid #c6cec9;
-}
-.impact thead th {
-	font-size: 20px;
-	letter-spacing: 2px;
-	text-transform: uppercase;
+.base-case {
+	font-size: 22px;
 	color: var(--muted);
-	padding-top: 0;
+	margin-top: 8px;
 }
-.impact tbody th {
-	font-weight: 600;
-	width: 23%;
+.impact-cols {
+	display: grid;
+	grid-template-columns: 1.15fr 1fr 1fr;
+	gap: 48px;
+	margin-top: 22px;
 }
-.impact tbody td:last-child {
+.impact-cols > div {
+	border-top: 2px solid var(--teal);
+	padding-top: 14px;
+}
+.impact-cols b {
+	font-size: 17px;
+	letter-spacing: 2px;
+	color: var(--teal);
+}
+.impact-cols ul {
+	list-style: none;
+	margin: 6px 0 0;
+	padding: 0;
+}
+.impact-cols li {
+	font-size: 22px;
+	line-height: 1.3;
+	padding: 8px 0;
+	border-bottom: 1px solid #d6dbd6;
+}
+.impact-cols li strong {
+	white-space: nowrap;
+	font-size: 26px;
+	color: var(--navy);
+}
+.impact-cols li span {
+	display: block;
+	font-size: 19px;
 	color: var(--teal);
 	font-weight: 600;
 }
-.impact .caption {
-	margin-top: 32px;
+.impact-cols .illustrative {
+	background: #ebe4d6;
+	padding: 8px 10px;
+}
+.impact-cols .note {
+	font-size: 19px;
+	color: var(--coral);
+	margin-top: 10px;
+}
+.impact .sources {
+	margin-top: 18px;
+	font-size: 16px;
+	line-height: 1.35;
 }
 .ai-columns {
 	display: grid;

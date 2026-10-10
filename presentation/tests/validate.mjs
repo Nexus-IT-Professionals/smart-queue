@@ -75,7 +75,7 @@ for (let i = 1; i <= 12; i++) {
 	const overflow = await page.locator(".slide:visible").evaluate((slide) =>
 		[
 			...slide.querySelectorAll(
-				"h1,h2,p,blockquote,figure,.story-copy,.cast-labels,table",
+				"h1,h2,p,li,blockquote,figure,.story-copy,.cast-labels,.why-grid,.impact-cols,table",
 			),
 		]
 			.filter((el) => {
