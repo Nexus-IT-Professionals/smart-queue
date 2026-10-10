@@ -5,6 +5,9 @@ Requires ffmpeg (VIDEO_FFMPEG). Narration backend (VIDEO_TTS):
   VIDEO_TTS_RATE). edge-tts calls Microsoft's online TTS service with the narration text.
 VIDEO_MUSIC=<audio file> adds a background bed: 60/40 voice/music baseline, sidechain-ducked
 under the voice, faded in/out, then two-pass linear loudnorm. No application dependencies.
+VIDEO_XFADE=<seconds> (default 0.8; 0 = the earlier hard cuts) crossfades the screen across each
+scene boundary, centred on the cue, and dips the caption band text out/in around the cue. Scene
+cues, captions and the audio timeline are unchanged; the total stays exactly 120 s.
 """
 import json, math, os, pathlib, re, subprocess, wave
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -12,6 +15,10 @@ WORK = pathlib.Path(os.environ.get('VIDEO_WORK_DIR', '/tmp/smart-queue-video-wor
 FFMPEG = os.environ.get('VIDEO_FFMPEG', 'ffmpeg')
 TTS = os.environ.get('VIDEO_TTS', 'say')
 MUSIC = os.environ.get('VIDEO_MUSIC')
+FPS = 30
+XFADE_FRAMES = 2 * round(float(os.environ.get('VIDEO_XFADE', '0.8')) * FPS / 2)  # even: centred on the cue
+HALF = XFADE_FRAMES / 2 / FPS   # seconds on each side of a cue
+GUARD = 0.2                     # freeze each scene's screen this long before its end (hides the next action's first frames)
 scenes = json.loads((ROOT / 'scenes.json').read_text(encoding='utf-8'))
 timeline = json.loads((WORK / 'timeline.json').read_text(encoding='utf-8'))
 assert sum(s['duration'] for s in scenes) == 120
@@ -49,9 +56,45 @@ for i, (scene, timing) in enumerate(zip(scenes, timeline)):
 (WORK / 'parts.txt').write_text(''.join(f"file '{(WORK / f'part-{i:02}.mp4').as_posix()}'\nduration {scenes[i]['duration']}\n" for i in range(len(scenes))), encoding='utf-8')
 output = ROOT / 'smart-queue-demo-2min.mp4'
 concat = ['-f', 'concat', '-safe', '0', '-i', str(WORK / 'parts.txt')]
-video_args = ['-vf', 'fps=30,setpts=N/(30*TB),tpad=stop_mode=clone:stop_duration=1', '-c:v', 'libx264', '-preset', 'fast', '-crf', '19', '-threads', '4']
+cues = [sum(s['duration'] for s in scenes[:i]) for i in range(len(scenes))]
+
+def xfade_video():
+    """Inputs and graph for the crossfaded picture: 12 screen segments + 12 caption bands."""
+    last, inputs, graph = len(scenes) - 1, [], []
+    for i, (scene, timing) in enumerate(zip(scenes, timeline)):
+        pre = HALF if i else 0       # pre-roll: the recording just before this scene's cue
+        live = pre + scene['duration'] - (GUARD if i < last else 0)
+        length = pre + scene['duration'] + (HALF if i < last else 0)
+        segment = WORK / f'screen-{i:02}.mp4'
+        subprocess.run([FFMPEG, '-hide_banner', '-loglevel', 'error', '-y', '-ss', f"{max(0, timing['offset'] - pre):.3f}", '-i', str(WORK / 'recording.webm'), '-vf',
+                        f'setpts=PTS-STARTPTS,fps={FPS},scale=1600:800,trim=duration={live:.3f},tpad=stop_mode=clone:stop_duration={length - live + 1:.3f},setsar=1,format=yuv420p',
+                        '-t', f'{length:.3f}', '-an', '-c:v', 'libx264', '-preset', 'fast', '-crf', '12', '-threads', '4', str(segment)], check=True)
+        inputs += ['-i', str(segment)]
+    for i, scene in enumerate(scenes):
+        inputs += ['-loop', '1', '-framerate', str(FPS), '-t', str(scene['duration']), '-i', str(WORK / f'caption-{i:02}.png')]
+    n = len(scenes)
+    for i in range(n):
+        graph.append(f'[{i}:v]settb=AVTB,fps={FPS},format=yuv420p,setpts=PTS-STARTPTS[s{i}]')
+    prev = 's0'
+    for i in range(1, n):
+        graph.append(f'[{prev}][s{i}]xfade=transition=fade:duration={XFADE_FRAMES / FPS:.4f}:offset={cues[i] - HALF:.4f}[x{i}]')
+        prev = f'x{i}'
+    for i, scene in enumerate(scenes):
+        fades = (f',fade=t=in:st=0:d={HALF:.4f}:alpha=1' if i else '') + (f",fade=t=out:st={scene['duration'] - HALF:.4f}:d={HALF:.4f}:alpha=1" if i < n - 1 else '')
+        graph.append(f'[{n + i}:v]format=rgba,settb=AVTB,fps={FPS}{fades}[c{i}]')
+    graph.append(''.join(f'[c{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=0[band]')
+    graph.append(f'[{prev}]tpad=stop_mode=clone:stop_duration=1,pad=1600:900:0:0:color=0x142747[screen];[screen][band]overlay=0:800:eof_action=repeat,scale=1920:1080,setsar=1,format=yuv420p[v]')
+    return inputs, ';'.join(graph), 2 * n
+
+if XFADE_FRAMES:
+    video_in, video_graph, audio_index = xfade_video()
+else:
+    video_in, video_graph, audio_index = concat, f'[0:v]fps={FPS},setpts=N/({FPS}*TB),tpad=stop_mode=clone:stop_duration=1[v]', 1
+video_args = ['-c:v', 'libx264', '-preset', 'fast', '-crf', '19', '-threads', '4']
 if not MUSIC:
-    audio_in, audio_args = [], ['-af', 'loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asetpts=N/SR/TB,atrim=duration=120']
+    audio_in = concat if XFADE_FRAMES else []
+    audio_index = audio_index if XFADE_FRAMES else 0
+    audio_filter = 'loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asetpts=N/SR/TB,atrim=duration=120'
 else:
     # Voice track (scene parts) and music bed (trimmed/padded to 120 s, faded), each measured.
     voice_track, bed = WORK / 'voice-track.wav', WORK / 'music-bed.wav'
@@ -81,8 +124,10 @@ else:
         raise RuntimeError(f'Final loudnorm would not be linear (true peak {stats["input_tp"]} dBTP)')
     print(f"Mix: voice gain {gv:.2f} dB, music gain {gm:.2f} dB, raw mix {raw_i} LUFS, limited mix {stats['input_i']} LUFS / {stats['input_tp']} dBTP, linear loudnorm to -16", flush=True)
     audio_in = ['-i', str(mix)]
-    audio_args = ['-map', '0:v', '-map', '1:a', '-af', f'{norm},aresample=48000,asetpts=N/SR/TB,atrim=duration=120']
-subprocess.run([FFMPEG, '-hide_banner', '-loglevel', 'error', '-y', *concat, *audio_in, *video_args, *audio_args, '-c:a', 'aac', '-ar', '48000', '-b:a', '160k', '-t', '120', '-movflags', '+faststart', str(output)], check=True)
+    audio_filter = f'{norm},aresample=48000,asetpts=N/SR/TB,atrim=duration=120'
+# Picture and the unchanged 120 s audio timeline are muxed in one pass.
+graph = f'{video_graph};[{audio_index}:a]{audio_filter}[a]'
+subprocess.run([FFMPEG, '-hide_banner', '-loglevel', 'error', '-y', *video_in, *audio_in, '-filter_complex', graph, '-map', '[v]', '-map', '[a]', *video_args, '-c:a', 'aac', '-ar', '48000', '-b:a', '160k', '-t', '120', '-movflags', '+faststart', str(output)], check=True)
 start = 0
 vtt = ['WEBVTT', '']
 narrator = 'macOS Samantha' if TTS == 'say' else f"Microsoft neural voice {os.environ.get('VIDEO_TTS_VOICE', 'en-US-JennyNeural')} via edge-tts, rate {os.environ.get('VIDEO_TTS_RATE', '+5%')}"
@@ -96,4 +141,4 @@ for i, scene in enumerate(scenes):
     start = end
 (ROOT / 'captions.vtt').write_bytes('\n'.join(vtt).encode('utf-8'))
 (ROOT / 'NARRATION.md').write_bytes('\n'.join(notes).encode('utf-8'))
-print(f'Created {output}: {output.stat().st_size / 1_000_000:.2f} MB', flush=True)
+print(f'Created {output}: {output.stat().st_size / 1_000_000:.2f} MB; transitions: ' + (f'{XFADE_FRAMES / FPS:.2f} s crossfade' if XFADE_FRAMES else 'hard cuts'), flush=True)
